@@ -16,6 +16,7 @@ lst_y = []
 center_x,center_y=0,0
 radius = 290
 n=100
+m=30
 step = math.pi * 2 / n
 for i in range(n):
     angle = i * step
@@ -25,7 +26,7 @@ for i in range(n):
     lst_y.append(y)
 
 for i in range(n):
-    j=(i+30) % 100
+    j=(i+m) % n
     x1=lst_x[i]
     y1=lst_y[i]
     x2=lst_x[j]
