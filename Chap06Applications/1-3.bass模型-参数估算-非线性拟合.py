@@ -23,9 +23,7 @@ guess=(0,0,0)
 params,parma_covariance = curve_fit(func,xi,n,guess)
 
 print(params)
-a = params[0]
-b = params[1]
-c = params[2]
+a,b,c=tuple(params)
 print(a,b,c)
 
 yy= func(xi,a,b,c)

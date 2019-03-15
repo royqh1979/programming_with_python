@@ -22,7 +22,7 @@ datas = raw_data.split(',')
 
 result = "股票{0}目前的价格是{1},最高价{2},最低价{3}".format(datas[0], datas[3], datas[4], datas[5])
 # 使用对话框显示查询结果
-dlg.set_dialog_font_size(14)
+dlg.set_dialog_font_size(30)
 dlg.show_message(result, "股票信息")
 
 """
