@@ -50,6 +50,7 @@ vy = random.randint(1,3)
 ball = Ball(world,cx,cy,r,vx,vy)
 while is_run():
     ball.move()
+    # Ball.move(ball) # 和上面一行语句等效
     if delay_jfps(200):
         clear()
         set_color("black")

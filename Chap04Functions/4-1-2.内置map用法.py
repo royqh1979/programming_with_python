@@ -52,10 +52,17 @@ lst_b = [10]*10
 lst_c = list(map(Fraction,lst_a,lst_b))
 print(lst_c)
 
+# 对象方法
 f = Fraction(1,2)
 lst_d = map(f.__add__,lst_c)
 print(list(lst_d))
 
+
+# 类方法
+lst_a = ['hello','word','name','this','game']
+lst_c = map(str.capitalize,lst_a)
+
+print(list(lst_c))
 
 
 
