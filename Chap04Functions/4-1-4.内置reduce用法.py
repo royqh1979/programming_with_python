@@ -7,8 +7,8 @@ lst_b = ['张三','李四','王五']
 print(lst_a)
 print(lst_b)
 
-a=reduce(op.add,lst_a)
-b=reduce(op.add,lst_b)
+a=reduce(op.add,lst_a,0)
+b=reduce(op.add,lst_b,'')
 
 print(a)
 print(b)
@@ -19,7 +19,7 @@ print(a)
 # print(b)
 
 lst_a = [1,2,3,4,5]
-a=reduce(op.mul,lst_a)
+a=reduce(op.mul,lst_a,1)
 print(a)
 
 

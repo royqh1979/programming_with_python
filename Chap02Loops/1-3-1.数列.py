@@ -1,3 +1,4 @@
 n=int(input("请输入n:"))
-for i in range(n):
+lst=['张三','李四','王五']
+for i in lst:
     print(i)

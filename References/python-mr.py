@@ -119,7 +119,6 @@ def timer(start):
 def worker_assign(workers, current_worker_id, item):
     item % workers == current_worker_id
 
-
 if __name__ == "__main__":
     N = 2000
     ''' Example '''
