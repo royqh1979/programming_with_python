@@ -1,5 +1,6 @@
 import csv
 from easygraphics import dialog as dlg
+import statistics
 
 class Score:
     def __init__(self,id,name, clazz, math,literacy,english):
@@ -48,4 +49,6 @@ lst2=list(map(score_to_math,lst1))
 total = sum(lst2)
 count = len(lst2)
 average = total / count
+
+# average = statistics.mean(lst2)
 print(f"电商18班{count}名同学数学平均分为{average:.2f}")

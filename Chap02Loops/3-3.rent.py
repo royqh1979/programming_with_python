@@ -7,8 +7,8 @@ num_a,num_b = 100,100
 customer_a,customer_b = 0,0
 no_bike_count_a,no_bike_count_b=0,0
 for i in range(n):
-    want_a = random.uniform(0,1) <= 0.3
-    want_b = random.uniform(0,1) <= 0.5
+    want_a = random.uniform(0,1) <= prob_a
+    want_b = random.uniform(0,1) <= prob_b
     if want_a:
         customer_a += 1
         if num_a > 0:
