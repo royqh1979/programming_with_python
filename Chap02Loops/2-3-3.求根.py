@@ -8,9 +8,11 @@ def f_derivative(x):
 
 ep = 0.00000001
 xk = 1.5
-xk1 = 1.5
+k=0
 while True:
-    xk1 = xk
+    temp = xk
+    k+=1
+    xk1 = temp
     xk = xk1 - f(xk1) / f_derivative(xk1)
     print(xk1, xk)
     if math.fabs(xk - xk1) < ep:

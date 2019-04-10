@@ -10,7 +10,7 @@ def get_normal(mean,dev,n):
     :return: 产生的随机数数组
     """
     if mean<=0 or dev<=0 :
-        raise  RuntimeError("Mean and dev must be positive！")
+        raise  ValueError("Mean and dev must be positive！")
     result = random.normal(mean,dev,n)
     return np.where(result>0,result,0)
 

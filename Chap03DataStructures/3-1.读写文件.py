@@ -16,7 +16,10 @@ if filename == '':
 sales = []
 file=open(filename,mode="r",encoding="UTF-8")
 while True:
-    name = file.readline().strip()
+    name = file.readline()
+    print(f"---{name}---")
+    name = name.strip()
+    print(f"---**{name}**---")
     if name == "":
         break
     price = Decimal(file.readline().strip())

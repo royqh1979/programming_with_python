@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>成绩管理系统</title>
+</head>
+<body>
+    <div>
+        <h1>查找学生成绩</h1>
+        <form method="post" action="/search">
+            <input type="text" name="keyword" /><input type="submit" value="查找">
+        </form>
+
+        {% if students %}
+        <h1>搜索结果</h1>
+        {% include 'students.html' %}
+        {% endif %}
+        <div><a href="/">返回首页</a></div>
+    </div>
+</body>
+</html>

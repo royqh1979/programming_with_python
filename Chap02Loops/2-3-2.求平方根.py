@@ -2,15 +2,15 @@ import easygraphics.dialog as gui
 import math
 
 def sqrt(a, epsilon):
-    k=0
     xk = a
+    k=0
     while True:
+        temp=xk
         k+=1
-        xk1 =xk
+        xk1=temp
         xk = (xk1+a/xk1)/2
         if math.fabs(xk-xk1)<epsilon:
             break
-    root=xk
     return xk
 
 

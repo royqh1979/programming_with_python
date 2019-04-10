@@ -9,7 +9,7 @@ def get_normal(mean,dev):
     :return: 产生的随机数
     """
     if mean<=0 or dev<=0 :
-        raise  RuntimeError("Mean and dev must be positive！")
+        raise  ValueError("Mean and dev must be positive！")
     result = random.normalvariate(mean,dev)
     return max(0,result)
 
