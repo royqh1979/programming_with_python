@@ -29,7 +29,7 @@ def index():
 
 @app.route("/load")
 def load():
-    with open(filename, mode="r", encoding="UTF-8") as file:
+    with open(filename, mode="r", encoding="GBK") as file:
         students.clear()
         reader = csv.reader(file)
         for row in reader:
@@ -46,7 +46,7 @@ def load():
 
 @app.route("/save")
 def save():
-    with open(filename, mode="w", encoding="UTF-8") as file:
+    with open(filename, mode="w", encoding="GBK") as file:
         for s in students.values():
             file.write(f"{s.id},{s.name},{s.class_name},{s.score}\n")
     return render_template("save.html",students=students.values())

@@ -1,9 +1,3 @@
-"""
-某商店卖两种品牌的果汁：
-A品牌果汁每瓶进价1元，B品牌果汁每瓶进价1.2元。
-店主估计，如果A品牌和B品牌果汁每瓶的卖价分别定为x和y，则他们每天的销量分别为70-5x+4y和80+6x-7y。
-请问，店主每天应该以什么价格卖两种牌子的果汁，以获取最大收益？
-"""
 from matplotlib import use
 use('Qt5Agg')
 import matplotlib.pyplot as plt

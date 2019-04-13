@@ -15,7 +15,7 @@ def read_csv_file(filename):
     :return: scores列表
     """
     scores = []
-    with open(filename, mode="r", encoding="UTF-8") as file:
+    with open(filename, mode="r", encoding="GBK") as file:
         reader = csv.reader(file)
         next(reader)  # 跳过csv第一行 (标题行)
         for row in reader:

@@ -45,7 +45,7 @@ def read_csv(filename):
     :return: 股票信息列表
     """
     stocks = []
-    with open(filename,mode="r",encoding="UTF-8") as file:
+    with open(filename,mode="r",encoding="GBK") as file:
         reader = csv.reader(file)
         next(reader)
         for row in reader:

@@ -14,7 +14,7 @@ if filename == '':
     exit(-1)
 
 sales = []
-file=open(filename,mode="r",encoding="UTF-8")
+file=open(filename,mode="r",encoding="GBK")
 while True:
     name = file.readline()
     print(f"---{name}---")
@@ -41,7 +41,7 @@ if filename == '':
     exit(-1)
 
 
-file=open(filename,mode="w",encoding="UTF-8")
+file=open(filename,mode="w",encoding="GBK")
 for i in range(len(sales)):
     sale = sales[i]
     file.write(f"{sale.name}\t{sale.price}\t{sale.quantity}\n")

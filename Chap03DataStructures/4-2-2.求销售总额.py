@@ -16,7 +16,7 @@ def read_csv(filename):
     :return: 销售记录列表
     """
     sales = []
-    with open(filename,mode="r",encoding="UTF-8") as file:
+    with open(filename,mode="r",encoding="GBK") as file:
         reader = csv.reader(file)
         row=next(reader)
         for row in reader:

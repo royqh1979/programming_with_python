@@ -12,7 +12,7 @@ from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 
 def f(x,y):
-    return -np.exp()
+    return (70-5*x+4*y)*(x-1)+(80+6*x-7*y)*(y-1.2)
 
 fig = plt.figure()
 ax = Axes3D(fig)

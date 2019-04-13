@@ -15,7 +15,7 @@ if filename == '':
     exit(-1)
 
 sales = []
-with open(filename,mode="r",encoding="UTF-8") as file:
+with open(filename,mode="r",encoding="GBK") as file:
     reader = csv.reader(file)
     next(reader) # 跳过csv第一行 (标题行)
     for row in reader:
@@ -37,7 +37,7 @@ if filename == '':
     print("未选择文件")
     exit(-1)
 
-with open(filename,mode="w",encoding="UTF-8") as file:
+with open(filename,mode="w",encoding="GBK") as file:
     file.write(f"商品名称,单价,数量\n")
     for i in range(len(sales)):
         sale = sales[i]

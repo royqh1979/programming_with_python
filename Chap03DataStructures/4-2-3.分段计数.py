@@ -2,6 +2,8 @@ import easygraphics.dialog as dlg
 import csv
 from decimal import Decimal
 
+
+
 class Score:
     def __init__(self,id,name,score):
         self.id = id
@@ -15,7 +17,7 @@ def read_csv_file(filename):
     :return: scores列表
     """
     scores = []
-    with open(filename, mode="r", encoding="UTF-8") as file:
+    with open(filename, mode="r", encoding="GBK") as file:
         reader = csv.reader(file)
         next(reader)  # 跳过csv第一行 (标题行)
         for row in reader:
@@ -53,6 +55,12 @@ nums = count_scores(scores)
 
 for i in range(10):
     print(f"分数段{i*10}-{(i+1)*10}人数:{nums[i]}")
+
+# 画柱状图
+import matplotlib.pyplot as plt
+labels = [f"{i*10}-{(i+1)*10}" for i in range(10)]
+plt.bar(labels,nums)
+plt.show()
 
 
 

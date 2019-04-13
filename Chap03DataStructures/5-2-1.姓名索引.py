@@ -24,7 +24,7 @@ def read_csv(filename):
     :return: 学生成绩列表
     """
     scores = []
-    with open(filename, mode = "r", encoding="UTF-8") as file:
+    with open(filename, mode = "r", encoding="GBK") as file:
         reader = csv.reader(file)
         next(reader)
         for row in reader:

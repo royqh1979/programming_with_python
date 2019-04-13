@@ -7,7 +7,7 @@ filename = dlg.get_open_file_name("请选择要打开的csv文件",dlg.FileFilte
 if filename =="":
     print("未选择文件")
     exit(-1)
-with open(filename,mode="r",encoding="UTF-8") as file:
+with open(filename,mode="r",encoding="GBK") as file:
     df=pd.read_csv(file)
 df["销售额"]=df["单价"]*df["数量"]
 index=df["销售额"]>100 #生成筛选bool数组
