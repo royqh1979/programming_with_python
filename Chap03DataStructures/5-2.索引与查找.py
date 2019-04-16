@@ -34,10 +34,9 @@ def create_index(scores):
     :param scores: 要索引的scores列表
     :return: index索引列表
     """
-    index = [-1]*(MAX_ID+1)
-    for i in range(len(scores)):
-        s=scores[i]
-        index[s.id] = i
+    index = [None]*(MAX_ID+1)
+    for s in scores:
+        index[s.id] = s
     return index
 
 def find_using_index(index,id_key):
@@ -45,7 +44,7 @@ def find_using_index(index,id_key):
     使用index索引列表，查找学号等于id_key在scores列表中的下标
     :param index: 索引列表
     :param id_key: 要查找的学号
-    :return: 学生在scores列表中的下标。-1表示列表中无此学生。
+    :return: 学号为id_key的学生。None表示无此学生。
     """
     return index[id_key]
 
@@ -59,9 +58,8 @@ scores = read_csv(filename)
 dlg.show_objects(scores)
 index = create_index(scores)
 id = int(dlg.get_string("请输入要查找的id"))
-i = find_using_index(index,id)
-if i==-1:
+found = find_using_index(index,id)
+if found is None:
     dlg.show_message(f"找不到id为{id}的学生")
 else:
-    s=scores[i]
-    dlg.show_message(f"id: {s.id} 姓名: {s.name} 成绩：{s.score}")
+    dlg.show_message(f"id: {found.id} 姓名: {found.name} 成绩：{found.score}")
