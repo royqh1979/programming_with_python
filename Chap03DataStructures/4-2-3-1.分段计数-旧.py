@@ -35,24 +35,10 @@ def count_scores(scores):
     :param scores: scores列表
     :return: 分段计数结果列表
     """
-    nums=[0]*10
-    params =[
-        (0,10,0),
-        (10,20,1),
-        (20,30,2),
-        (30, 40, 3),
-        (40, 50, 4),
-        (50, 60, 5),
-        (60, 70, 6),
-        (70, 80, 7),
-        (80, 90, 8),
-        (90, 100, 9)
-    ]
+    nums = [0]*10
     for s in scores:
-        for p in params:
-            start,end,index=p
-            if start <=s.score < end:
-                nums[index]+=1
+        c=int(s.score // 10)
+        nums[c]+=1
     return nums
 
 # 读取文件
