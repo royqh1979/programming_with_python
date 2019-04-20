@@ -20,43 +20,56 @@ def show_fraction(f:Fraction):
 
 class Model:
     def __init__(self, **kwargs):
+        """
+        创建优化模型，并建立（最大化）优化目标函数
+
+        :param kwargs: 目标函数中各变量的系数
+        """
         self.variables = [] # 所有变量，包括松弛变量
-        self.objective = [] # 优化目标中包含的变量
-        self.coefficients = [] # 存储扩展后方程组左侧的系数
+        self.real_variables = [] # 优化目标中包含的变量
+        self.left_side = [] # 存储扩展后方程组左侧的系数矩阵（用二维列表表示）
         self.right_side = [] # 存储扩展后方程组右侧的常数
         self.ratio = [] # 存储各方程组的离速
         self.basic_variables = [] # 基变量列表
 
-        eq0 = [Fraction(1)]
+        # equation 0 为方程组中的第一个方程，即目标函数方程
+        # 创建该方程
+        equation0_left = [Fraction(1)]
         for v in kwargs:
             self.variables.append(v)
-            self.objective.append(len(self.variables)-1)
-            eq0.append(Fraction(-kwargs[v]))
-
-        self.coefficients.append(eq0)
+            self.real_variables.append(len(self.variables) - 1)
+            equation0_left.append(Fraction(-kwargs[v]))
+        self.left_side.append(equation0_left)
         self.right_side.append(Fraction(0))
-        self.ratio.append('')
-        self.basic_variables.append(None)
+        self.ratio.append('')             # 该方程的离速（无）
+        self.basic_variables.append(None) # 该方程对应的基变量（无）
 
 
 
-    def add_constraint(self,constaint,**kwargs):
-        for eq in self.coefficients:
-            eq.append(Fraction(0))
-        eq=[Fraction(0)]
+    def add_constraint(self,constaint,**kwargs)->None:
+        """
+        添加约束（小于等于）
+
+        :param constaint: 右侧的约束值，必须大于0
+        :param kwargs: 左侧各变量的系数
+        :return: 无
+        """
+        for equation_left_side in self.left_side:
+            equation_left_side.append(Fraction(0))
+        equation_left_side=[Fraction(0)]
         for var in self.variables:
             if var in kwargs:
-                eq.append(Fraction(kwargs[var]))
+                equation_left_side.append(Fraction(kwargs[var]))
             else:
-                eq.append(Fraction(0))
-        eq.append(Fraction(1))
-        self.coefficients.append(eq)
+                equation_left_side.append(Fraction(0))
+        equation_left_side.append(Fraction(1))
+        self.left_side.append(equation_left_side)
         self.right_side.append(constaint)
         self.ratio.append('')
-        self.variables.append('_s'+str(len(self.coefficients)-1))
+        self.variables.append('_s' + str(len(self.left_side) - 1))
         self.basic_variables.append(len(self.variables)-1)
 
-    def display(self):
+    def _display(self):
         print(f'BV.\t\tEq.\t\tZ',end='')
         for var in self.variables:
             print(f'\t\t{var}',end='')
@@ -67,14 +80,14 @@ class Model:
                 print(f"obj\t\t({i})",end='')
             else:
                 print(f'{self.variables[self.basic_variables[i]]}\t\t({i})',end='')
-            eq=self.coefficients[i]
+            eq=self.left_side[i]
             for c in eq:
                 print(f'\t\t{show_fraction(c)}',end='')
             print(f'\t\t{show_fraction(self.right_side[i])}',end='')
             print(f'\t\t{self.ratio[i]}')
 
-    def done(self):
-        self.display()
+    def solve(self):
+        self._display()
         iteration = 0
         while True:
             iteration += 1
@@ -82,7 +95,7 @@ class Model:
             print('---------------------------------')
             print("Optimality Test:")
             # find the variable with the minimum negative coeffecient
-            eq0 = self.coefficients[0]
+            eq0 = self.left_side[0]
             min_v = 0
             min_i = -1
             for i in range(len(eq0)):
@@ -98,8 +111,8 @@ class Model:
             print("Minumum Ratio Test:")
             min_ratio = None
             min_i = -1
-            for i in range(1,len(self.coefficients)):
-                eq = self.coefficients[i]
+            for i in range(1, len(self.left_side)):
+                eq = self.left_side[i]
                 if eq[enter_basic] == 0:
                     self.ratio[i] = ''
                 else:
@@ -119,26 +132,26 @@ class Model:
             print("leaving basic:",self.variables[leaving_basic])
 
             #Gaussian Elimination
-            leaving_basic_eq = self.coefficients[min_i]
+            leaving_basic_eq = self.left_side[min_i]
             denominator = leaving_basic_eq[enter_basic]
             for i in range(len(leaving_basic_eq)):
                 leaving_basic_eq[i] /= denominator
             self.right_side[min_i] /= denominator
             self.basic_variables[min_i]=enter_basic-1
-            for i in range(len(self.coefficients)):
+            for i in range(len(self.left_side)):
                 if i==min_i:
                     continue
-                eq=self.coefficients[i]
+                eq=self.left_side[i]
                 multiple = eq[enter_basic]
                 for j in range(len(eq)):
                     eq[j] -= multiple * leaving_basic_eq[j]
                 self.right_side[i] -= multiple * self.right_side[min_i]
-            self.display()
-        self.display_solution()
+            self._display()
+        self._display_solution()
 
-    def display_solution(self):
+    def _display_solution(self):
         print("The optiomal solution:")
-        for i in self.objective:
+        for i in self.real_variables:
             found = False
             for j in range(1,len(self.basic_variables)):
                 basic_variable = self.basic_variables[j]
@@ -150,9 +163,9 @@ class Model:
                 print(f'{self.variables[i]}: 0')
         print("objective value: ",self.right_side[0])
         print("shadow price:")
-        eq0 = self.coefficients[0]
-        for i in range(1,len(self.coefficients)):
-            slack_index = len(self.objective)-1+i
+        eq0 = self.left_side[0]
+        for i in range(1, len(self.left_side)):
+            slack_index = len(self.real_variables) - 1 + i
             print(f"shadow price for constaint {i}:",eq0[slack_index+1])
 
 
@@ -161,15 +174,15 @@ model = Model(x1=3,x2=5)
 model.add_constraint(4,x1=1)
 model.add_constraint(12,x2=2)
 model.add_constraint(18,x1=3,x2=2)
-model.done()
+model.solve()
 
 # model = Model(x1=3,x2=2)
 # model.add_constraint(4,x1=1)
 # model.add_constraint(12,x2=2)
 # model.add_constraint(18,x1=3,x2=2)
-# model.done()
+# model.solve()
 
 # model = Model(x1=40,x2=30)
 # model.add_constraint(120,x1=4,x2=3)
 # model.add_constraint(50,x1=2,x2=1)
-# model.done()
+# model.solve()
