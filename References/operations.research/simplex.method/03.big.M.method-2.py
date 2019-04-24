@@ -294,12 +294,10 @@ class Model:
                     self.ratio[i] = ''
                 else:
                     denominator = eq[enter_basic]
-                    if denominator == 0:
+                    if denominator <= 0:
                         self.ratio[i] == ''
                     else:
                         self.ratio[i] = self.right_side[i] / denominator
-                        if self.ratio[i] <= 0:
-                            continue
                         if min_ratio is None or self.ratio[i] < min_ratio:
                             min_ratio = self.ratio[i]
                             min_i = i

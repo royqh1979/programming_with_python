@@ -117,12 +117,10 @@ class Model:
                     self.ratio[i] = ''
                 else:
                     denominator = eq[enter_basic]
-                    if denominator == 0:
+                    if denominator <=0:
                         self.ratio[i] == ''
                     else:
                         self.ratio[i] = self.right_side[i]/denominator
-                        if self.ratio[i]<=0:
-                            continue
                         if min_ratio is None or self.ratio[i] < min_ratio:
                             min_ratio = self.ratio[i]
                             min_i = i
@@ -170,10 +168,17 @@ class Model:
 
 
 
-model = Model(x1=3,x2=5)
-model.add_constraint(4,x1=1)
-model.add_constraint(12,x2=2)
-model.add_constraint(18,x1=3,x2=2)
+# model = Model(x1=3,x2=5)
+# model.add_constraint(4,x1=1)
+# model.add_constraint(12,x2=2)
+# model.add_constraint(18,x1=3,x2=2)
+# model.solve()
+
+model = Model(x1=4,x2=-2,x3=7,x4=-1)
+model.add_constraint(10,x1=1,x3=5)
+model.add_constraint(1, x1=1,x2=1,x3=-1)
+model.add_constraint(0,x1=6,x2=-5)
+model.add_constraint(3,x1=-1,x3=2,x4=-2)
 model.solve()
 
 # model = Model(x1=3,x2=2)

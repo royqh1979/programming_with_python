@@ -9,7 +9,6 @@
 """
 from fractions import Fraction
 from enum import Enum
-from decimal import Decimal
 
 
 class OptimizationType(Enum):
@@ -18,8 +17,8 @@ class OptimizationType(Enum):
 
 
 class Model:
-    def __init__(self, type=OptimizationType.maximization, **kwargs):
-        self.variables = []  # 所有变量，包括松弛变量
+    def __init__(self, type=OptimizationType.maximization, enable_log = True, **kwargs):
+        self.variable_names = []  # 所有变量的变量名，包括松弛变量
         self.real_variables = []  # 优化目标中包含的变量
         self.left_side = []  # 存储扩展后方程组左侧的系数
         self.right_side = []  # 存储扩展后方程组右侧的常数
@@ -29,20 +28,22 @@ class Model:
         self.artificial_variables = []  # 人工变量列表
         self.surplus_variables = []  # 剩余变量
         self.objective=[] # 最终的优化目标
+        self.type = type
+        self.enable_log = enable_log
 
 
         if type == OptimizationType.maximization:
             equation0 = [1]
             for v in kwargs:
-                self.variables.append(v)
-                self.real_variables.append(len(self.variables) - 1)
-                equation0.append(-kwargs[v])
+                self.variable_names.append(v)
+                self.real_variables.append(len(self.variable_names) - 1)
+                equation0.append(-Fraction(kwargs[v]))
         else:
             equation0 = [-1]
             for v in kwargs:
-                self.variables.append(v)
-                self.real_variables.append(len(self.variables) - 1)
-                equation0.append(kwargs[v])
+                self.variable_names.append(v)
+                self.real_variables.append(len(self.variable_names) - 1)
+                equation0.append(Fraction(kwargs[v]))
 
         self.objective = equation0
         self.left_side.append([])
@@ -52,66 +53,78 @@ class Model:
 
 
     def add_equal_constraint(self, constraint, **kwargs):
+        if constraint<0:
+            for var_name in kwargs:
+                kwargs[var_name] = -kwargs[var_name]
+            self.add_equal_constraint(-constraint, **kwargs)
         for i in range(1, len(self.left_side)):
             eq = self.left_side[i]
             eq.append(0)
         eq = [0]
-        for var in self.variables:
-            if var in kwargs:
-                eq.append(kwargs[var])
+        for var_name in self.variable_names:
+            if var_name in kwargs:
+                eq.append(Fraction(kwargs[var_name]))
             else:
                 eq.append(0)
         eq.append(1)
         self.left_side.append(eq)
-        self.variables.append('_a' + str(len(self.artificial_variables) + 1))
-        self.artificial_variables.append(len(self.variables) - 1)
-        self.basic_variables.append(len(self.variables) - 1)
-        self.right_side.append(constraint)
+        self.variable_names.append('_a' + str(len(self.artificial_variables) + 1))
+        self.artificial_variables.append(len(self.variable_names) - 1)
+        self.basic_variables.append(len(self.variable_names) - 1)
+        self.right_side.append(Fraction(constraint))
         self.ratio.append('')
 
     def add_greater_constraint(self, constraint, **kwargs):
+        if constraint<0:
+            for var_name in kwargs:
+                kwargs[var_name] = -kwargs[var_name]
+            self.add_less_constraint(-constraint, **kwargs)
         for i in range(1, len(self.left_side)):
             eq = self.left_side[i]
             eq.append(0)
             eq.append(0)
         eq = [0]
-        for var in self.variables:
-            if var in kwargs:
-                eq.append(kwargs[var])
+        for var_name in self.variable_names:
+            if var_name in kwargs:
+                eq.append(Fraction(kwargs[var_name]))
             else:
                 eq.append(0)
         eq.append(-1)
         eq.append(1)
         self.left_side.append(eq)
-        self.variables.append('_ss' + str(len(self.surplus_variables) + 1))
-        self.surplus_variables.append(len(self.variables) - 1)
-        self.variables.append('_a' + str(len(self.artificial_variables) + 1))
-        self.artificial_variables.append(len(self.variables) - 1)
-        self.basic_variables.append(len(self.variables) - 1)
-        self.right_side.append(constraint)
+        self.variable_names.append('_ss' + str(len(self.surplus_variables) + 1))
+        self.surplus_variables.append(len(self.variable_names) - 1)
+        self.variable_names.append('_a' + str(len(self.artificial_variables) + 1))
+        self.artificial_variables.append(len(self.variable_names) - 1)
+        self.basic_variables.append(len(self.variable_names) - 1)
+        self.right_side.append(Fraction(constraint))
         self.ratio.append('')
 
     def add_less_constraint(self, constraint, **kwargs):
+        if constraint<0:
+            for var_name in kwargs:
+                kwargs[var_name] = -kwargs[var_name]
+            self.add_greater_constraint(-constraint, **kwargs)
         for i in range(1, len(self.left_side)):
             eq = self.left_side[i]
             eq.append(0)
         eq = [0]
-        for var in self.variables:
-            if var in kwargs:
-                eq.append(kwargs[var])
+        for var_name in self.variable_names:
+            if var_name in kwargs:
+                eq.append(Fraction(kwargs[var_name]))
             else:
                 eq.append(0)
         eq.append(1)
         self.left_side.append(eq)
-        self.variables.append('_s' + str(len(self.slack_variables) + 1))
-        self.slack_variables.append(len(self.variables) - 1)
-        self.basic_variables.append(len(self.variables) - 1)
-        self.right_side.append(constraint)
+        self.variable_names.append('_s' + str(len(self.slack_variables) + 1))
+        self.slack_variables.append(len(self.variable_names) - 1)
+        self.basic_variables.append(len(self.variable_names) - 1)
+        self.right_side.append(Fraction(constraint))
         self.ratio.append('')
 
     def _display(self):
         print(f'BV.\t\tEq.\t\tZ', end='')
-        for var in self.variables:
+        for var in self.variable_names:
             print(f'\t\t{var}', end='')
         print('\t\tRight\t\tRatio')
 
@@ -119,7 +132,7 @@ class Model:
             if i == 0:
                 print(f"obj\t\t({i})", end='')
             else:
-                print(f'{self.variables[self.basic_variables[i]]}\t\t({i})', end='')
+                print(f'{self.variable_names[self.basic_variables[i]]}\t\t({i})', end='')
             eq = self.left_side[i]
             for c in eq:
                 print(f'\t\t{c}', end='')
@@ -127,7 +140,7 @@ class Model:
             print(f'\t\t{self.ratio[i]}')
 
     def _prepare_first_phase(self):
-        eq0=[0]*len(self.variables)
+        eq0=[0]*len(self.variable_names)
         for i in self.artificial_variables:
             eq0[i]=1
         eq0=[-1]+eq0
@@ -142,12 +155,14 @@ class Model:
 
     def _solve(self):
         iteration = 0
-        self._display()
+        if self.enable_log:
+            self._display()
         while True:
             iteration += 1
-            print(f'iteration {iteration}:')
-            print('---------------------------------')
-            print("Optimality Test:")
+            if self.enable_log:
+                print(f'iteration {iteration}:')
+                print('---------------------------------')
+                print("Optimality Test:")
             # find the variable with the minimum negative coeffecient
             eq0 = self.left_side[0]
             min_v = 0
@@ -157,12 +172,15 @@ class Model:
                     min_v = eq0[i]
                     min_i = i
             if min_v == 0:
-                print("The solution is optimal")
+                if self.enable_log:
+                    print("The solution is optimal")
                 break
             enter_basic = min_i
-            print("Entering basic :", self.variables[enter_basic - 1])
+            if self.enable_log:
+                print("Entering basic :", self.variable_names[enter_basic - 1])
 
-            print("Minumum Ratio Test:")
+            if self.enable_log:
+                print("Minumum Ratio Test:")
             min_ratio = None
             min_i = -1
             for i in range(1, len(self.left_side)):
@@ -171,19 +189,18 @@ class Model:
                     self.ratio[i] = ''
                 else:
                     denominator = eq[enter_basic]
-                    if denominator == 0:
+                    if denominator <= 0:
                         self.ratio[i] == ''
                     else:
                         self.ratio[i] = self.right_side[i] / denominator
-                        if self.ratio[i] <= 0:
-                            continue
                         if min_ratio is None or self.ratio[i] < min_ratio:
                             min_ratio = self.ratio[i]
                             min_i = i
             if min_i == -1:
                 raise RuntimeError("can't find the minimum ratio!")
             leaving_basic = self.basic_variables[min_i]
-            print("leaving basic:", self.variables[leaving_basic])
+            if self.enable_log:
+                print("leaving basic:", self.variable_names[leaving_basic])
 
             # Gaussian Elimination
             leaving_basic_eq = self.left_side[min_i]
@@ -200,7 +217,8 @@ class Model:
                 for j in range(len(eq)):
                     eq[j] -= multiple * leaving_basic_eq[j]
                 self.right_side[i] -= multiple * self.right_side[min_i]
-            self._display()
+            if self.enable_log:
+                self._display()
 
     def _prepare_second_pass(self):
         # drop artificial variables
@@ -239,42 +257,55 @@ class Model:
 
     def solve(self):
         if len(self.artificial_variables)>0:
-            print("======First Phase=======:")
+            if self.enable_log:
+                print("======First Phase=======:")
             self._prepare_first_phase()
             self._solve()  # solve first phase
             if self._no_feasible_solution_test():
-                print("~~~~~~~~~~~~~~~~~~~~~~")
-                print("Some artificial variable is none zero!")
-                print("No feasible solution!")
+                if self.enable_log:
+                    print("~~~~~~~~~~~~~~~~~~~~~~")
+                    print("Some artificial variable is none zero!")
+                    print("No feasible solution!")
                 return None
-            print("======Second Phase=======:")
+            if self.enable_log:
+                print("======Second Phase=======:")
             self._prepare_second_pass()
-            self._solve()
+            self._solve() # solve the second phase
         else:
             self._prepare()
             self._solve()
-        self._display_solution()
+        if self.enable_log:
+            self._display_solution()
+        return self.get_result()
 
     def _display_solution(self):
         print("The optiomal solution:")
+        object,params = self.get_result()
+        for var_name in params:
+            print(f'{var_name}: {params[var_name]}')
+        print("objective value: ", object)
+
+    def get_result(self):
+        object = self.right_side[0] * self.left_side[0][0]
+        params = {}
         for i in self.real_variables:
             found = False
             for j in range(1, len(self.basic_variables)):
                 basic_variable = self.basic_variables[j]
                 if i == basic_variable:
-                    print(f'{self.variables[i]}: {self.right_side[j]}')
+                    params[self.variable_names[i]] = self.right_side[j]
                     found = True
                     break
             if not found:
-                print(f'{self.variables[i]}: 0')
-        print("objective value: ", self.right_side[0] * self.left_side[0][0])
+                params[self.variable_names[i]]=0
+        return object,params
 
 
-# model = Model(type=OptimizationType.minimization, x1=Fraction(4, 10), x2=Fraction(5, 10))
-# model.add_less_constraint(Fraction(27, 10), x1=Fraction(3, 10), x2=Fraction(1, 10))
-# model.add_equal_constraint(6, x1=Fraction(5, 10), x2=Fraction(5, 10))
-# model.add_greater_constraint(6, x1=Fraction(6, 10), x2=Fraction(4, 10))
-# model.solve()
+model = Model(type=OptimizationType.minimization, x1='0.4', x2='0.5')
+model.add_less_constraint('2.7', x1='0.3', x2='0.1')
+model.add_equal_constraint(6, x1='0.5', x2='0.5')
+model.add_greater_constraint(6, x1='0.6', x2='0.4')
+model.solve()
 
 # model = Model(x1=3,x2=5)
 # model.add_less_constraint(4,x1=1)
@@ -283,8 +314,8 @@ class Model:
 # model.solve()
 
 # No feasible solution
-model = Model(type=OptimizationType.minimization, x1=Fraction(4, 10), x2=Fraction(5, 10))
-model.add_less_constraint(Fraction(18, 10), x1=Fraction(3, 10), x2=Fraction(1, 10))
-model.add_equal_constraint(6, x1=Fraction(5, 10), x2=Fraction(5, 10))
-model.add_greater_constraint(6, x1=Fraction(6, 10), x2=Fraction(4, 10))
-model.solve()
+# model = Model(type=OptimizationType.minimization, x1=Fraction(4, 10), x2=Fraction(5, 10))
+# model.add_less_constraint(Fraction(18, 10), x1=Fraction(3, 10), x2=Fraction(1, 10))
+# model.add_equal_constraint(6, x1=Fraction(5, 10), x2=Fraction(5, 10))
+# model.add_greater_constraint(6, x1=Fraction(6, 10), x2=Fraction(4, 10))
+# model.solve()

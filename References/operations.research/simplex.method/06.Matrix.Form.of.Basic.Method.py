@@ -82,27 +82,12 @@ class Model:
         return Left, Right
 
     def _optimal_test(self, Left,  non_basic_variables):
+        print("Optimality Test:")
         min_index = np.argmin(Left[0][non_basic_variables])
         min_value = Left[0][non_basic_variables[min_index]]
         if min_value >= 0:
             return None
         return min_index
-
-    def _minimal_ratio_test(self,Left,Right,enter_basic):
-        min_ratio = None
-        min_index = -1
-        for i in range(1, np.size(Left, 0)):
-            enter_basic_coefficient = Left[i, enter_basic]
-            if enter_basic_coefficient <= 0:
-                continue
-            else:
-                ratio = Right[i, 0] / enter_basic_coefficient
-                if min_ratio is None or ratio < min_ratio:
-                    min_ratio = ratio
-                    min_index = i
-        if min_index == -1:
-            raise RuntimeError("can't find the minimum ratio!")
-        return min_index,min_ratio
 
     def solve(self):
         c = np.array(self.objective).reshape((1, len(self.objective)))  # c是行向量
@@ -137,7 +122,19 @@ class Model:
             print("Entering basic :", self.variable_names[enter_basic])
 
             print("Minimum Ratio Test:")
-            min_index,min_ratio = self._minimal_ratio_test(Left,Right,enter_basic)
+            min_ratio = None
+            min_index = -1
+            for i in range(1, np.size(Left, 0)):
+                enter_basic_coefficient = Left[i, enter_basic]
+                if enter_basic_coefficient == 0:
+                    continue
+                else:
+                    ratio = Right[i, 0] / enter_basic_coefficient
+                    if ratio <= 0:
+                        continue
+                    if min_ratio is None or ratio < min_ratio:
+                        min_ratio = ratio
+                        min_index = i
             if min_index == -1:
                 raise RuntimeError("can't find the minimum ratio!")
             leaving_basic_index = min_index - 1
