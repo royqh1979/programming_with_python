@@ -6,11 +6,31 @@
 或者 变量的线性组合 = 常数 形式
 或者 变量的线性组合 >= 常数 形式
 
+算法描述见 《运筹学导论》第8版 Introduction to Operations Research 清华大学出版社 第4.6章
 """
 from fractions import Fraction
 from enum import Enum
 from decimal import Decimal
 
+#The ANSI escape sequences （用于显示带颜色字符）
+class Color:
+    Reset = '\033[0m'
+    Black = '\033[30m'
+    Red = '\033[31m'
+    Green = '\033[32m'
+    Yellow = '\033[33m'
+    Blue = '\033[34m'
+    Magenta = '\033[35m'
+    Cyan = '\033[36m'
+    White = '\033[37m'
+    Black_Background = '\033[40m'
+    Red_Background = '\033[41m'
+    Green_Background = '\033[42m'
+    Yellow_Background = '\033[43m'
+    Blue_Background = '\033[44m'
+    Magenta_Background = '\033[45m'
+    Cyan_Background = '\033[46m'
+    White_Background = '\033[47m'
 
 class FractionWithM:
     """
@@ -133,6 +153,8 @@ class FractionWithM:
                 str = '0'
         return str
 
+    def __format__(self, format_spec):
+        return format(str(self), format_spec)
 
 class OptimizationType(Enum):
     maximization = 1
@@ -231,22 +253,58 @@ class Model:
         self.slack_variables.append(len(self.variables) - 1)
         self.basic_variables.append(len(self.variables) - 1)
 
-    def _display(self):
-        print(f'BV.\t\tEq.\t\tZ', end='')
-        for var in self.variables:
-            print(f'\t\t{var}', end='')
-        print('\t\tRight\t\tRatio')
+    def _display(self, enter_basic=-2, leaving_basic=-2, highlight=True):
+        """
+        显示迭代表
 
+        :param enter_basic:
+        :param leaving_basic:
+        :param highlight:
+        :return:
+        """
+        # 扩展表标题 第一行
+        print(f'{"Basic":<10} {"Equation":<10} {"Z":<8}', end='')
+        for i in range(len(self.variables)):
+            var = self.variables[i]
+            if i == enter_basic:  # 用红色显示入基变量
+                print(f' {Color.Red}{var:<8}{Color.Reset}', end='')
+            else:
+                print(f' {var:<8}', end='')
+        if highlight:
+            print(f'{"Right":<8} {"Ratio":<10}')
+        else:
+            print(f'{"Right":<8}')
+
+        # 扩展表标题 第二行
+        print(f'{"Variables":<10} {"":<10} {"":<8}', end='')
+        print(' ' * len(self.variables) * 9, end='')
+        print(f'{"Side":<8}')
+
+        # 扩展表内容
         for i in range(len(self.basic_variables)):
             if i == 0:
-                print(f"obj\t\t({i})", end='')
+                print(f"{'obj.':<10} {'(' + str(i) + ')':<10}", end='')
+            elif i == leaving_basic:  # 用紫色显示出基变量系数
+                print(f'{Color.Magenta}{self.variables[self.basic_variables[i]]:<10} {"(" + str(i) + ")":<10}{Color.Reset}', end='')
             else:
-                print(f'{self.variables[self.basic_variables[i]]}\t\t({i})', end='')
-            eq = self.left_side[i]
-            for c in eq:
-                print(f'\t\t{c}', end='')
-            print(f'\t\t{self.right_side[i]}', end='')
-            print(f'\t\t{self.ratio[i]}')
+                print(f'{self.variables[self.basic_variables[i]]:<10} {"(" + str(i) + ")":<10}', end='')
+
+            equation_left = self.left_side[i]
+            for j in range(len(equation_left)):
+                c = equation_left[j]
+                if j == enter_basic + 1:  # 用红色显示入基变量系数
+                    print(f' {Color.Red}{c:<8}{Color.Reset}', end='')
+                elif i == leaving_basic:  # 用紫色显示出基变量系数
+                    print(f' {Color.Magenta}{c:<8}{Color.Reset}', end='')
+                else:
+                    print(f' {c:<8}', end='')
+
+            if i == leaving_basic:  # 用紫色显示出基变量系数
+                print(Color.Magenta, end='')
+            print(f'{self.right_side[i]:<8}', end='')
+            if highlight:
+                print(f' {self.ratio[i] :<10}', end='')
+            print(Color.Reset)
 
     def _eliminate_artificials(self):
         artificials = self.artificial_variables[:]
@@ -260,17 +318,20 @@ class Model:
             self.right_side[0] -= co_of_artificial * self.right_side[index]
 
     def solve(self):
-        self._display()
+        print("Intial form:")
+        print('---------------------------------')
+        self._display(highlight=False)
+        print()
         print("Converting Equaiton(0) to proper form:")
         print('---------------------------------')
         self._eliminate_artificials()
-        self._display()
+        self._display(highlight=False)
         iteration = 0
         while True:
             iteration += 1
             print(f'iteration {iteration}:')
             print('---------------------------------')
-            print("Optimality Test:")
+            # Optimality Test
             # find the variable with the minimum negative coeffecient
             eq0 = self.left_side[0]
             min_v = FractionWithM(0)
@@ -283,9 +344,8 @@ class Model:
                 print("The solution is optimal")
                 break
             enter_basic = min_i
-            print("Entering basic :", self.variables[enter_basic - 1])
 
-            print("Minumum Ratio Test:")
+            # Minumum Ratio Test
             min_ratio = None
             min_i = -1
             for i in range(1, len(self.left_side)):
@@ -302,8 +362,13 @@ class Model:
                             min_ratio = self.ratio[i]
                             min_i = i
             if min_i == -1:
-                raise RuntimeError("can't find the minimum ratio!")
+                print("can't find the minimum ratio!")
+                return
+            leaving_basic_eq_index = min_i
             leaving_basic = self.basic_variables[min_i]
+
+            self._display(enter_basic-1,leaving_basic_eq_index)
+            print("Entering basic :", self.variables[enter_basic - 1])
             print("leaving basic:", self.variables[leaving_basic])
 
             # Gaussian Elimination
@@ -321,7 +386,8 @@ class Model:
                 for j in range(len(eq)):
                     eq[j] -= multiple * leaving_basic_eq[j]
                 self.right_side[i] -= multiple * self.right_side[min_i]
-            self._display()
+
+        self._display(highlight = False)
         self._display_solution()
 
     def _display_solution(self):
