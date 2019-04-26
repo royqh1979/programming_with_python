@@ -556,8 +556,10 @@ class IntegerModel:
                 self.upper_bounds[var_name] = value
                 self.lower_bounds[var_name] = value
         else:
-            right = constraint
-            left = kwargs.copy()
+            right = Fraction(constraint)
+            left = {}
+            for var_name in kwargs:
+                left[var_name] = Fraction(kwargs[var_name])
             constraint = Constraint(left, constraint_type, right)
             self.constraints.append(constraint)
 
