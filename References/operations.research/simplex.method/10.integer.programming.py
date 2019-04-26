@@ -17,24 +17,11 @@ import operator as op
 import math
 import copy
 
-class Color:
-    Reset = '\033[0m'
-    Black = '\033[30m'
-    Red = '\033[31m'
-    Green = '\033[32m'
-    Yellow = '\033[33m'
-    Blue = '\033[34m'
-    Magenta = '\033[35m'
-    Cyan = '\033[36m'
-    White = '\033[37m'
-    Black_Background = '\033[40m'
-    Red_Background = '\033[41m'
-    Green_Background = '\033[42m'
-    Yellow_Background = '\033[43m'
-    Blue_Background = '\033[44m'
-    Magenta_Background = '\033[45m'
-    Cyan_Background = '\033[46m'
-    White_Background = '\033[47m'
+import colorama
+from colorama import Fore,Style
+
+# init windows ansi color
+colorama.init()
 
 class OptimizationType(Enum):
     maximization = 1
@@ -204,11 +191,11 @@ class LinearModel:
         # 扩展表标题 第一行
         print(f'{"Basic":<10} {"Equation":<10} {"Z":<8}',end='')
         for i in range(len(self.variable_names)):
-            var = self.variable_names[i]
+            var_name = self.variable_names[i]
             if i==enter_basic: # 用红色显示入基变量
-                print(f' {Color.Red}{var:<8}{Color.Reset}',end='')
+                print(f' {Fore.RED}{var_name:<8}{Style.RESET_ALL}',end='')
             else:
-                print(f' {var:<8}',end='')
+                print(f' {var_name:<8}',end='')
         if highlight:
             print(f'{"Right":<8} {"Ratio":<10}')
         else:
@@ -216,7 +203,7 @@ class LinearModel:
 
         # 扩展表标题 第二行
         print(f'{"Variables":<10} {"":<10} {"":<8}',end='')
-        print(' '*len(self.variable_names)*9,end='')
+        print(' ' * len(self.variable_names) * 9, end='')
         print(f'{"Side":<8}')
 
         # 扩展表内容
@@ -224,26 +211,26 @@ class LinearModel:
             if i==0:
                 print(f"{'obj.':<10} {'('+str(i)+')':<10}",end='')
             elif i == leaving_basic:  # 用紫色显示出基变量系数
-                print(f'{Color.Magenta}{self.variable_names[self.basic_variables[i]]:<10} {"("+str(i)+")":<10}{Color.Reset}',end='')
+                print(f'{Fore.MAGENTA}{self.variable_names[self.basic_variables[i]]:<10} {"(" + str(i) + ")":<10}{Style.RESET_ALL}', end='')
             else:
-                print(f'{self.variable_names[self.basic_variables[i]]:<10} {"("+str(i)+")":<10}',end='')
+                print(f'{self.variable_names[self.basic_variables[i]]:<10} {"(" + str(i) + ")":<10}', end='')
 
             equation_left=self.left_side[i]
             for j in range(len(equation_left)):
                 c=equation_left[j]
                 if j == enter_basic+1:  # 用红色显示入基变量系数
-                    print(f' {Color.Red}{str(c):<8}{Color.Reset}', end='')
+                    print(f' {Fore.RED}{str(c):<8}{Style.RESET_ALL}', end='')
                 elif i == leaving_basic: # 用紫色显示出基变量系数
-                    print(f' {Color.Magenta}{str(c):<8}{Color.Reset}', end='')
+                    print(f' {Fore.MAGENTA}{str(c):<8}{Style.RESET_ALL}', end='')
                 else:
                     print(f' {str(c):<8}', end='')
 
             if i == leaving_basic:  # 用紫色显示出基变量系数
-                print(Color.Magenta,end='')
+                print(Fore.MAGENTA,end='')
             print(f'{str(self.right_side[i]):<8}', end='')
             if highlight:
                 print(f' {str(self.ratio[i]) :<10}',end='')
-            print(Color.Reset)
+            print(Style.RESET_ALL)
 
     def _prepare_first_phase(self):
         eq0 = [0] * len(self.variable_names)
@@ -470,7 +457,7 @@ def get_floor(value):
         return value.numerator // value.denominator
 
 
-class MaxQueueItem:
+class MaxSearchNode:
     def __init__(self, lower_bounds: Dict[str, Rational], upper_bounds: Dict[str, Rational], optimize_limit: Rational):
         self.lower_bounds = lower_bounds
         self.upper_bounds = upper_bounds
@@ -483,7 +470,7 @@ class MaxQueueItem:
     def __eq__(self, other):
         return self.optimize_limit == other.optimize_limit
 
-class MinQueueItem:
+class MinSearchNode:
     def __init__(self, lower_bounds: Dict[str, Rational], upper_bounds: Dict[str, Rational], optimize_limit: Rational):
         self.lower_bounds = lower_bounds
         self.upper_bounds = upper_bounds
@@ -634,34 +621,34 @@ class IntegerModel:
         #
         # initial
         if self.type == OptimizationType.maximization:
-            QueueItem = MaxQueueItem
+            QueueNode = MaxSearchNode
             cmp_op = op.gt
         else:
-            QueueItem = MinQueueItem
+            QueueNode = MinSearchNode
             cmp_op = op.lt
-        queue:List[QueueItem] = [] # 使用堆来存储，关键字为优化值上/下限
-        item = QueueItem(lower_bounds=self.lower_bounds,
+        queue:List[QueueNode] = [] # 使用堆来存储，关键字为优化值上/下限
+        node = QueueNode(lower_bounds=self.lower_bounds,
                          upper_bounds=self.upper_bounds,
                          optimize_limit=sys.maxsize)
 
-        heapq.heappush(queue, item)
+        heapq.heappush(queue, node)
 
         known_optimal_value = -sys.maxsize
         known_optimal_vars = None
 
         while len(queue) > 0:
-            item = heapq.heappop(queue) # 从堆中取出优化值最优的待选项
-            if  cmp_op(known_optimal_value,item.optimize_limit):
+            node = heapq.heappop(queue) # 从堆中取出优化值最优的待选项
+            if  cmp_op(known_optimal_value,node.optimize_limit):
                 # 如果已知的最优值比待选的最优化值还优，不必继续找了
                 break
             print('---------------------------------------------------')
-            if len(item.splits)>0:
+            if len(node.splits)>0:
                 print("split constraints:")
-                for split in item.splits:
+                for split in node.splits:
                     print("    ",split)
             objective = self.objective.copy()
-            lower_bounds = item.lower_bounds.copy()
-            upper_bounds = item.upper_bounds.copy()
+            lower_bounds = node.lower_bounds.copy()
+            upper_bounds = node.upper_bounds.copy()
 
             # 尝试用各变量的上下限约束夹逼确定该变量的解
             no_solution, known_vars = self._calculate_known_vars(lower_bounds, upper_bounds)
@@ -714,57 +701,72 @@ class IntegerModel:
                 if upper < sys.maxsize:
                     model.add_less_constraint(upper, **params)
 
+            # 对线性规划问题求解
             object_value, var_values = model.solve()
             print("----------------------")
-            if object_value is None:
+            if object_value is None: # 无解
                 print("no solution")
                 continue
+            # 有解
             object_value += basic_object_value
             var_values.update(known_vars)
             print("object:", object_value)
             for var_name in var_values:
                 print(f"{var_name} : {var_values[var_name]}")
 
+            # 如果放松后的线性规划解优于已知最优解，则继续，否则丢弃该搜索方向
             if cmp_op(object_value , known_optimal_value):
                 integer_ok, non_int_var_name = self._integer_constraints_test(var_values)
-                if integer_ok:
+                if integer_ok: # 如果满足所有整数约束，更新最优解
                     known_optimal_value = object_value
                     known_optimal_vars = var_values
-                else:
-                    self._split(queue, item, object_value, non_int_var_name, var_values[non_int_var_name])
+                else: # 不满足所有整数约束，产生分支以继续搜索
+                    self._split(queue, node, object_value, non_int_var_name, var_values[non_int_var_name])
 
         print('---------------')
         if known_optimal_value is None:
             print("Don't find solution!")
+            return None,None
         else:
             print("The final result object:", known_optimal_value)
             for var_name in known_optimal_vars:
                 print(f"{var_name} : {known_optimal_vars[var_name]}")
+            return known_optimal_value,known_optimal_vars
 
-    def _split(self, queue, item, object_value, split_var_name, split_value):
+    def _split(self, queue, node, optimal_value_limit, split_var_name, split_value):
+        """
+        在当前搜索节点基础上，分支产生新的搜索节点
+
+        :param queue: 搜索节点队列（实际为堆（heap)）
+        :param node: 当前搜索节点
+        :param optimal_value_limit: 最优值的上或者下限
+        :param split_var_name: 用于产生分支的变量名
+        :param split_value: 分支变量对应的值
+        """
         if self.type == OptimizationType.maximization:
-            QueueItem = MaxQueueItem
+            SearchNode = MaxSearchNode
         else:
-            QueueItem = MinQueueItem
+            SearchNode = MinSearchNode
 
         print(f"split {split_var_name}: {split_value}")
-        old_lower = item.lower_bounds[split_var_name]
-        old_upper = item.upper_bounds[split_var_name]
-        new_item1 = QueueItem(lower_bounds=item.lower_bounds.copy(),
-                              upper_bounds=item.upper_bounds.copy(),
-                              optimize_limit=object_value
+        old_lower = node.lower_bounds[split_var_name]
+        old_upper = node.upper_bounds[split_var_name]
+        new_node1 = SearchNode(lower_bounds=node.lower_bounds.copy(),
+                              upper_bounds=node.upper_bounds.copy(),
+                              optimize_limit=optimal_value_limit
                               )
-        new_item1.upper_bounds[split_var_name] = min(old_upper, int(math.floor(split_value)))
-        new_item1.splits=item.splits.copy()
-        new_item1.splits.append(f"{split_var_name}<={new_item1.upper_bounds[split_var_name]}")
-        heapq.heappush(queue, new_item1)
-        new_item2 = QueueItem(lower_bounds=item.lower_bounds.copy(),
-                              upper_bounds=item.upper_bounds.copy(),
-                              optimize_limit=object_value)
-        new_item2.lower_bounds[split_var_name] = max(old_lower, int(math.ceil(split_value)))
-        new_item2.splits=item.splits.copy()
-        new_item2.splits.append(f"{split_var_name}>={new_item2.lower_bounds[split_var_name]}")
-        heapq.heappush(queue, new_item2)
+        new_node1.upper_bounds[split_var_name] = min(old_upper, int(math.floor(split_value)))
+        new_node1.splits=node.splits.copy()
+        new_node1.splits.append(f"{split_var_name}<={new_node1.upper_bounds[split_var_name]}")
+        heapq.heappush(queue, new_node1)
+
+        new_node2 = SearchNode(lower_bounds=node.lower_bounds.copy(),
+                               upper_bounds=node.upper_bounds.copy(),
+                               optimize_limit=optimal_value_limit)
+        new_node2.lower_bounds[split_var_name] = max(old_lower, int(math.ceil(split_value)))
+        new_node2.splits=node.splits.copy()
+        new_node2.splits.append(f"{split_var_name}>={new_node2.lower_bounds[split_var_name]}")
+        heapq.heappush(queue, new_node2)
 
 
 # model = IntegerModel(x1=4, x2=-2, x3=7, x4=-1)
