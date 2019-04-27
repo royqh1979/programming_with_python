@@ -24,6 +24,7 @@ print(a)
 
 
 lst_a=['张三','李四','王五','张三','王五','王五','张三','李四']
+
 def add_to_set(name_set,name):
     name_set.add(name)
     return name_set
