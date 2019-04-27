@@ -53,7 +53,6 @@ class Model:
             for v in kwargs:
                 self.variable_names.append(v)
                 self.original_variables.append(len(self.variable_names) - 1)
-                print(kwargs)
                 equation0.append(-Fraction(kwargs[v]))
         else:
             equation0 = [-1]
@@ -300,6 +299,7 @@ class Model:
                 for j in range(len(eq)):
                     eq[j] -= multiple * leaving_basic_eq[j]
                 self.right_side[i] -= multiple * self.right_side[min_i]
+
         if self.enable_log:
             self._display()
         return True
@@ -407,10 +407,15 @@ class Model:
                 params[self.variable_names[i]] = 0
         return object_value, params
 
-model = Model(OptimizationType.minimization, x1='0.4', x2='0.5')
-model.add_less_constraint('2.7', x1='0.3', x2='0.1')
-model.add_equal_constraint(6, x1='0.5', x2='0.5')
-model.add_greater_constraint(6, x1='0.6', x2='0.4')
+# model = Model(opt_type=OptimizationType.minimization, x1='0.4', x2='0.5')
+# model.add_less_constraint('2.7', x1='0.3', x2='0.1')
+# model.add_equal_constraint(6, x1='0.5', x2='0.5')
+# model.add_greater_constraint(6, x1='0.6', x2='0.4')
+# model.solve()
+
+model = Model(opt_type=OptimizationType.minimization, x1=2,x2=3,x3=2)
+model.add_greater_constraint(8,x1=1,x2=4,x3=2)
+model.add_greater_constraint(6,x1=3,x2=2,x3=0)
 model.solve()
 
 # model = Model(x1=3,x2=5)
@@ -420,8 +425,13 @@ model.solve()
 # model.solve()
 
 # No feasible solution
-# model = Model(type=OptimizationType.minimization, x1=Fraction(4, 10), x2=Fraction(5, 10))
+# model = Model(opt_type=OptimizationType.minimization, x1=Fraction(4, 10), x2=Fraction(5, 10))
 # model.add_less_constraint(Fraction(18, 10), x1=Fraction(3, 10), x2=Fraction(1, 10))
 # model.add_equal_constraint(6, x1=Fraction(5, 10), x2=Fraction(5, 10))
 # model.add_greater_constraint(6, x1=Fraction(6, 10), x2=Fraction(4, 10))
+# model.solve()
+
+# model = Model(opt_type=OptimizationType.minimization,x1=3,x2=2,x3=4)
+# model.add_greater_constraint(8,x1=2,x2=1,x3=3)
+# model.add_greater_constraint(6,x1=3,x2=3,x3=5)
 # model.solve()

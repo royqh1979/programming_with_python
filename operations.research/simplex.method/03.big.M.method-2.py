@@ -9,6 +9,7 @@
 算法描述见 《运筹学导论》第8版 Introduction to Operations Research 清华大学出版社 第4.6章
 """
 from bigm import FractionWithM
+from fractions import Fraction
 from enum import Enum
 import colorama
 from colorama import Fore,Style
@@ -270,9 +271,14 @@ class Model:
             print(f"shadow price for constaint {i}:", eq0[slack_index + 1])
 
 
-model = Model(type=OptimizationType.minimization, x1=Fraction(4, 10), x2=Fraction(5, 10))
-model.add_less_constraint(Fraction(27, 10), x1=Fraction(3, 10), x2=Fraction(1, 10))
-model.add_equal_constraint(6, x1=Fraction(5, 10), x2=Fraction(5, 10))
-model.add_greater_constraint(6, x1=Fraction(6, 10), x2=Fraction(4, 10))
+# model = Model(type=OptimizationType.minimization, x1=Fraction(4, 10), x2=Fraction(5, 10))
+# model.add_less_constraint(Fraction(27, 10), x1=Fraction(3, 10), x2=Fraction(1, 10))
+# model.add_equal_constraint(6, x1=Fraction(5, 10), x2=Fraction(5, 10))
+# model.add_greater_constraint(6, x1=Fraction(6, 10), x2=Fraction(4, 10))
+# model.solve()
+
+model = Model(type=OptimizationType.minimization, x1=2,x2=3,x3=2)
+model.add_greater_constraint(8,x1=1,x2=4,x3=2)
+model.add_greater_constraint(6,x1=3,x2=2,x3=0)
 model.solve()
 

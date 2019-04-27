@@ -1,14 +1,13 @@
 """
-基本的单纯形算法实现
+基本的改进单纯形算法实现（The Revised Simplex Method)
 
 要优化的目标为 最大化目标函数值
 约束条件均为 变量的线性组合<=常数 形式
 变量的取值范围均为非负实数
 
-运筹学导论（Introduction to Operations Research 第9版）第5章
+运筹学导论（Introduction to Operations Research 第9版）第5.4章
 """
 import numpy as np
-from numpy.linalg import multi_dot
 
 
 class Model:
@@ -174,7 +173,7 @@ class Model:
             print(E)
 
             self.B_inv = E @ self.B_inv
-            cB = c_base[:, self.basic_variables]
+            cB = -self.t[:, self.basic_variables]
             y_star = cB @ self.B_inv
             t_star = self.t + y_star @ self.T
             T_star = self.B_inv @ self.T
@@ -205,12 +204,15 @@ class Model:
 
         optimal_var_values=optimal_var_values.reshape((optimal_var_values.size))
 
-        optimal_var_names = [self.variable_names[i] for i in self.basic_variables if i in self.original_variables]
+        print(optimal_var_values)
 
-        optimal_vars = dict(zip(optimal_var_names,optimal_var_values))
+        optimal_vars = {}
         for i in self.original_variables:
             if not i in self.basic_variables:
                 optimal_vars[self.variable_names[i]]=0
+            else:
+                index = self.basic_variables.index(i)
+                optimal_vars[self.variable_names[i]]=optimal_var_values[index]
         return optimal_value,optimal_vars
 
 
