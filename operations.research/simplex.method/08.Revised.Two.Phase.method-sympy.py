@@ -7,13 +7,12 @@
 
 需要安装numpy和sympy库
 
-结果为浮点数形式
+结果为分数形式
 """
 from typing import Dict, List
 import sympy as sy
-
-import math
 import numpy as np
+
 from enum import Enum
 
 class OptimizationType(Enum):
@@ -43,10 +42,10 @@ class Model:
         self.type = opt_type
         if opt_type == OptimizationType.maximization:
             for v in kwargs:
-                self.objective[v] = kwargs[v]
+                self.objective[v] = sy.Rational(kwargs[v])
         else:
             for v in kwargs:
-                self.objective[v] = -kwargs[v]
+                self.objective[v] = -sy.Rational(kwargs[v])
 
         self.constraints:List[Constraint] = [] # 约束列表
         self.less_than_constraints = 0 # 小于等于约束数量
@@ -63,14 +62,14 @@ class Model:
         self.non_basic_variables: List[int] = None
         self.basic_variables: List[int] = None
 
-        self.t: np.ndarray = None
-        self.T: np.ndarray = None
-        self.t_star: np.ndarray = None
-        self.T_star: np.ndarray = None
-        self.B_inv: np.ndarray = None
+        self.t = None
+        self.T = None
+        self.t_star = None
+        self.T_star = None
+        self.B_inv = None
 
 
-    def add_constraint(self, constraint: float, constraint_type: ConstraintType, **kwargs):
+    def add_constraint(self, constraint, constraint_type: ConstraintType, **kwargs):
         """
         添加约束
 
@@ -78,13 +77,14 @@ class Model:
         :param constraint_type: 约束类型（大于等于，小于等于，等于）
         :param kwargs: 不等式左侧各变量系数
         """
+        constraint = sy.Rational(constraint)
         if constraint<0:
             right = -constraint
             left = {}
             for var_name in kwargs:
                 if var_name not in self.objective:
                     raise RuntimeError(f'variables \'{var_name}\' not in objective function!')
-                left[var_name] = -kwargs[var_name]
+                left[var_name] = -sy.Rational(kwargs[var_name])
             if constraint_type == ConstraintType.LessEqual:
                 constraint_type = ConstraintType.GreaterEqual
             elif constraint_type == ConstraintType.GreaterEqual:
@@ -95,7 +95,7 @@ class Model:
             for var_name in kwargs:
                 if var_name not in self.objective:
                     raise RuntimeError(f'variables \'{var_name}\' not in objective function!')
-                left[var_name] = kwargs[var_name]
+                left[var_name] = sy.Rational(kwargs[var_name])
         constraint = Constraint(left, constraint_type, right)
         if constraint_type==ConstraintType.LessEqual:
             self.less_than_constraints+=1
@@ -141,13 +141,13 @@ class Model:
         print(f"{'Variables'}")
 
         print(f"{'':<10} {1:<4}",end="")
-        for i in range(np.size(t_star,1)):
-            print(f"{t_star[0,i]:<10f} ",end="")
+        for i in range(t_star.shape[1]):
+            print(f"{str(t_star[0,i]):<10} ",end="")
         print()
-        for i in range(np.size(T_star,0)):
+        for i in range(T_star.shape[0]):
             print(f"{self.variable_names[self.basic_variables[i]]:<10} {0:<4}", end="")
-            for j in range(np.size(T_star, 1)):
-                print(f"{T_star[i, j]:<10f} ", end="")
+            for j in range(T_star.shape[1]):
+                print(f"{str(T_star[i, j]):<10} ", end="")
             print()
 
     def _prepare_first_phase(self):
@@ -156,7 +156,6 @@ class Model:
         for var_name in self.objective:
             original_vars.append(len(var_names))
             var_names.append(var_name)
-
 
         basic_var_names = []
         surplus_var_names = []
@@ -201,20 +200,22 @@ class Model:
         non_basic_vars = list(range(len(var_names)))
         var_names+=basic_var_names
 
-        t = np.repeat(0,len(var_names)+1)
-        t = t.reshape((1,t.size))# t是行向量
-        A = np.array(A)
-        I = np.identity(len(basic_vars))
-        b = np.array(b).reshape((len(b), 1))  # b是列向量
+        t = sy.zeros(1,len(var_names)+1) # t是行向量
+        A = sy.Matrix(A)
+        I = sy.eye(len(basic_vars))
+        b = sy.Matrix(b) # b是列向量
 
-        T = np.block([A, I, b])
-        t[0,artificial_vars]=1
-        # for i in artificial_vars:
-        #     t[0,i]=1
+        T = sy.Matrix(sy.BlockMatrix([[A, I, b]]))
+        for i in artificial_vars:
+            t[0,i]=1
 
         for i in artificial_vars:
             index = basic_vars.index(i)
             t = t - T[index, :]
+
+        print(t)
+
+
 
         self.variable_names = var_names
         self.running_variable_names = var_names
@@ -237,8 +238,14 @@ class Model:
         :param non_basic_variables: 非基变量列表
         :return: None 已经最优， 否则返回入基变量在单纯形表第0行中的位置
         """
-        min_index = np.argmin(t_star[0,non_basic_variables])
-        min_value = t_star[0,non_basic_variables[min_index]]
+        min_index = -1
+        min_value = 0
+        for i in range(len(non_basic_variables)):
+            index = non_basic_variables[i]
+            value = t_star[0,index]
+            if value < min_value:
+                min_value = value
+                min_index = i
         if min_value >= 0:
             return None
         return min_index
@@ -246,12 +253,12 @@ class Model:
     def _minimum_ratio_test(self,T_star,enter_basic):
         min_ratio = None
         min_index = -1
-        for i in range(np.size(T_star, 0)):
+        for i in range(T_star.shape[0]):
             enter_basic_coefficient = T_star[i, enter_basic]
             if enter_basic_coefficient <= 0:
                 continue
             else:
-                ratio = T_star[i, -1] / enter_basic_coefficient
+                ratio = T_star[i, T_star.shape[1]-1] / enter_basic_coefficient
                 if min_ratio is None or ratio < min_ratio:
                     min_ratio = ratio
                     min_index = i
@@ -297,21 +304,23 @@ class Model:
             self.basic_variables[leaving_basic_index] = enter_basic
             self.non_basic_variables[enter_basic_index] = leaving_basic
 
-            E = np.identity(m)
+            E = sy.eye(m)
             r = leaving_basic_index
             a_rk = T_star[r,enter_basic]
 
-            eta = - T_star[:,enter_basic].reshape(m) / np.repeat(a_rk,m)
-            eta[r] = 1/a_rk
-            E[:,r] = eta
+            for i in range(m):
+                if i == r :
+                    E[i,r] = 1/a_rk
+                else:
+                    E[i,r] = -T_star[i,enter_basic] / a_rk
             #
             # print(E)
 
-            self.B_inv = E @ self.B_inv
+            self.B_inv = E * self.B_inv
             cB = -self.t[:, self.basic_variables]
-            y_star = cB @ self.B_inv
-            t_star = self.t + y_star @ self.T
-            T_star = self.B_inv @ self.T
+            y_star = cB * self.B_inv
+            t_star = self.t + y_star * self.T
+            T_star = self.B_inv * self.T
 
         self.t_star,self.T_star = t_star,T_star
         self._display(t_star,T_star)
@@ -337,9 +346,9 @@ class Model:
         :return:
         """
         optimal_var_values = T_star[:,-1]
-        optimal_value = t_star[0][-1]
+        optimal_value = t_star[-1]
 
-        optimal_var_values=optimal_var_values.reshape((optimal_var_values.size))
+        optimal_var_values=optimal_var_values.T
 
         optimal_vars = {}
         for var_name in self.objective:
@@ -360,19 +369,17 @@ class Model:
     def _preare_second_phase(self):
         self.non_basic_variables = [ i for i in self.non_basic_variables if i not in self.artificial_variables]
         A = self.T_star[:,self.non_basic_variables]
-        I = np.identity(len(self.basic_variables))
+        I = sy.eye(len(self.basic_variables))
 
         b=self.T_star[:, -1]
-        b=b.reshape((b.size,1))
-        T=np.block([A, I, b])
+        T=sy.Matrix(sy.BlockMatrix([[A, I, b]]))
 
 
         var_names = np.array(self.variable_names)
         non_basic_varnames = list(var_names[self.non_basic_variables])
         basic_varnames = list(var_names[self.basic_variables])
         new_varnames = non_basic_varnames + basic_varnames
-        t=np.zeros(len(new_varnames)+1)
-        t = t.reshape((1,t.size))
+        t=sy.zeros(1,len(new_varnames)+1)
         for var_name in self.objective:
             index = new_varnames.index(var_name)
             t[0,index] = - self.objective[var_name]
@@ -424,8 +431,8 @@ class Model:
 # model.add_constraint(18, x1=3, x2=2)
 # model.solve()
 
-model = Model(opt_type=OptimizationType.minimization, x1=0.4,x2=0.5)
-model.add_less_constraint(2.7,x1=0.3,x2=0.1)
-model.add_equal_constraint(6,x1=0.5,x2=0.5)
-model.add_greater_constraint(6,x1=0.6,x2=0.4)
+model = Model(opt_type=OptimizationType.minimization, x1='0.4',x2='0.5')
+model.add_less_constraint('2.7',x1='0.3',x2='0.1')
+model.add_equal_constraint(6,x1='0.5',x2='0.5')
+model.add_greater_constraint(6,x1='0.6',x2='0.4')
 model.solve()

@@ -7,11 +7,11 @@
 
 运筹学导论（Introduction to Operations Research 第9版）第5.4章
 
-需要numpy
+需要sympy
 
-结果为浮点数形式
+结果为分数形式
 """
-import numpy as np
+import sympy as sy
 
 
 class Model:
@@ -29,16 +29,16 @@ class Model:
         for v in kwargs:
             self.variable_names.append(v)
             self.original_variables.append(len(self.variable_names) - 1)
-            equation0_coefficients.append(kwargs[v])
+            equation0_coefficients.append(sy.Rational(kwargs[v]))
 
-        self.objective = np.array(equation0_coefficients)  # 目标优化函数的系数向量
+        self.objective = sy.Matrix([equation0_coefficients])  # 目标优化函数的系数向量
         self.constraints_left = []  # 约束的左侧
         self.constraints_right = []  # 约束的右侧
         self.non_basic_variables = [] # 非基变量集合
         self.basic_variables = []  # 基变量集合(下标为约束式序号-1） basic_variables[0]为约束式（1）对应的基变量，依此类推
-        self.B_inv : np.ndarray = None #
-        self.t : np.ndarray = None # Row 0 of the initial tableau
-        self.T : np.ndarray = None # Other rows of the initial tableau
+        self.B_inv : sy.Matrix = None #
+        self.t : sy.Matrix  = None # Row 0 of the initial tableau
+        self.T : sy.Matrix  = None # Other rows of the initial tableau
 
     def add_constraint(self, constaint_value, **kwargs) -> None:
         """
@@ -52,11 +52,11 @@ class Model:
         for real_var in self.original_variables:
             real_var_name = self.variable_names[real_var]
             if real_var_name in kwargs:
-                constraint_left.append(kwargs[real_var_name])
+                constraint_left.append(sy.Rational(kwargs[real_var_name]))
             else:
                 constraint_left.append(0)
         self.constraints_left.append(constraint_left)
-        self.constraints_right.append(constaint_value)
+        self.constraints_right.append(sy.Rational(constaint_value))
         self.variable_names.append('_s' + str(len(self.slack_variables) + 1))
         self.slack_variables.append(len(self.variable_names) - 1)
 
@@ -68,20 +68,19 @@ class Model:
         print(f"{'Variables'}")
 
         print(f"{'':<10} {1:<4}",end="")
-        for i in range(np.size(t_star,1)):
-            print(f"{t_star[0,i]:<10f} ",end="")
+        for i in range(t_star.shape[1]):
+            print(f"{str(t_star[0,i]):<10} ",end="")
         print()
-        for i in range(np.size(T_star,0)):
+        for i in range(T_star.shape[0]):
             print(f"{self.variable_names[self.basic_variables[i]]:<10} {0:<4}", end="")
-            for j in range(np.size(T_star, 1)):
-                print(f"{T_star[i, j]:<10f} ", end="")
+            for j in range(T_star.shape[1]):
+                print(f"{str(T_star[i, j]):<10} ", end="")
             print()
 
-    def _prepare_iteration_0(self, c:np.ndarray, A:np.ndarray, I:np.ndarray, b:np.ndarray)->(np.ndarray,np.ndarray):
-        zeros_1 = np.zeros((1, len(self.slack_variables)))
-
-        t = np.block([-c, zeros_1,0])
-        T = np.block([A, I, b])
+    def _prepare_iteration_0(self, c:sy.Matrix, A:sy.Matrix, I:sy.Matrix, b:sy.Matrix)->(sy.Matrix,sy.Matrix):
+        zeros_1 = sy.zeros(1, len(self.slack_variables)+1)
+        t = sy.Matrix(sy.BlockMatrix([[-c, zeros_1]]))
+        T = sy.Matrix(sy.BlockMatrix([[A, I, b]]))
         return t, T
 
     def _optimal_test(self, t_star,  non_basic_variables):
@@ -92,8 +91,14 @@ class Model:
         :param non_basic_variables: 非基变量列表
         :return: None 已经最优， 否则返回入基变量在单纯形表第0行中的位置
         """
-        min_index = np.argmin(t_star[0,non_basic_variables])
-        min_value = t_star[0,non_basic_variables[min_index]]
+        min_index = -1
+        min_value = 0
+        for i in range(len(non_basic_variables)):
+            index = non_basic_variables[i]
+            value = t_star[0, index]
+            if value < min_value:
+                min_value = value
+                min_index = i
         if min_value >= 0:
             return None
         return min_index
@@ -101,7 +106,7 @@ class Model:
     def _minimum_ratio_test(self,T_star,enter_basic):
         min_ratio = None
         min_index = -1
-        for i in range(np.size(T_star, 0)):
+        for i in range(T_star.shape[0]):
             enter_basic_coefficient = T_star[i, enter_basic]
             if enter_basic_coefficient <= 0:
                 continue
@@ -118,13 +123,10 @@ class Model:
         return min_index, min_ratio
 
     def solve(self):
-        c = np.array(self.objective).reshape((1, len(self.objective)))  # c是行向量
-        c_base = np.block([
-            c, np.zeros((1, len(self.slack_variables)))
-        ])
-        A = np.array(self.constraints_left)
-        I = np.identity(len(self.slack_variables))
-        b = np.array(self.constraints_right).reshape((len(self.constraints_right), 1))  # b是列向量
+        c = sy.Matrix([self.objective])  # c是行向量
+        A = sy.Matrix(self.constraints_left)
+        I = sy.eye(len(self.slack_variables))
+        b = sy.Matrix(self.constraints_right) # b是列向量
 
         self.t, self.T = self._prepare_iteration_0(c, A, I, b)
         self.B_inv = I
@@ -166,21 +168,21 @@ class Model:
             self.basic_variables[leaving_basic_index] = enter_basic
             self.non_basic_variables[enter_basic_index] = leaving_basic
 
-            E = np.identity(len(self.slack_variables))
+            E = sy.eye(len(self.slack_variables))
             r = leaving_basic_index
             a_rk = T_star[r,enter_basic]
 
-            eta = - T_star[:,enter_basic].reshape(m) / np.repeat(a_rk,m)
-            eta[r] = 1/a_rk
-            E[:,r] = eta
+            for i in range(m):
+                if i == r :
+                    E[i,r] = 1/a_rk
+                else:
+                    E[i,r] = -T_star[i,enter_basic] / a_rk
 
-            print(E)
-
-            self.B_inv = E @ self.B_inv
+            self.B_inv = E * self.B_inv
             cB = -self.t[:, self.basic_variables]
-            y_star = cB @ self.B_inv
-            t_star = self.t + y_star @ self.T
-            T_star = self.B_inv @ self.T
+            y_star = cB * self.B_inv
+            t_star = self.t + y_star * self.T
+            T_star = self.B_inv * self.T
 
         self._display(t_star,T_star)
         optimal_value, optimal_vars = self._cal_solution(t_star,T_star)
@@ -203,10 +205,11 @@ class Model:
         :param basic_variables:
         :return:
         """
-        optimal_var_values = T_star[:,-1]
-        optimal_value = t_star[0][-1]
 
-        optimal_var_values=optimal_var_values.reshape((optimal_var_values.size))
+        optimal_var_values = T_star[:,-1]
+        optimal_value = t_star[-1]
+
+        optimal_var_values=optimal_var_values.T
 
         print(optimal_var_values)
 
