@@ -46,7 +46,7 @@ class LinearModel:
         :param kwargs: 目标函数各变量及其系数
         """
         self.variable_names = []  # 所有变量的变量名，包括松弛变量
-        self.real_variables = []  # 优化目标中包含的变量(元素为变量在variables_names列表中的下标）
+        self.original_variables = []  # 优化目标中包含的变量(元素为变量在variables_names列表中的下标）
         self.left_side = []  # 存储 扩展后方程组左侧的各变量系数
         self.right_side = []  # 存储 扩展后方程组右侧的常数
         self.ratio = []  # 存储各方程组的离速(ratio)
@@ -62,14 +62,14 @@ class LinearModel:
             equation0 = [1]
             for v in kwargs:
                 self.variable_names.append(v)
-                self.real_variables.append(len(self.variable_names) - 1)
+                self.original_variables.append(len(self.variable_names) - 1)
                 print(kwargs)
                 equation0.append(-Fraction(kwargs[v]))
         else:
             equation0 = [-1]
             for v in kwargs:
                 self.variable_names.append(v)
-                self.real_variables.append(len(self.variable_names) - 1)
+                self.original_variables.append(len(self.variable_names) - 1)
                 equation0.append(Fraction(kwargs[v]))
 
         self.objective = equation0
@@ -405,7 +405,7 @@ class LinearModel:
     def get_result(self):
         object_value = self.right_side[0] * self.left_side[0][0]
         params = {}
-        for i in self.real_variables:
+        for i in self.original_variables:
             found = False
             for j in range(1, len(self.basic_variables)):
                 basic_variable = self.basic_variables[j]

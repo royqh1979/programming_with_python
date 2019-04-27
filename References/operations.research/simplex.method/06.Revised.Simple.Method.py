@@ -31,6 +31,11 @@ class Model:
         self.objective = np.array(equation0_coefficients)  # 目标优化函数的系数向量
         self.constraints_left = []  # 约束的左侧
         self.constraints_right = []  # 约束的右侧
+        self.non_basic_variables = [] # 非基变量集合
+        self.basic_variables = []  # 基变量集合(下标为约束式序号-1） basic_variables[0]为约束式（1）对应的基变量，依此类推
+        self.B_inv : np.ndarray = None #
+        self.t : np.ndarray = None # Row 0 of the initial tableau
+        self.T : np.ndarray = None # Other rows of the initial tableau
 
     def add_constraint(self, constaint_value, **kwargs) -> None:
         """
@@ -52,52 +57,53 @@ class Model:
         self.variable_names.append('_s' + str(len(self.slack_variables) + 1))
         self.slack_variables.append(len(self.variable_names) - 1)
 
-    def _display(self, iteration, Left, Right,basic_variables):
+    def _display(self, t_star,T_star):
         print(f"{'Basic':<10} {'Z':<4} ", end="")
         for var_name in self.variable_names:
             print(f"{var_name:<10} ", end="")
         print("Right Side")
         print(f"{'Variables'}")
-        for i in range(np.size(Left, 0)):
-            if i == 0:
-                print(f"{'':<10} {1:<4} ", end="")
-            else:
-                print(f"{self.variable_names[basic_variables[i-1]]:<10} {0:<4} ", end="")
-            for j in range(np.size(Left, 1)):
-                print(f"{Left[i, j]:<10f} ", end="")
-            print(f"{Right[i][0]:<10f} ")
 
-    def _prepare_iteration_0(self, c, A, I, b):
+        print(f"{'':<10} {1:<4}",end="")
+        for i in range(np.size(t_star,1)):
+            print(f"{t_star[0,i]:<10f} ",end="")
+        print()
+        for i in range(np.size(T_star,0)):
+            print(f"{self.variable_names[self.basic_variables[i]]:<10} {0:<4}", end="")
+            for j in range(np.size(T_star, 1)):
+                print(f"{T_star[i, j]:<10f} ", end="")
+            print()
+
+    def _prepare_iteration_0(self, c:np.ndarray, A:np.ndarray, I:np.ndarray, b:np.ndarray)->(np.ndarray,np.ndarray):
         zeros_1 = np.zeros((1, len(self.slack_variables)))
 
-        Left = np.block([
-            [-c, zeros_1],
-            [A, I]
-        ])
-        Right = np.block(
-            [
-                [0],
-                [b]
-            ]
-        )
-        return Left, Right
+        t = np.block([-c, zeros_1,0])
+        T = np.block([A, I, b])
+        return t, T
 
-    def _optimal_test(self, Left,  non_basic_variables):
-        min_index = np.argmin(Left[0][non_basic_variables])
-        min_value = Left[0][non_basic_variables[min_index]]
+    def _optimal_test(self, t_star,  non_basic_variables):
+        """
+        最优结果测试
+
+        :param t_star: 单纯形表 第0行
+        :param non_basic_variables: 非基变量列表
+        :return: None 已经最优， 否则返回入基变量在单纯形表第0行中的位置
+        """
+        min_index = np.argmin(t_star[0,non_basic_variables])
+        min_value = t_star[0,non_basic_variables[min_index]]
         if min_value >= 0:
             return None
         return min_index
 
-    def _minimum_ratio_test(self,Left,Right,enter_basic):
+    def _minimum_ratio_test(self,T_star,enter_basic):
         min_ratio = None
         min_index = -1
-        for i in range(1, np.size(Left, 0)):
-            enter_basic_coefficient = Left[i, enter_basic]
+        for i in range(np.size(T_star, 0)):
+            enter_basic_coefficient = T_star[i, enter_basic]
             if enter_basic_coefficient <= 0:
                 continue
             else:
-                ratio = Right[i, 0] / enter_basic_coefficient
+                ratio = T_star[i, -1] / enter_basic_coefficient
                 if min_ratio is None or ratio < min_ratio:
                     min_ratio = ratio
                     min_index = i
@@ -106,7 +112,7 @@ class Model:
             print("no solution!")
             return -1, None
 
-        return min_index -1, min_ratio
+        return min_index, min_ratio
 
     def solve(self):
         c = np.array(self.objective).reshape((1, len(self.objective)))  # c是行向量
@@ -116,13 +122,17 @@ class Model:
         A = np.array(self.constraints_left)
         I = np.identity(len(self.slack_variables))
         b = np.array(self.constraints_right).reshape((len(self.constraints_right), 1))  # b是列向量
-        AI = np.block([A, I])
-        Left, Right = self._prepare_iteration_0(c, A, I, b)
 
+        self.t, self.T = self._prepare_iteration_0(c, A, I, b)
+        self.B_inv = I
+
+        self.non_basic_variables = self.original_variables[:]
+        self.basic_variables = self.slack_variables[:]
+
+        m = len(self.slack_variables)
+        t_star = self.t
+        T_star = self.T
         iteration = 0
-
-        non_basic_variables = self.original_variables[:]
-        basic_variables = self.slack_variables
 
         while True:
             iteration += 1
@@ -130,43 +140,47 @@ class Model:
             print('---------------------------------')
 
             # Optimality Test
-            enter_basic_index = self._optimal_test(Left, non_basic_variables)
+            enter_basic_index = self._optimal_test(t_star, self.non_basic_variables)
             if enter_basic_index == None:
                 print("The solution is optimal")
                 break
-            enter_basic = non_basic_variables[enter_basic_index]
+            enter_basic = self.non_basic_variables[enter_basic_index]
 
             # Minimum Ratio Test
-            leaving_basic_index,min_ratio = self._minimum_ratio_test(Left,Right,enter_basic)
+            leaving_basic_index,min_ratio = self._minimum_ratio_test(T_star,enter_basic)
             if leaving_basic_index == -1:
-                self._display(iteration, Left, Right)
+                self._display( t_star, T_star)
                 print("can't find the minimum ratio!")
                 print("no solution!")
                 return None,None
-            leaving_basic = basic_variables[leaving_basic_index]
-            self._display(iteration, Left, Right,basic_variables)
+            leaving_basic = self.basic_variables[leaving_basic_index]
+
+            self._display( t_star, T_star)
             print("minimum ratio:", min_ratio)
             print("Entering basic :", self.variable_names[enter_basic])
             print("leaving basic:", self.variable_names[leaving_basic])
 
-            basic_variables[leaving_basic_index] = enter_basic
-            non_basic_variables[enter_basic_index] = leaving_basic
+            self.basic_variables[leaving_basic_index] = enter_basic
+            self.non_basic_variables[enter_basic_index] = leaving_basic
 
-            B = AI[:, basic_variables]
-            B_inv = np.linalg.inv(B)
-            cB = c_base[:, basic_variables]
+            E = np.identity(len(self.slack_variables))
+            r = leaving_basic_index
+            a_rk = T_star[r,enter_basic]
 
-            Left = np.block([
-                [multi_dot([cB, B_inv, A]) - c, multi_dot([cB, B_inv])],
-                [multi_dot([B_inv, A]), B_inv]
-            ])
-            Right = np.block([
-                [multi_dot([cB, B_inv, b])],
-                [multi_dot([B_inv, b])]
-            ])
+            eta = - T_star[:,enter_basic].reshape(m) / np.repeat(a_rk,m)
+            eta[r] = 1/a_rk
+            E[:,r] = eta
 
-        self._display(iteration,Left,Right,basic_variables)
-        optimal_value, optimal_vars = self._cal_solution(B_inv,b,cB,basic_variables)
+            print(E)
+
+            self.B_inv = E @ self.B_inv
+            cB = c_base[:, self.basic_variables]
+            y_star = cB @ self.B_inv
+            t_star = self.t + y_star @ self.T
+            T_star = self.B_inv @ self.T
+
+        self._display(t_star,T_star)
+        optimal_value, optimal_vars = self._cal_solution(t_star,T_star)
         self._display_solution(optimal_value,optimal_vars)
         return optimal_value,optimal_vars
 
@@ -176,7 +190,7 @@ class Model:
             print(f"{var_name} :{optimal_vars[var_name]}")
 
 
-    def _cal_solution(self,B_inv,b,cB,basic_variables):
+    def _cal_solution(self,t_star,T_star):
         """
         计算最终结果
 
@@ -186,16 +200,16 @@ class Model:
         :param basic_variables:
         :return:
         """
-        optimal_var_values = np.matmul(B_inv,b)
-        optimal_value = np.matmul(cB,optimal_var_values)[0][0]
+        optimal_var_values = T_star[:,-1]
+        optimal_value = t_star[0][-1]
 
         optimal_var_values=optimal_var_values.reshape((optimal_var_values.size))
 
-        optimal_var_names = [self.variable_names[i] for i in basic_variables if i in self.original_variables]
+        optimal_var_names = [self.variable_names[i] for i in self.basic_variables if i in self.original_variables]
 
         optimal_vars = dict(zip(optimal_var_names,optimal_var_values))
         for i in self.original_variables:
-            if not i in basic_variables:
+            if not i in self.basic_variables:
                 optimal_vars[self.variable_names[i]]=0
         return optimal_value,optimal_vars
 
@@ -221,19 +235,15 @@ class Model:
     #         print(f"shadow price for constaint {i}:",eq0[slack_index+1])
 
 
-model = Model(x1=3, x2=5)
-model.add_constraint(4, x1=1)
-model.add_constraint(12, x2=2)
-model.add_constraint(18, x1=3, x2=2)
+# model = Model(x1=3, x2=5)
+# model.add_constraint(4, x1=1)
+# model.add_constraint(12, x2=2)
+# model.add_constraint(18, x1=3, x2=2)
+# model.solve()
+
+model = Model(x1=4,x2=-2,x3=7,x4=-1)
+model.add_constraint(10,x1=1,x3=5)
+model.add_constraint(1, x1=1,x2=1,x3=-1)
+model.add_constraint(0,x1=6,x2=-5)
+model.add_constraint(3,x1=-1,x3=2,x4=-2)
 model.solve()
-
-# model = Model(x1=3,x2=2)
-# model.add_constraint(4,x1=1)
-# model.add_constraint(12,x2=2)
-# model.add_constraint(18,x1=3,x2=2)
-# model.solve()
-
-# model = Model(x1=40,x2=30)
-# model.add_constraint(120,x1=4,x2=3)
-# model.add_constraint(50,x1=2,x2=1)
-# model.solve()

@@ -9,26 +9,11 @@ from decimal import Decimal
 from fractions import Fraction
 from enum import Enum
 from typing import Union
+import colorama
+from colorama import Fore,Style
 
-
-class Color:
-    Reset = '\033[0m'
-    Black = '\033[30m'
-    Red = '\033[31m'
-    Green = '\033[32m'
-    Yellow = '\033[33m'
-    Blue = '\033[34m'
-    Magenta = '\033[35m'
-    Cyan = '\033[36m'
-    White = '\033[37m'
-    Black_Background = '\033[40m'
-    Red_Background = '\033[41m'
-    Green_Background = '\033[42m'
-    Yellow_Background = '\033[43m'
-    Blue_Background = '\033[44m'
-    Magenta_Background = '\033[45m'
-    Cyan_Background = '\033[46m'
-    White_Background = '\033[47m'
+# init windows ansi color
+colorama.init()
 
 class OptimizationType(Enum):
     maximization = 1
@@ -51,7 +36,7 @@ class Model:
         :param kwargs: 目标函数各变量及其系数
         """
         self.variable_names = []  # 所有变量的变量名，包括松弛变量
-        self.real_variables = []  # 优化目标中包含的变量(元素为变量在variables_names列表中的下标）
+        self.original_variables = []  # 优化目标中包含的变量(元素为变量在variables_names列表中的下标）
         self.left_side = []  # 存储 扩展后方程组左侧的各变量系数
         self.right_side = []  # 存储 扩展后方程组右侧的常数
         self.ratio = []  # 存储各方程组的离速(ratio)
@@ -67,14 +52,14 @@ class Model:
             equation0 = [1]
             for v in kwargs:
                 self.variable_names.append(v)
-                self.real_variables.append(len(self.variable_names) - 1)
+                self.original_variables.append(len(self.variable_names) - 1)
                 print(kwargs)
                 equation0.append(-Fraction(kwargs[v]))
         else:
             equation0 = [-1]
             for v in kwargs:
                 self.variable_names.append(v)
-                self.real_variables.append(len(self.variable_names) - 1)
+                self.original_variables.append(len(self.variable_names) - 1)
                 equation0.append(Fraction(kwargs[v]))
 
         self.objective = equation0
@@ -196,11 +181,11 @@ class Model:
         # 扩展表标题 第一行
         print(f'{"Basic":<10} {"Equation":<10} {"Z":<8}',end='')
         for i in range(len(self.variable_names)):
-            var = self.variable_names[i]
+            var_name = self.variable_names[i]
             if i==enter_basic: # 用红色显示入基变量
-                print(f' {Color.Red}{var:<8}{Color.Reset}',end='')
+                print(f' {Fore.RED}{var_name:<8}{Style.RESET_ALL}',end='')
             else:
-                print(f' {var:<8}',end='')
+                print(f' {var_name:<8}',end='')
         if highlight:
             print(f'{"Right":<8} {"Ratio":<10}')
         else:
@@ -208,7 +193,7 @@ class Model:
 
         # 扩展表标题 第二行
         print(f'{"Variables":<10} {"":<10} {"":<8}',end='')
-        print(' '*len(self.variable_names)*9,end='')
+        print(' ' * len(self.variable_names) * 9, end='')
         print(f'{"Side":<8}')
 
         # 扩展表内容
@@ -216,26 +201,26 @@ class Model:
             if i==0:
                 print(f"{'obj.':<10} {'('+str(i)+')':<10}",end='')
             elif i == leaving_basic:  # 用紫色显示出基变量系数
-                print(f'{Color.Magenta}{self.variable_names[self.basic_variables[i]]:<10} {"("+str(i)+")":<10}{Color.Reset}',end='')
+                print(f'{Fore.MAGENTA}{self.variable_names[self.basic_variables[i]]:<10} {"(" + str(i) + ")":<10}{Style.RESET_ALL}', end='')
             else:
-                print(f'{self.variable_names[self.basic_variables[i]]:<10} {"("+str(i)+")":<10}',end='')
+                print(f'{self.variable_names[self.basic_variables[i]]:<10} {"(" + str(i) + ")":<10}', end='')
 
             equation_left=self.left_side[i]
             for j in range(len(equation_left)):
                 c=equation_left[j]
                 if j == enter_basic+1:  # 用红色显示入基变量系数
-                    print(f' {Color.Red}{str(c):<8}{Color.Reset}', end='')
+                    print(f' {Fore.RED}{str(c):<8}{Style.RESET_ALL}', end='')
                 elif i == leaving_basic: # 用紫色显示出基变量系数
-                    print(f' {Color.Magenta}{str(c):<8}{Color.Reset}', end='')
+                    print(f' {Fore.MAGENTA}{str(c):<8}{Style.RESET_ALL}', end='')
                 else:
                     print(f' {str(c):<8}', end='')
 
             if i == leaving_basic:  # 用紫色显示出基变量系数
-                print(Color.Magenta,end='')
+                print(Fore.MAGENTA,end='')
             print(f'{str(self.right_side[i]):<8}', end='')
             if highlight:
                 print(f' {str(self.ratio[i]) :<10}',end='')
-            print(Color.Reset)
+            print(Style.RESET_ALL)
 
     def _prepare_first_phase(self):
         eq0 = [0] * len(self.variable_names)
@@ -410,7 +395,7 @@ class Model:
     def get_result(self):
         object_value = self.right_side[0] * self.left_side[0][0]
         params = {}
-        for i in self.real_variables:
+        for i in self.original_variables:
             found = False
             for j in range(1, len(self.basic_variables)):
                 basic_variable = self.basic_variables[j]
