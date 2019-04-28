@@ -16,7 +16,7 @@ def select_sort(lst):
     """
     n = len(lst)
     for i in range(n):
-        t = i
+        t = i # lst[i]到lst[n-1]中最大值下标
         for j in range(i, n):
             if lst[j] > lst[t]:
                 t = j

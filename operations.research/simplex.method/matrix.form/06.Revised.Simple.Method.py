@@ -174,8 +174,6 @@ class Model:
             eta[r] = 1/a_rk
             E[:,r] = eta
 
-            print(E)
-
             self.B_inv = E @ self.B_inv
             cB = -self.t[:, self.basic_variables]
             y_star = cB @ self.B_inv
@@ -207,8 +205,6 @@ class Model:
         optimal_value = t_star[0][-1]
 
         optimal_var_values=optimal_var_values.reshape((optimal_var_values.size))
-
-        print(optimal_var_values)
 
         optimal_vars = {}
         for i in self.original_variables:
