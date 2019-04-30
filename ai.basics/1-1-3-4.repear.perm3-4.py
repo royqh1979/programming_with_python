@@ -13,7 +13,8 @@ def perm4():
             count += 1
             print(f"{a[1]},{a[2]},{a[3]},{a[4]}")
         else:
-            perm3()
+            pass
+            #perm5()
 
 
 def perm3():
@@ -24,7 +25,7 @@ def perm3():
             count += 1
             print(f"{a[1]},{a[2]},{a[3]},{a[4]}")
         else:
-            perm3()
+            perm4()
 
 def perm2():
     global count
@@ -44,7 +45,7 @@ def perm1():
             count += 1
             print(f"{a[1]},{a[2]},{a[3]},{a[4]}")
         else:
-            perm3()
+            perm2()
 
 
 n=4

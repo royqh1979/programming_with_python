@@ -18,12 +18,12 @@ def perm(n):
         stack[-1] += 1 # 当前变量（栈顶变量）尝试下一个取值
         if stack[-1]>n: # 当前变量的所有可能取值都试过了，丢弃该变量（循环后会尝试前一个变量）
             stack.pop()
+            continue
+        if len(stack)==n: # 产生了一个新的方案
+            count += 1
+            print(stack)
         else:
-            if len(stack)==n: # 产生了一个新的方案
-                count += 1
-                print(stack)
-            else:
-                stack.append(0) # 下一个变量从1开始尝试取值（因为循环后会+1）
+            stack.append(0) # 下一个变量从1开始尝试取值（因为循环后会+1）
 
 
 n=int(input("请输入n："))
