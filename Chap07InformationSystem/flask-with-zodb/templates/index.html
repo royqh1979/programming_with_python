@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>成绩管理系统</title>
+     <link rel="stylesheet" type="text/css" href="/static/css/style.css" >
+</head>
+<body>
+    <div id="container">
+        <h1>成绩管理系统</h1>
+        <div>现有学生信息数：{{ num_students }}</div>
+        <ul>
+            <li><a href="/add">增加一条成绩信息</a></li>
+            <li><a href="/search">查找成绩信息</a></li>
+            <li><a href="/show">显示所有成绩</a></li>
+        </ul>
+        <hr>
+        <ul>
+            <li><a href="/sort">按成绩排序</a></li>
+            <li><a href="/show_hist">成绩段人数</a></li>
+            <li><a href="/show_pie">成绩段饼图</a></li>
+        </ul>
+    </div>
+</body>
+</html>
