@@ -1,10 +1,12 @@
 """
-使用队列实现DFS（深度优先搜索）
+n个数字的可重复排列
+
+使用队列实现BFS（广度优先搜索）
 """
 
 from collections import deque
 
-def perm(m,n):
+def perm(n):
     """
     n个变量，每个变量可以取1，2，3，……，m，共m个值
 
@@ -21,15 +23,14 @@ def perm(m,n):
             count+=1
             print(node)
         else:
-            for i in range(1,m+1): # 在当前方案基础上产生新的方案，并且加入到队列末尾
+            for i in range(1,n+1): # 在当前方案基础上产生新的方案，并且加入到队列末尾
                 new_node = node.copy()
                 new_node.append(i)
                 queue.append(new_node)
 
 
 n=int(input("请输入n："))
-m=int(input("请输入m："))
 count = 0
-perm(m, n)
+perm(n)
 
 print(f"共{count}种方案")

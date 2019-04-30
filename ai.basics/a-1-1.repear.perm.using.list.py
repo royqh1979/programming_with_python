@@ -1,19 +1,14 @@
 """
+n个数字的可重复排列
+
 使用全局列表来模拟栈，实现DFS（深度优先搜索）
 """
-def perm(m,n):
-    """
-    n个变量，每个变量可以取1，2，3，……，m，共m个值
-
-    求所有的方案
-    :param m: 每个变量可以取的最大值
-    :param n: 变量个数
-    """
+def perm(n):
     global count
     i = 1
     while i>=1:
         a[i]+=1
-        if a[i]>m: # 第i个变量的所有可能取值都试过了，回退到第i-1个变量进行尝试
+        if a[i]>n: # 第i个变量的所有可能取值都试过了，回退到第i-1个变量进行尝试
             a[i]=0
             i-=1
         else: # 第i个变量尝试了一个新的取值
@@ -25,9 +20,8 @@ def perm(m,n):
 
 
 n=int(input("请输入n："))
-m=int(input("请输入m："))
 count = 0
 a =[0]*(n+1)
-perm(m, n)
+perm(n)
 
 print(f"共{count}种方案")

@@ -1,7 +1,9 @@
 """
+n个数字的可重复排列
+
 使用栈实现DFS（深度优先搜索）
 """
-def perm(m,n):
+def perm(n):
     """
     n个变量，每个变量可以取1，2，3，……，m，共m个值
 
@@ -14,7 +16,7 @@ def perm(m,n):
     stack.append(0)
     while len(stack)>0:
         stack[-1] += 1 # 当前变量（栈顶变量）尝试下一个取值
-        if stack[-1]>m: # 当前变量的所有可能取值都试过了，丢弃该变量（循环后会尝试前一个变量）
+        if stack[-1]>n: # 当前变量的所有可能取值都试过了，丢弃该变量（循环后会尝试前一个变量）
             stack.pop()
         else:
             if len(stack)==n: # 产生了一个新的方案
@@ -25,8 +27,7 @@ def perm(m,n):
 
 
 n=int(input("请输入n："))
-m=int(input("请输入m："))
 count = 0
-perm(m, n)
+perm(n)
 
 print(f"共{count}种方案")
