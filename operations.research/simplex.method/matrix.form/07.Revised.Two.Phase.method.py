@@ -1,15 +1,16 @@
 """
 两阶段法的改进单纯形算法实现（The Revised Simplex Method)
 
-要优化的目标为 最大化目标函数值
-约束条件均为 变量的线性组合<=常数 形式
 变量的取值范围均为非负实数
 
 运筹学导论（Introduction to Operations Research 第9版）第4章和第5章
 
+需要安装numpy和sympy库
 
+结果为浮点数形式
 """
 from typing import Dict, List
+import sympy as sy
 
 import math
 import numpy as np
@@ -78,12 +79,12 @@ class Model:
         :param kwargs: 不等式左侧各变量系数
         """
         if constraint<0:
-            right = constraint
+            right = -constraint
             left = {}
             for var_name in kwargs:
                 if var_name not in self.objective:
                     raise RuntimeError(f'variables \'{var_name}\' not in objective function!')
-                left[var_name] = kwargs[var_name]
+                left[var_name] = -kwargs[var_name]
             if constraint_type == ConstraintType.LessEqual:
                 constraint_type = ConstraintType.GreaterEqual
             elif constraint_type == ConstraintType.GreaterEqual:

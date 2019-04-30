@@ -6,6 +6,10 @@
 变量的取值范围均为非负实数
 
 运筹学导论（Introduction to Operations Research 第9版）第5.4章
+
+需要numpy
+
+结果为浮点数形式
 """
 import numpy as np
 
