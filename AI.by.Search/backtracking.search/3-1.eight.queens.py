@@ -2,6 +2,7 @@
 8皇后问题
 
 
+使用栈实现回溯法
 """
 def print_board(n,count):
 	print(f"------解.{count}------")
@@ -40,17 +41,22 @@ def can_stay(i,j,n):
 
 def try_queen(i,n):
 	global count
-	for j in range(1,n+1):
-		if can_stay(i,j,n):
-			queens[i] = j
+	i=1
+	while True:
+		queens[i]+=1
+		if queens[i]>n: # backtracking
+			i-=1
+			if i<1: # all possible solutions have been tried, quit searching
+				break
+			clear_flags(i,queens[i],n)
+		elif can_stay(i,queens[i],n):
 			if i==n:
-				count+=1
-				print_board(n,count)
+				count += 1
+				print_board(n, count)
 			else:
-				set_flags(i,j,n)
-				try_queen(i+1,n)
-				clear_flags(i,j,n)
-			queens[i] = 0
+				set_flags(i, queens[i], n)
+				i+=1
+				queens[i] = 0
 
 def queen(n):
 	try_queen(1,n)
