@@ -1,3 +1,13 @@
+"""
+数独求解
+
+使用简化的启发式回溯搜索
+
+使用递归实现
+
+每次优先尝试填写可行数字最少的格子
+
+"""
 import numpy as np
 from easygraphics import *
 
