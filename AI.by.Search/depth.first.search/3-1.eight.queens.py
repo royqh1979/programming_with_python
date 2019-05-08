@@ -4,7 +4,6 @@
 
 使用队列实现BFS（广度优先搜索）
 """
-from collections import deque
 
 class Node:
 	def __init__(self):
@@ -53,7 +52,7 @@ def can_stay(node:Node,i,j,n):
 def try_queen(i,n):
 	global count
 
-	queue = deque()
+	stack = []
 
 	node = Node()
 	# 已产生的皇后位置
@@ -65,10 +64,10 @@ def try_queen(i,n):
 	# 副对角线标志
 	node.diag2_flags = [0] * (2 * n)
 
-	queue.append(node)
+	stack.append(node)
 
-	while len(queue)>0:
-		node = queue.popleft()
+	while len(stack)>0:
+		node = stack.pop()
 		i = len(node.queens)+1 # 要产生第几个皇后的位置
 		for q in range(1,n+1):
 			if can_stay(node,i,q,n):
@@ -85,7 +84,7 @@ def try_queen(i,n):
 					new_node.diag2_flags = node.diag2_flags.copy()
 					new_node.queens.append(q)
 					set_flags(new_node,i,q,n)
-					queue.append(new_node)
+					stack.append(new_node)
 
 def queen(n):
 	try_queen(1,n)
