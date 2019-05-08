@@ -218,7 +218,11 @@ def calculatePossible(i, j):
 def solve(unsolved):
     if unsolved == 0:
         return True
+
+    # 显示用
     delay_fps(SPEED)
+
+    # 找出可填的数字数量最少的格子
     c = CandiateSquare()
     min_possible_count = 10
     for i in range(1, 10):
@@ -231,6 +235,7 @@ def solve(unsolved):
                     c.y = j
                     c.possibles = possibles
 
+    # 尝试填写该格子
     for v in c.possibles:
         fill(c.x, c.y, v)
         draw_number_at(c.x, c.y, v, Color.BLACK)
