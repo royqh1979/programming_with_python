@@ -1,13 +1,3 @@
-
-def find_max(lst,start,end):
-    """
-    找从lst[start] 到 lst[end-1]之中的最大值下标
-    :return: 最大值在lst中的下标
-    """
-    max = start
-
-    return max
-
 def select_sort(lst):
     """
     选择排序

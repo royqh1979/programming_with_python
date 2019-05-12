@@ -12,4 +12,4 @@ with open(filename,mode="r",encoding="GBK") as file:
 df["销售额"]=df["单价"]*df["数量"]
 index=df["销售额"]>100 #生成筛选bool数组
 new_df=df[index] #使用bool数组筛选行
-new_df.to_csv("result.csv")
+new_df.to_csv("result.csv",index=False)

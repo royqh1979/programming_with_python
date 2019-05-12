@@ -1,14 +1,13 @@
 import easygraphics.dialog as dlg
 import csv
 from decimal import Decimal
+from dataclasses import dataclass
 
-
-
+@dataclass()
 class Score:
-    def __init__(self,id,name,score):
-        self.id = id
-        self.name = name
-        self.score = score
+    id: str
+    name: str
+    score: Decimal
 
 def read_csv_file(filename):
     """

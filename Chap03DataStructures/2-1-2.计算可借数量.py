@@ -1,12 +1,12 @@
 from easygraphics import dialog as dlg
+from dataclasses import dataclass
 
-
+@dataclass()
 class User:
-    def __init__(self, id, name, borrowed, type):
-        self.id = id
-        self.name = name
-        self.borrowed = borrowed
-        self.type = type
+    id: str
+    name: str
+    borrowed: int
+    type: str
 
 
 def calc_books_can_borrow(user):

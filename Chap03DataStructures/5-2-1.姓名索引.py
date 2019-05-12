@@ -1,21 +1,21 @@
 import csv
 import easygraphics.dialog as dlg
 from decimal import Decimal
+from dataclasses import dataclass
 
+@dataclass()
 class Student:
-    def __init__(self, id, name, score):
-        self.id = id
-        self.name = name
-        self.score = score
+    id: int
+    name: str
+    score: Decimal
 
-
+@dataclass()
 class IndexItem:
     """
     存放index条目
     """
-    def __init__(self,key,student):
-        self.key = key
-        self.student = student
+    key: str
+    student: Student
 
 def read_csv(filename):
     """

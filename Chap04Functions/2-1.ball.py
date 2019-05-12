@@ -1,12 +1,13 @@
 from easygraphics import *
 import random
+from dataclasses import dataclass
 
+@dataclass()
 class World:
-    def __init__(self, left, top, right, bottom):
-        self.left = left  # 左上角x坐标
-        self.top = top  # 左上角y坐标
-        self.right = right  # 右下角x坐标
-        self.bottom = bottom  # 右下角坐标
+    left: float  # 左上角x坐标
+    top: float  # 左上角y坐标
+    right: float  # 右下角x坐标
+    bottom: float  # 右下角坐标
 
 
 
@@ -45,8 +46,14 @@ world = World(20,20,380,380)
 cx = random.randrange(20,380)
 cy = random.randrange(20,200)
 r=5
-vx = random.randint(-3,3)
-vy = random.randint(1,3)
+vx = 0
+# 确保随机出来的vx（x方向速度）不会是0
+while vx == 0:
+    vx = random.randint(-3,3)
+
+vy = 0
+while vy == 0:
+    vy = random.randint(1,3)
 ball = Ball(world,cx,cy,r,vx,vy)
 while is_run():
     ball.move()

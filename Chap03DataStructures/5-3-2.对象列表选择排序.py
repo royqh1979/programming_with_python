@@ -1,12 +1,13 @@
 import csv
 import easygraphics.dialog as dlg
 from decimal import Decimal
+from dataclasses import dataclass
 
+@dataclass()
 class Score:
-    def __init__(self, id, name, score):
-        self.id = id
-        self.name = name
-        self.score = score
+    id: int
+    name: str
+    score: Decimal
 
 def read_csv(filename):
     """
@@ -26,16 +27,6 @@ def read_csv(filename):
             scores.append(s)
     return scores
 
-def find_max(scores,start,end):
-    """
-    找从scores[start]到scores[end-1]中，成绩最高的元素下标
-    """
-    max = start
-    for i in range(start,end):
-        if scores[i].score > scores[max].score:
-            max = i
-    return max
-
 def select_sort(scores):
     """
     选择排序
@@ -43,7 +34,10 @@ def select_sort(scores):
     """
     n = len(scores)
     for i in range(n):
-        t = find_max(scores,i,n)
+        t = i
+        for j in range(i, n):
+            if scores[j].score > scores[t].score:
+                t = j
         scores[i],scores[t] = scores[t],scores[i]
 
 filename = dlg.get_open_file_name("请选择成绩csv文件",dlg.FileFilter.CSVFiles)

@@ -4,13 +4,15 @@
 
 使用队列实现BFS（广度优先搜索）
 """
+from dataclasses import dataclass
+from typing import List
 
+@dataclass()
 class Node:
-	def __init__(self):
-		self.queens = None
-		self.col_flags = None
-		self.diag_flags = None
-		self.diag2_flags = None
+	queens: List[int] = None
+	col_flags:  List[int] = None
+	diag_flags:  List[int] = None
+	diag2_flags:  List[int] = None
 
 def print_board(queens,n,count):
 	print(f"------解.{count}------")

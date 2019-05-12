@@ -2,6 +2,7 @@ from decimal import Decimal
 import easygraphics.dialog as dlg
 import csv
 from datetime import date
+from dataclasses import dataclass
 
 """
 股票代码 Symbol
@@ -20,22 +21,21 @@ from datetime import date
 流通市值 Tradable Market Cap
 """
 
+@dataclass()
 class Stock:
-    def __init__(self, pdate, pclose, high, low, popen, last_price, change, change_percent, turnover_rate,
-                 volume, amount, cap, tradable_cap):
-        self.pdate = pdate
-        self.pclose = pclose
-        self.high = high
-        self.low = low
-        self.popen = popen
-        self.last_price = last_price
-        self.change = change
-        self.change_percent = change_percent
-        self.turnover_rate = turnover_rate
-        self.volume = volume
-        self.amount = amount
-        self.cap = cap
-        self.tradable_cap = tradable_cap
+    pdate: date
+    pclose: Decimal
+    high: Decimal
+    low: Decimal
+    popen: Decimal
+    last_price: Decimal
+    change: Decimal
+    change_percent: Decimal
+    turnover_rate: Decimal
+    volume: int
+    amount: Decimal
+    cap: Decimal
+    tradable_cap: Decimal
 
 def read_csv(filename):
     """
