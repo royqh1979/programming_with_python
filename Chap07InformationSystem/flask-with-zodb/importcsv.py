@@ -1,18 +1,19 @@
 """
 从data.csv中导入初始数据到data.fs
 """
+from dataclasses import dataclass
 
 import ZODB
 import csv
 from BTrees.OOBTree import BTree
 import transaction
 
+@dataclass()
 class Student:
-    def __init__(self, id, name, class_name, score):
-        self.id = id
-        self.name = name
-        self.class_name = class_name
-        self.score = score
+    id: str
+    name: str
+    class_name: str
+    score: float
 
 csv_filename = 'data.csv'
 db_filename = 'data/data.fs'

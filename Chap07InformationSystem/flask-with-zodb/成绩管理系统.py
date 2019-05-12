@@ -6,6 +6,8 @@
 需要flask、matplotlib、zodb库
 """
 # zodb
+from dataclasses import dataclass
+
 import ZODB
 from BTrees.OOBTree import BTree
 import transaction
@@ -23,12 +25,12 @@ mpl.rcParams['font.family'] = font_name
 mpl.rcParams['axes.unicode_minus'] = False  # in case minus sign is shown as box
 
 
+@dataclass()
 class Student:
-    def __init__(self, id, name, class_name, score):
-        self.id = id
-        self.name = name
-        self.class_name = class_name
-        self.score = score
+    id: str
+    name: str
+    class_name: str
+    score: float
 
 
 filename = "data/data.fs"
@@ -48,7 +50,6 @@ def get_students(conn):
         students = BTree()  # btree可以当成一个字典来用
         root.students = students  # 将students交给zodb来管理
     else:
-        print("haha")
         students = root.students
     return students
 
