@@ -32,7 +32,7 @@
       <property name="childrenCollapsible">
        <bool>false</bool>
       </property>
-      <widget class="QTableView" name="tblStudents">
+      <widget class="QTableWidget" name="tblStudents">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
          <horstretch>1</horstretch>
@@ -181,7 +181,7 @@
      <x>0</x>
      <y>0</y>
      <width>881</width>
-     <height>27</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">
@@ -202,8 +202,16 @@
     <addaction name="actionAdd"/>
     <addaction name="actionDelete"/>
    </widget>
+   <widget class="QMenu" name="menu_2">
+    <property name="title">
+     <string>可视化分析</string>
+    </property>
+    <addaction name="actionPiechart"/>
+    <addaction name="actionHistogram"/>
+   </widget>
    <addaction name="menu"/>
    <addaction name="menuEdit"/>
+   <addaction name="menu_2"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">
@@ -222,6 +230,9 @@
    <addaction name="separator"/>
    <addaction name="actionAdd"/>
    <addaction name="actionDelete"/>
+   <addaction name="separator"/>
+   <addaction name="actionHistogram"/>
+   <addaction name="actionPiechart"/>
   </widget>
   <action name="actionNew">
    <property name="icon">
@@ -271,7 +282,7 @@
   <action name="actionAdd">
    <property name="icon">
     <iconset>
-     <normaloff>resources/icons/list-add.svg</normaloff>resources/icons/list-add.svg</iconset>
+     <normaloff>resources/icons/add.svg</normaloff>resources/icons/add.svg</iconset>
    </property>
    <property name="text">
     <string>添加学生</string>
@@ -290,6 +301,24 @@
    </property>
    <property name="toolTip">
     <string>删除选中学生</string>
+   </property>
+  </action>
+  <action name="actionPiechart">
+   <property name="icon">
+    <iconset>
+     <normaloff>resources/icons/piechart.png</normaloff>resources/icons/piechart.png</iconset>
+   </property>
+   <property name="text">
+    <string>饼图</string>
+   </property>
+  </action>
+  <action name="actionHistogram">
+   <property name="icon">
+    <iconset>
+     <normaloff>resources/icons/histogram.png</normaloff>resources/icons/histogram.png</iconset>
+   </property>
+   <property name="text">
+    <string>条形图</string>
    </property>
   </action>
  </widget>

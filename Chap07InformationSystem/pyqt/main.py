@@ -2,12 +2,11 @@
 
 # Form implementation generated from reading ui file 'main.ui'
 #
-# Created by: PyQt5 UI code generator 5.12
+# Created by: PyQt5 UI code generator 5.11.3
 #
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -26,7 +25,7 @@ class Ui_MainWindow(object):
         self.splitter.setOpaqueResize(False)
         self.splitter.setChildrenCollapsible(False)
         self.splitter.setObjectName("splitter")
-        self.tblStudents = QtWidgets.QTableView(self.splitter)
+        self.tblStudents = QtWidgets.QTableWidget(self.splitter)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(1)
         sizePolicy.setVerticalStretch(0)
@@ -34,6 +33,8 @@ class Ui_MainWindow(object):
         self.tblStudents.setSizePolicy(sizePolicy)
         self.tblStudents.setMinimumSize(QtCore.QSize(200, 0))
         self.tblStudents.setObjectName("tblStudents")
+        self.tblStudents.setColumnCount(0)
+        self.tblStudents.setRowCount(0)
         self.editor = QtWidgets.QWidget(self.splitter)
         self.editor.setEnabled(False)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
@@ -100,12 +101,14 @@ class Ui_MainWindow(object):
         self.verticalLayout.addWidget(self.splitter)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 881, 27))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 881, 26))
         self.menubar.setObjectName("menubar")
         self.menu = QtWidgets.QMenu(self.menubar)
         self.menu.setObjectName("menu")
         self.menuEdit = QtWidgets.QMenu(self.menubar)
         self.menuEdit.setObjectName("menuEdit")
+        self.menu_2 = QtWidgets.QMenu(self.menubar)
+        self.menu_2.setObjectName("menu_2")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -140,7 +143,7 @@ class Ui_MainWindow(object):
         self.actionExit.setObjectName("actionExit")
         self.actionAdd = QtWidgets.QAction(MainWindow)
         icon7 = QtGui.QIcon()
-        icon7.addPixmap(QtGui.QPixmap("resources/icons/list-add.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon7.addPixmap(QtGui.QPixmap("resources/icons/add.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.actionAdd.setIcon(icon7)
         self.actionAdd.setObjectName("actionAdd")
         self.actionDelete = QtWidgets.QAction(MainWindow)
@@ -148,6 +151,16 @@ class Ui_MainWindow(object):
         icon8.addPixmap(QtGui.QPixmap("resources/icons/edit-delete.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.actionDelete.setIcon(icon8)
         self.actionDelete.setObjectName("actionDelete")
+        self.actionPiechart = QtWidgets.QAction(MainWindow)
+        icon9 = QtGui.QIcon()
+        icon9.addPixmap(QtGui.QPixmap("resources/icons/piechart.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionPiechart.setIcon(icon9)
+        self.actionPiechart.setObjectName("actionPiechart")
+        self.actionHistogram = QtWidgets.QAction(MainWindow)
+        icon10 = QtGui.QIcon()
+        icon10.addPixmap(QtGui.QPixmap("resources/icons/histogram.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionHistogram.setIcon(icon10)
+        self.actionHistogram.setObjectName("actionHistogram")
         self.menu.addAction(self.actionNew)
         self.menu.addAction(self.actionOpen)
         self.menu.addAction(self.actionSave)
@@ -156,14 +169,20 @@ class Ui_MainWindow(object):
         self.menu.addAction(self.actionExit)
         self.menuEdit.addAction(self.actionAdd)
         self.menuEdit.addAction(self.actionDelete)
+        self.menu_2.addAction(self.actionPiechart)
+        self.menu_2.addAction(self.actionHistogram)
         self.menubar.addAction(self.menu.menuAction())
         self.menubar.addAction(self.menuEdit.menuAction())
+        self.menubar.addAction(self.menu_2.menuAction())
         self.toolBar.addAction(self.actionNew)
         self.toolBar.addAction(self.actionOpen)
         self.toolBar.addAction(self.actionSave)
         self.toolBar.addSeparator()
         self.toolBar.addAction(self.actionAdd)
         self.toolBar.addAction(self.actionDelete)
+        self.toolBar.addSeparator()
+        self.toolBar.addAction(self.actionHistogram)
+        self.toolBar.addAction(self.actionPiechart)
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -179,6 +198,7 @@ class Ui_MainWindow(object):
         self.btnCancel.setText(_translate("MainWindow", "Cancel"))
         self.menu.setTitle(_translate("MainWindow", "文件"))
         self.menuEdit.setTitle(_translate("MainWindow", "编辑"))
+        self.menu_2.setTitle(_translate("MainWindow", "可视化分析"))
         self.toolBar.setWindowTitle(_translate("MainWindow", "toolBar"))
         self.actionNew.setText(_translate("MainWindow", "新建"))
         self.actionOpen.setText(_translate("MainWindow", "打开"))
@@ -189,5 +209,6 @@ class Ui_MainWindow(object):
         self.actionAdd.setToolTip(_translate("MainWindow", "添加学生"))
         self.actionDelete.setText(_translate("MainWindow", "删除选中学生"))
         self.actionDelete.setToolTip(_translate("MainWindow", "删除选中学生"))
-
+        self.actionPiechart.setText(_translate("MainWindow", "饼图"))
+        self.actionHistogram.setText(_translate("MainWindow", "条形图"))
 
