@@ -26,9 +26,9 @@ class Student:
     class_name: str
     score: float
 
-filename =  "data.csv"
-
 students = {}
+
+filename =  "data.csv"
 
 app = Flask(__name__)
 
@@ -50,7 +50,6 @@ def load():
                 return f"载入失败：学号{id}已存在！"
             student = Student(id,name,class_name,score)
             students[id]=student
-
     return render_template("load.html",students=students.values())
 
 @app.route("/save")
