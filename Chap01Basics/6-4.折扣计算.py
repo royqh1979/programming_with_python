@@ -13,6 +13,8 @@ def calc_discount(total):
         discount_rate=0.9
     elif total >= 200:
         discount_rate=0.95
+    else:
+        discount_rate = 1
     amount = total * discount_rate
     return discount_rate,amount
 
