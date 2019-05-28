@@ -1,0 +1,9 @@
+1. 如何从QGridLayout中取出各单元格里的控件（见sports_lottery_dialog.py)，并进一步保存到列表中
+2. 如何从QVBoxLayout中取出各行的控件（见sports_lottery_dialog.py)，并进一步保存到列表中
+3. 使用QTimer产生定时事件（见sports_lottery_dialog.py）
+4. 在隐藏控件时保持布局不变（见welfare_lottery_dialoy.py
+    # 下面三行代码保证按钮被隐藏时，不会改变对话框的布局
+    sp_retain = btn_number.sizePolicy()
+    sp_retain.setRetainSizeWhenHidden(True)
+    btn_number.setSizePolicy(sp_retain)
+5.
