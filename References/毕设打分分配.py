@@ -13,6 +13,7 @@ try:
 except:
     raise ValueError("总分必须为整数！")
 
+random.seed()
 n=len(MAX_SCORES)
 scores = [0]*n
 

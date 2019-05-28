@@ -1,6 +1,7 @@
 import numpy as np
 from numpy import random
 
+random.seed()
 n=10000000
 r=0.5
 cx,cy=0,0

@@ -14,6 +14,7 @@ def get_normal(mean,dev,n):
     result = random.normal(mean,dev,n)
     return np.where(result>0,result,0)
 
+random.seed()
 cost = 200000
 sale_mean, sale_dev = 30000,10000
 price_mean, price_dev= 6,1

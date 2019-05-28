@@ -1,5 +1,6 @@
 import random
 
+random.seed()
 total_time = 0
 n=500000
 
