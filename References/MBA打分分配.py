@@ -1,7 +1,7 @@
 from easygraphics.dialog import get_string
 import random
 
-MAX_SCORES = [30,20,30,15,5]
+MAX_SCORES = [15,12,10,10,13,20,8,4,8]
 
 def check_max_scores(MAX_SCORES):
     m = sum(MAX_SCORES)
@@ -13,6 +13,7 @@ try:
 except:
     raise ValueError("总分必须为整数！")
 
+print(f"总分：{score}")
 random.seed()
 n=len(MAX_SCORES)
 scores = [0]*n
@@ -34,12 +35,3 @@ if sum(scores)!=score:
     raise RuntimeError("总分与所给不符！")
 
 print(scores)
-
-
-
-
-
-
-
-
-88
