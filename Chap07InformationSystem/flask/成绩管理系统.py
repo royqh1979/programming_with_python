@@ -129,7 +129,7 @@ def get_score(student):
 
 @app.route("/sort")
 def display_sort():
-    new_students = reversed(sorted(students.values(),key=get_score))
+    new_students = sorted(students.values(),key=get_score, reverse=True)
     return render_template("show.html", students=new_students)
 
 @app.route("/show_hist")

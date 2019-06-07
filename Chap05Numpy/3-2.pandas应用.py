@@ -11,4 +11,4 @@ df=pd.read_csv(filename,encoding='GBK')
 df["销售额"]=df["单价"]*df["数量"]
 index=df["销售额"]>100 #生成筛选bool数组
 new_df=df[index] #使用bool数组筛选行
-new_df.to_csv("result.csv",encoding='UTF-8')
+new_df.to_csv("result.csv",encoding='UTF-8',index=False)
