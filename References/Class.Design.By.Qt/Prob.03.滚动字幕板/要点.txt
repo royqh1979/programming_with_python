@@ -1,0 +1,11 @@
+1. 如何从QHBoxLayout中取出各行的控件（见sports_lottery_dialog.py)，并进一步保存到列表中
+2. 如何让窗口始终保持最前（见DisplayWindow.__init__())
+3. 在ComboBox中保存并取出用户数据：
+    # 存
+    self.ui.cbForeground.addItem(c.name,c.value)
+    # 取
+    fore_color = self.ui.cbForeground.itemData(self.ui.cbForeground.currentIndex())
+
+4.重新计算和设置标签大小（以便完整显示所有文字）
+    size=lblDisplay.sizeHint()
+    lblDisplay.setMinimumSize(size.width(),size.height())

@@ -47,6 +47,7 @@ class DisplayWindow(QtWidgets.QDialog):
         super().__init__();
         self.ui=DisplayWindowUi()
         self.ui.setupUi(self)
+        #让窗口始终在最前
         self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
 
     def closeEvent(self, a0: QtGui.QCloseEvent) -> None:
