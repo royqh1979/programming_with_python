@@ -1,0 +1,4 @@
+1. QGraphicsView和QGraphisScene的使用
+2. 使用QGraphicsObject来定义signal
+3. 在QGraphicsObject中覆盖paint函数，来绘制自己的形状
+4. QColor的使用
