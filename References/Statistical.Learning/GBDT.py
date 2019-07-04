@@ -29,8 +29,10 @@ X = train[x_columns]
 y = train[target]
 
 print("开始训练：")
-gbm0 = GradientBoostingClassifier(random_state=10,verbose=1)
+gbm0 = GradientBoostingClassifier(verbose=1)
 gbm0.fit(X,y)
+print(f"特征数:{gbm0.n_features_}")
+
 y_pred = gbm0.predict(X)
 y_predprob = gbm0.predict_proba(X)[:,1]
 print("Accuracy : %.4g" % metrics.accuracy_score(y.values, y_pred))
