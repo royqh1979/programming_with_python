@@ -1,15 +1,16 @@
 import csv
 from easygraphics import dialog as dlg
 from functools import partial
+from dataclasses import dataclass
 
+@dataclass()
 class Score:
-    def __init__(self,id,name, clazz, math,literacy,english):
-        self.id = id
-        self.name = name
-        self.clazz = clazz
-        self.math = math
-        self.literacy=literacy
-        self.english = english
+    id: str
+    name: str
+    clazz: str
+    math: int
+    literacy: int
+    english: int
 
 def read_csv(filename):
     """

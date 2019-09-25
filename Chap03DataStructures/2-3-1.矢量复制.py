@@ -1,12 +1,10 @@
 import copy
+from dataclasses import dataclass
 
+@dataclass()
 class Vector:
-    def __init__(self,x,y):
-        self.x = x
-        self.y = y
-
-    def __str__(self):
-        return f'({self.x},{self.y})'
+    x: float
+    y: float
 
 v1 = Vector(1,1)
 print(v1)

@@ -1,15 +1,15 @@
 import csv
 from easygraphics import dialog as dlg
-import statistics
+from dataclasses import dataclass
 
+@dataclass()
 class Score:
-    def __init__(self,id,name, clazz, math,literacy,english):
-        self.id = id
-        self.name = name
-        self.clazz = clazz
-        self.math = math
-        self.literacy=literacy
-        self.english = english
+    id: str
+    name: str
+    clazz: str
+    math: int
+    literacy: int
+    english: int
 
 def read_csv(filename):
     """
@@ -50,5 +50,4 @@ total = sum(lst2)
 count = len(lst2)
 average = total / count
 
-# average = statistics.mean(lst2)
 print(f"电商18班{count}名同学数学平均分为{average:.2f}")

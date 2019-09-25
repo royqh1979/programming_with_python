@@ -12,18 +12,19 @@ import csv
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure,Axes
 import matplotlib as mpl
+from dataclasses import dataclass
 
 # matplotlib 使用中文字体显示内容
 font_name = "STKaiti"
 mpl.rcParams['font.family']=font_name
 mpl.rcParams['axes.unicode_minus']=False # in case minus sign is shown as box
 
+@dataclass()
 class Student:
-    def __init__(self, id, name, class_name, score):
-        self.id = id
-        self.name = name
-        self.class_name = class_name
-        self.score = score
+    id: str
+    name: str
+    class_name: str
+    score: float
 
 filename =  "data.csv"
 

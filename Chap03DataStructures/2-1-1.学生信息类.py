@@ -1,8 +1,10 @@
+from dataclasses import dataclass
+
+@dataclass()
 class Student:
-    def __init__(self,id,name,score):
-        self.id=id
-        self.name = name
-        self.score = score
+    id: int
+    name: str
+    score: int
 
 
 s1 = Student(1,'张三',50)

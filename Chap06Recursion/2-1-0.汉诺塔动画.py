@@ -1,5 +1,6 @@
 from easygraphics import *
 from typing import List
+from dataclasses import dataclass
 
 SPEED = 1000        # 绘制时，delay()的参数
 
@@ -41,7 +42,7 @@ POLE_A = 0
 POLE_B = 1
 POLE_C = 2
 
-
+@dataclass()
 class Disk:
     def __init__(self,id,cx,cy,half_width):
         self.id = id  # 圆盘序号
@@ -50,6 +51,7 @@ class Disk:
         self.half_width = half_width  #圆盘宽度的一半
         self.at_pole = 0 #默认在A柱上
 
+@dataclass()
 class Pole:
     def __init__(self,id,tag,cx):
         self.id=id

@@ -1,10 +1,11 @@
 from decimal import Decimal
+from dataclasses import dataclass
 
+@dataclass()
 class Sale:
-    def __init__(self, name, price, quantity):
-        self.name = name
-        self.price = price
-        self.quantity = quantity
+    name: str
+    price: Decimal
+    quantity: int
 
 sales = []
 while True:

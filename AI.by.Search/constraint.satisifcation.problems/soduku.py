@@ -10,6 +10,8 @@
 """
 import numpy as np
 from easygraphics import *
+from dataclasses import dataclass
+from typing import Set
 
 FONT_WIDTH = 40
 BOARD_TOP = 10
@@ -79,11 +81,11 @@ DATA_FILE = "10soduku.board"
 
 
 # 候选格子, canPut[n]=1表示该格可以放数字n，否则不行
+@dataclass()
 class CandiateSquare:
-    def __init__(self, x=0, y=0):
-        self.x = x  # 格子所在的行
-        self.y = y  # 格子所在的列
-        self.possibles = set()  # 格子中可填的数字集合
+    x: int = 0
+    y: int = 0
+    possibles = set()
 
 
 def which_block(i, j):

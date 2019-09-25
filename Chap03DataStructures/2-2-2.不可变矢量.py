@@ -1,7 +1,7 @@
-from dataclasses import dataclass
+#使用NamedTuple定义不可变数据对象
+from typing import NamedTuple
 
-@dataclass()
-class Vector:
+class Vector(NamedTuple):
     x: float
     y: float
 

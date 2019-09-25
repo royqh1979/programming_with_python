@@ -1,12 +1,13 @@
 import csv
 from decimal import Decimal
 import easygraphics.dialog as dlg
+from dataclasses import dataclass
 
+@dataclass()
 class Sale:
-    def __init__(self,name,price,quantity):
-        self.name = name
-        self.price = price
-        self.quantity = quantity
+    name : str
+    price: Decimal
+    quantity: int
 
 def read_csv(filename):
     """
