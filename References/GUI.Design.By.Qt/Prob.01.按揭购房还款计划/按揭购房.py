@@ -28,7 +28,6 @@ class MainDialog(QtWidgets.QDialog):
         # 初始化 还款年数 下拉框
         for i in range(1, 30):
             self.ui.cbYears.addItem(str(i))
-        self.ui.cbYears.setCurrentIndex(14)  # 缺省为15
         # 享受政策性贷款的人数 默认为2人
         self.ui.rbTwo.setChecked(True)
         # 还款起始年月默认为当前日期
