@@ -44,14 +44,12 @@ POLE_C = 2
 
 @dataclass()
 class Disk:
-    def __init__(self,id,cx,cy,half_width):
-        self.id = id  # 圆盘序号
-        self.cx = cx  # 圆盘中心x坐标
-        self.cy = cy  #圆盘中心y坐标
-        self.half_width = half_width  #圆盘宽度的一半
-        self.at_pole = 0 #默认在A柱上
+    id : int # 圆盘序号
+    cx : int # 圆盘中心x坐标
+    cy : int  #圆盘中心y坐标
+    half_width: int   #圆盘宽度的一半
+    at_pole : int = 0 #默认在A柱上
 
-@dataclass()
 class Pole:
     def __init__(self,id,tag,cx):
         self.id=id

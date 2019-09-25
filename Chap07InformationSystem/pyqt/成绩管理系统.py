@@ -65,10 +65,10 @@ class MyWindow(QtWidgets.QMainWindow):
                                                          "打开文件",
                                                          "",
                                                          "CSV文件 (*.csv);;所有文件(*.*)")
-        if result == None:
+        filename = result[0]
+        if filename == '':
             return
         students = {}
-        filename = result[0]
         try:
             with open(filename, mode="r", encoding="GBK") as file:
                 reader = csv.reader(file)
@@ -96,7 +96,10 @@ class MyWindow(QtWidgets.QMainWindow):
         """
         保存到数据文件
         """
-        self.save(self.data_file)
+        if self.data_file is None:
+            self.do_save_as()
+        else:
+            self.save(self.data_file)
 
     def do_save_as(self):
         """
@@ -106,9 +109,9 @@ class MyWindow(QtWidgets.QMainWindow):
                                                        "保存文件",
                                                        "",
                                                        "CSV文件 (*.csv);;所有文件(*.*)")
-        if result == None:
-            return
         filename = result[0]
+        if filename == '':
+            return
         self.save(filename)
         self.data_file = filename
 
@@ -118,6 +121,7 @@ class MyWindow(QtWidgets.QMainWindow):
 
         :param filename: 要保存的文件路径
         """
+        print("lala")
         try:
             with open(filename,mode="w",encoding="GBK") as file:
                 file.write("学号,姓名,班级,成绩\n")

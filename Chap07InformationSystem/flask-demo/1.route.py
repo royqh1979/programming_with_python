@@ -6,7 +6,7 @@ app = Flask(__name__)
 def index():
     html = "<html><head><title>"
     html +="Hello</title></head><body>"
-    html += "<h1>Hello world!</h1>"
+    html += "<h1>Hello world 2!</h1>"
     html += "</body></html>"
     return html
 
