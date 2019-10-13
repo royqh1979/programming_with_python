@@ -1,8 +1,9 @@
 # 使用Boyer-Moore算法查找子串
 # 算法描述见https://www.cnblogs.com/lanxuezaipiao/p/3452579.html
-from typing import List
+from typing import List, Dict
 
-def calc_bad_char_table(s:str)->List[int]:
+
+def calc_bad_char_table(s:str)->Dict[str,int]:
     """
     计算坏字符表
 
@@ -36,4 +37,50 @@ def calc_suffix_table(s:str)->List[int]:
         suffix[i]=l
     return suffix
 
-print(calc_suffix_table("bcababab"))
+def calc_good_table(s:str)->List[int]:
+    """
+    计算“好”后缀移动数组
+    :param s:
+    :return:
+    """
+    suffix = calc_suffix_table(s)
+
+    # case 3
+    good_table = [len(s)]*len(s)
+
+    # case 2
+    for i in range(len(s)-1,-1,-1):
+        if suffix[i]==i+1:
+            for j in range(0,len(s)-1-i):
+                if good_table[j]==len(s):
+                    good_table[j]=len(s)-1-suffix[i]
+    #case 3
+    for i in range(len(s)-1):
+        good_table[len(s)-1-suffix[i]]=len(s)-1-i
+
+    return good_table
+
+def search(s1:str,s2:str)->int:
+    bad_char_table=calc_bad_char_table(s2)
+    good_table = calc_good_table(s2)
+    i=0
+    while i<=len(s1)-len(s2):
+        print(i)
+        j=len(s2)-1
+        while j>=0:
+            if s1[i+j]==s2[j]:
+                j-=1
+            else:
+                break
+        if j<0:
+            return i
+        m1=j-len(s2)+1+bad_char_table.get(s1[i+j],len(s2))
+        m2=good_table[j]
+        m=max(m1,m2,1)
+        i+=m
+    return None
+
+
+print(calc_suffix_table("bcabcabcab"))
+print(calc_good_table("bcabcabcab"))
+print(search("abcbbacbabacab","babac"))
