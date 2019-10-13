@@ -87,7 +87,7 @@ def search(s1:str,s2:str)->int:
                 start=start+temp-j
 
 s1="abcabaaaabaabcac"
-s2="abaabcac"
+s2="aabc_aabc"
 
 next=calc_next(s2)
 print(next)
