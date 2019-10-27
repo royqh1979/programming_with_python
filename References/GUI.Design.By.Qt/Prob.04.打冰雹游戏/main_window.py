@@ -2,11 +2,13 @@
 
 # Form implementation generated from reading ui file 'main_window.ui'
 #
-# Created by: PyQt5 UI code generator 5.11.3
+# Created by: PyQt5 UI code generator 5.13.0
 #
 # WARNING! All changes made in this file will be lost!
 
+
 from PyQt5 import QtCore, QtGui, QtWidgets
+
 
 class Ui_Form(object):
     def setupUi(self, Form):
@@ -95,6 +97,5 @@ class Ui_Form(object):
         self.label_2.setText(_translate("Form", "得分"))
         self.label_3.setText(_translate("Form", "剩余能量"))
         self.label_4.setText(_translate("Form", "所用时间"))
-
 from arrow_frame import ArrowFrame
 from main_graphicsview import MainGraphicsView
