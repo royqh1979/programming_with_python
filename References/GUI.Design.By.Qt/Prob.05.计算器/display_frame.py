@@ -9,7 +9,7 @@ class DisplayFrame(QtWidgets.QLabel):
 
     def paintEvent(self, e: QtGui.QPaintEvent) -> None:
         super().paintEvent(e)
-        if self._memory!=0:
+        if self._memory!='0':
             p = QtGui.QPainter()
             p.begin(self)
             p.setBackground(QtCore.Qt.white)

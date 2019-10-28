@@ -254,7 +254,7 @@
        </widget>
       </item>
       <item row="1" column="3">
-       <widget class="QPushButton" name="btnArcctn">
+       <widget class="QPushButton" name="btnArcctg">
         <property name="autoFillBackground">
          <bool>false</bool>
         </property>
