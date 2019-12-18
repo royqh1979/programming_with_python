@@ -10,7 +10,7 @@
 //
 """
 import math as m
-
+import numpy as np
 from PyQt5 import QtGui
 from PyQt5.QtWidgets import QApplication,QOpenGLWidget
 from PyQt5.QtCore import Qt
@@ -39,11 +39,10 @@ class MyWidget(QOpenGLWidget):
         super().update()
 
     def calculate(self) -> None:
-        self._vertices=[None] * q
+        self._vertices= np.empty((q,6*(p+1)),dtype=np.float)
         delta1=1/q * m.pi / 2
         delta2=2/p*m.pi
         for j in range(q):
-            self._vertices[j]=[0]*(6*(p+1))
             for i in range(p + 1):
                 self._vertices[j][i*6]= R * m.cos((j + 1) * delta1) * m.cos(i * delta2)
                 self._vertices[j][i*6+1]= R * m.sin((j + 1) * delta1)
@@ -72,11 +71,13 @@ class MyWidget(QOpenGLWidget):
         # Array of latitudinal triangle strips, each parallel to the equator, stacked one
         # above the other from the equator to the north pole.
 
-        for j in range(q):
-            # One latitudinal triangle strip.
-            glVertexPointer(3,GL_FLOAT,0,self._vertices[j])
-            glDrawElements(GL_TRIANGLE_STRIP,2*(p+1),GL_UNSIGNED_INT,list(range(2*(p+1))))
-
+        # for j in range(q):
+        #     # One latitudinal triangle strip.
+        #     glVertexPointer(3,GL_FLOAT,0,self._vertices[j])
+        #     # glDrawElements(GL_TRIANGLE_STRIP,2*(p+1),GL_UNSIGNED_INT,list(range(2*(p+1))))
+        #     glDrawArrays(GL_TRIANGLE_STRIP,0,2*(p+1))
+        glVertexPointer(3, GL_FLOAT, 0, self._vertices)
+        glMultiDrawArrays(GL_TRIANGLE_STRIP,np.arange(0,2*(p+1)*q,2*(p+1)),np.repeat(2*(p+1),q),q)
 
         glFlush()
 
