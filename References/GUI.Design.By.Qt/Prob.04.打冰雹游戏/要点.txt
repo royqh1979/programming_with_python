@@ -2,3 +2,7 @@
 2. 使用QGraphicsObject来定义signal
 3. 在QGraphicsObject中覆盖paint函数，来绘制自己的形状
 4. QColor的使用
+5. 如何获取mouse move事件：
+    使用setMouseTracking()打开鼠标位置跟踪
+    在子控件的mousemoveevent()处理方法中，使用e.ignore()来将事件传播给父控件（main_graphicsview.py)
+6. 通过覆盖paintEvent()事件方法来绘制自定义图形（arrow_frame.py)

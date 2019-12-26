@@ -2,11 +2,13 @@
 
 # Form implementation generated from reading ui file 'main_window.ui'
 #
-# Created by: PyQt5 UI code generator 5.11.3
+# Created by: PyQt5 UI code generator 5.13.0
 #
 # WARNING! All changes made in this file will be lost!
 
+
 from PyQt5 import QtCore, QtGui, QtWidgets
+
 
 class Ui_Form(object):
     def setupUi(self, Form):
@@ -14,7 +16,7 @@ class Ui_Form(object):
         Form.resize(918, 840)
         self.verticalLayout = QtWidgets.QVBoxLayout(Form)
         self.verticalLayout.setObjectName("verticalLayout")
-        self.main_view = QtWidgets.QGraphicsView(Form)
+        self.main_view = MainGraphicsView(Form)
         self.main_view.setObjectName("main_view")
         self.verticalLayout.addWidget(self.main_view)
         self.line = QtWidgets.QFrame(Form)
@@ -53,7 +55,7 @@ class Ui_Form(object):
         spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.formLayout.setItem(2, QtWidgets.QFormLayout.LabelRole, spacerItem)
         self.horizontalLayout.addWidget(self.frame_2)
-        self.point_frame = QtWidgets.QFrame(self.frame)
+        self.point_frame = ArrowFrame(self.frame)
         self.point_frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.point_frame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.point_frame.setObjectName("point_frame")
@@ -95,4 +97,5 @@ class Ui_Form(object):
         self.label_2.setText(_translate("Form", "得分"))
         self.label_3.setText(_translate("Form", "剩余能量"))
         self.label_4.setText(_translate("Form", "所用时间"))
-
+from arrow_frame import ArrowFrame
+from main_graphicsview import MainGraphicsView

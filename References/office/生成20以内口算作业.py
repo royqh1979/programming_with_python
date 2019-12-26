@@ -7,13 +7,12 @@ import random
 app = CreateObject("Excel.Application")
 excel_constants = Constants(app)
 
-template_file = "g:/口算作业模板.xlsx"
+template_file = "g:/20加减法口算作业模板.xlsx"
 out_dir = "g:\\"
 out_name = out_dir+"口算"
 
 max_number = 100
-ratio_sub = 0.6 #减法题的比例
-ratio_carry = 0.8 # 进退位比例
+ratio_sub = 0.5 #减法题的比例
 total_page = 40 # 总页数
 seciton_per_page = 2 #每页的小节数
 row_per_section = 10 #每页的行数
@@ -37,33 +36,14 @@ for page in range(total_page):
             carry_or_not_ratio=random.random()
             row = i%row_per_section+1
             col = i//row_per_section+1
+            x = random.randint(1, 9)
+            y = random.randint(1, 9)
             if add_or_sub_ratio>ratio_sub:
                 # 生成加法
-                while True:
-                    x = random.randint(1,max_number-1)
-                    y = random.randint(1,max_number-x)
-                    if carry_or_not_ratio<ratio_carry: #需要进位
-                        if (x%10)+(y%10) >= 10:
-                            total_add_with_carry+=1
-                            break
-                    else:
-                        if (x%10)+(y%10) < 10:
-                            total_add_with_no_carry += 1
-                            break
                 str = f"{x: 3d} + {y: 3d} = "
             else:
                 # 生成减法
-                while True:
-                    x = random.randint(1,max_number)
-                    y = random.randint(1,x)
-                    if carry_or_not_ratio<ratio_carry: #需要退位
-                        if (x % 10) < (y % 10):
-                            total_sub_decomposition +=1
-                            break
-                    else:
-                        if (x % 10) >= (y % 10):
-                            total_sub_no_decomposition+=1
-                            break
+                x=x+y
                 str = f"{x: 3d} - {y: 3d} = "
 
             workbook.ActiveSheet.Cells(row + row_start, col).Value[()]=str

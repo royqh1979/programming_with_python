@@ -1,0 +1,8 @@
+<RCC>
+  <qresource prefix="main">
+    <file>13.ico</file>
+    <file>ARW.ICO</file>
+    <file>Canon.jpg</file>
+    <file>Icon1.ico</file>
+  </qresource>
+</RCC>
