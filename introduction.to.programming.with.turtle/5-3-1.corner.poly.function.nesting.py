@@ -15,14 +15,16 @@ def cor_poly_step(size, angle):
     cor_poly(size / 2, -angle)
     rt(angle)
 
+def main():
+    create_world(800, 600)
+    set_speed(100)
 
-create_world(800, 600)
-set_speed(100)
+    cor_poly(100, 90);
+    # cor_poly(100,120)
+    # cor_poly(50,60)
+    # cor_poly(50,144)
 
-cor_poly(100, 90);
-# cor_poly(100,120)
-# cor_poly(50,60)
-# cor_poly(50,144)
+    pause()
+    close_world()
 
-pause()
-close_world()
+easy_run(main)

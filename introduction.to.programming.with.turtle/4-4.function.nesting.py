@@ -12,11 +12,14 @@ def spiro(side, angle, n):
         subspiro(side, angle, n)
 
 
-create_world(800, 600)
-set_speed(50)
+def main():
+    create_world(800, 600)
+    set_speed(50)
 
-# spiro(30,90,10)
-# spiro(20, 144, 8)
-# spiro(20,60,10)
+    # spiro(30,90,10)
+    # spiro(20, 144, 8)
+    # spiro(20,60,10)
 
-close_world()
+    close_world()
+
+easy_run(main)

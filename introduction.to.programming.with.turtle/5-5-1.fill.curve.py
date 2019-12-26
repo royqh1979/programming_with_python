@@ -18,12 +18,15 @@ def Fill(size, level):
     Fill(size / 3, level - 1)
 
 
-create_world(800, 600)
-set_speed(500)
+def main():
+    create_world(800, 600)
+    set_speed(500)
 
-setxy(0, -200)
+    setxy(0, -200)
 
-Fill(400, 4);
+    Fill(400, 4);
 
-pause()
-close_world()
+    pause()
+    close_world()
+
+easy_run(main)

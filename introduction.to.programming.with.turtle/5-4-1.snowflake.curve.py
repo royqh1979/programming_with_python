@@ -19,15 +19,17 @@ def snowflake(size, level):
         snowflake_side(size, level)
         rt(120)
 
+def main():
+    create_world(800, 600)
+    set_speed(100)
 
-create_world(800, 600)
-set_speed(100)
+    setxy(-250, 150)
 
-setxy(-250, 150)
+    rt(90)
+    snowflake(500, 4)
 
-rt(90)
-snowflake(500, 4)
+    hide()
+    pause()
+    close_world()
 
-hide()
-pause()
-close_world()
+easy_run(main)

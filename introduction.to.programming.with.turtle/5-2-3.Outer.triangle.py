@@ -13,8 +13,11 @@ def outward_tri(size, level):
         rt(120)
 
 
-create_world(800, 600)
-set_speed(100)
-outward_tri(100, 4)
-pause()
-close_world()
+def main():
+    create_world(800, 600)
+    set_speed(100)
+    outward_tri(100, 4)
+    pause()
+    close_world()
+
+easy_run(main)

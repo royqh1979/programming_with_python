@@ -9,9 +9,12 @@ def eqspi(size, angle, scale):
         size = size * scale
 
 
-create_world(1024, 768)
-set_speed(100)
+def main():
+    create_world(1024, 768)
+    set_speed(100)
 
-eqspi(1, 1, 1.001)
+    eqspi(1, 1, 1.001)
 
-close_world()
+    close_world()
+
+easy_run(main)

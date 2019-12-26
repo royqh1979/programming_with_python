@@ -17,13 +17,16 @@ def inner_tri(size, level):
     rt(120)
 
 
-create_world(800, 600)
-set_speed(100)
+def main():
+    create_world(800, 600)
+    set_speed(100)
 
-setxy(-300, -250)
-rt(30)
+    setxy(-300, -250)
+    rt(30)
 
-inner_tri(600, 6)
+    inner_tri(600, 6)
 
-pause()
-close_world()
+    pause()
+    close_world()
+
+easy_run(main)

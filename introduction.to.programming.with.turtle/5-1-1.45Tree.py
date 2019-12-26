@@ -13,14 +13,17 @@ def branch(len, level):
     bk(len)
 
 
-create_world(800, 600)
-set_speed(100)
+def main():
+    create_world(800, 600)
+    set_speed(100)
 
 
-pu()
-bk(200)
-pd()
-branch(200, 5)
+    pu()
+    bk(200)
+    pd()
+    branch(200, 5)
 
-pause()
-close_world()
+    pause()
+    close_world()
+
+easy_run(main)

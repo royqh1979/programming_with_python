@@ -9,14 +9,17 @@ def random_move(d1, d2, a1, a2):
         fd(random.randint(d1, d2))
 
 
-create_world(800, 600)
-set_speed(10)
+def main():
+    create_world(800, 600)
+    set_speed(10)
 
-random.seed()
+    random.seed()
 
-# random_move(1,10,0,10)
-# random_move(1,10,-10,5)
-random_move(1, 10, -10, 10)
+    # random_move(1,10,0,10)
+    # random_move(1,10,-10,5)
+    random_move(1, 10, -10, 10)
 
-pause()
-close_world()
+    pause()
+    close_world()
+
+easy_run(main)

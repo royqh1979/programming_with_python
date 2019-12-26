@@ -11,13 +11,16 @@ def c_curve(size, level):
     lt(90)
 
 
-create_world(800, 600)
-set_speed(1000)
+def main():
+    create_world(800, 600)
+    set_speed(1000)
 
-pu()
-setxy(-100, -100)
-pd()
-c_curve(10, 10)
-hide()
-pause()
-close_world()
+    pu()
+    setxy(-100, -100)
+    pd()
+    c_curve(10, 10)
+    hide()
+    pause()
+    close_world()
+
+easy_run(main)

@@ -29,13 +29,16 @@ def vary_turn(x, y, side, angle):
         lt(factor(x, y) * angle);
 
 
-create_world(1024, 768)
-set_speed(100)
-setxy(100, 100)
-set_fill_color("red")
-fill_circle(0, 0, 4)
-# vary_step(0,0,1500,10)
-vary_turn(0, 0, 10, 2000)
+def main():
+    create_world(1024, 768)
+    set_speed(100)
+    setxy(100, 100)
+    set_fill_color("red")
+    fill_circle(0, 0, 4)
+    # vary_step(0,0,1500,10)
+    vary_turn(0, 0, 10, 2000)
 
-pause()
-close_world()
+    pause()
+    close_world()
+
+easy_run(main)

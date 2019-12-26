@@ -9,13 +9,15 @@ def corner_tri(size, level):
         corner_tri(size / 2, level - 1)
         rt(120)
 
+def main():
+    create_world(800, 600)
+    set_speed(100)
 
-create_world(800, 600)
-set_speed(100)
+    setxy(-200, -200)
 
-setxy(-200, -200)
+    corner_tri(240, 5)
 
-corner_tri(240, 5)
+    pause()
+    close_world()
 
-pause()
-close_world()
+easy_run(main)

@@ -24,9 +24,11 @@ def triangle_spiral(side, angle, side2):
         side = side * scale;
         side2 = side2 * scale;
 
+def main():
+    create_world(1024, 768)
+    set_speed(100)
+    triangle_spiral(1, 90, 0.5);
 
-create_world(1024, 768)
-set_speed(100)
-triangle_spiral(1, 90, 0.5);
+    close_world()
 
-close_world()
+easy_run(main)

@@ -13,14 +13,16 @@ def corner_poly(size, angle, level):
         if total_turn % 360 == 0:
             break
 
+def main():
+    create_world(800, 600)
+    set_speed(100)
 
-create_world(800, 600)
-set_speed(100)
+    # corner_poly(100,90,4)
+    # corner_poly(100,60,3)
+    corner_poly(100, 120, 4)
+    # corner_poly(100,144,2)
 
-# corner_poly(100,90,4)
-# corner_poly(100,60,3)
-corner_poly(100, 120, 4)
-# corner_poly(100,144,2)
+    pause()
+    close_world()
 
-pause()
-close_world()
+easy_run(main)

@@ -10,13 +10,16 @@ def nest_tri(size, level):
         rt(120)
 
 
-create_world(800, 600)
-set_speed(1000)
+def main():
+    create_world(800, 600)
+    set_speed(1000)
 
-setxy(-200, -150)
-rt(30)
+    setxy(-200, -150)
+    rt(30)
 
-nest_tri(400, 7)
+    nest_tri(400, 7)
 
-pause()
-close_world()
+    pause()
+    close_world()
+
+easy_run(main)

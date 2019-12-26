@@ -12,13 +12,15 @@ def arcr(side, degree):
         fd(side)
         rt(1)
 
+def main():
+    create_world(800, 600)
 
-create_world(800, 600)
+    set_speed(50)
 
-set_speed(50)
+    arcr(2, 90)
+    arcl(2, 90)
 
-arcr(2, 90)
-arcl(2, 90)
+    pause()
+    close_world()
 
-pause()
-close_world()
+easy_run(main)

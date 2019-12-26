@@ -41,21 +41,23 @@ def find_by_smell2(x, y, d1, d2, smell_turn, rand_turn):
         if smell(x, y) == -1:
             rt(smell_turn)
 
+def main():
+    create_world(800, 600)
+    set_speed(100)
+    random.seed(100)
 
-create_world(800, 600)
-set_speed(100)
-random.seed(100)
+    set_fill_color("red")
+    fill_circle(200, 200, 4)
 
-set_fill_color("red")
-fill_circle(200, 200, 4)
+    # find_by_smell(200,200)
+    # find_by_smell(200,200,20)
+    # find_by_smell(200,200,60)
+    find_by_smell(200, 200, 120)
+    # find_by_smell2(200,200,1,2,60,10)
+    # find_by_smell2(200,200,1,2,60,30)
+    # find_by_smell2(200,200,1,2,60,120)
 
-# find_by_smell(200,200)
-# find_by_smell(200,200,20)
-# find_by_smell(200,200,60)
-find_by_smell(200, 200, 120)
-# find_by_smell2(200,200,1,2,60,10)
-# find_by_smell2(200,200,1,2,60,30)
-# find_by_smell2(200,200,1,2,60,120)
+    pause()
+    close_world()
 
-pause()
-close_world()
+easy_run(main)

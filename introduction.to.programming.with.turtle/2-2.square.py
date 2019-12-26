@@ -1,12 +1,15 @@
 from easygraphics.turtle import *
 
-create_world()
+def main():
+    create_world()
 
-set_speed(10)
+    set_speed(10)
 
-for i in range(4):
-    fd(100)
-    lt(90)
+    for i in range(4):
+        fd(100)
+        lt(90)
 
-pause()
-close_world()
+    pause()
+    close_world()
+
+easy_run(main)
