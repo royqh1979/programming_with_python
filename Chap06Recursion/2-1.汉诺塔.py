@@ -1,6 +1,3 @@
-from easygraphics import *
-from typing import List
-
 def move_disk(from_pole, to_pole):
     print(f"从{from_pole}柱移动到{to_pole}柱")
 
