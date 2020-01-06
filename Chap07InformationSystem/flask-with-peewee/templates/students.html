@@ -1,0 +1,22 @@
+<table>
+    <tr>
+        <th>序号</th>
+        <th>学号</th>
+        <th>姓名</th>
+        <th>班级</th>
+        <th>成绩</th>
+        <th>修改</th>
+        <th>删除</th>
+    </tr>
+{% for s in students %}
+    <tr>
+        <td>{{loop.index}}</td>
+        <td>{{s.id}}</td>
+        <td>{{s.name}}</td>
+        <td>{{s.class_name}}</td>
+        <td>{{s.score}}</td>
+        <td><a href="/modify/{{s.id}}">修改</a></td>
+        <td><a href="/delete/{{s.id}}" onclick="return confirm('确认删除？');">删除</a></td>
+    </tr>
+{% endfor %}
+</table>
