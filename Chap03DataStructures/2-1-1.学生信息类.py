@@ -6,7 +6,6 @@ class Student:
     name: str
     score: int
 
-
 s1 = Student(1,'张三',50)
 s2 = Student(2,'李四',70)
 s1.score = 80

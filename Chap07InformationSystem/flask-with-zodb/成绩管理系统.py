@@ -46,7 +46,7 @@ def get_conn():
 def get_students(conn):
     root = conn.root
     if 'students' not in conn.root():
-        print("lala")
+        print("init zodb database...")
         students = BTree()  # btree可以当成一个字典来用
         root.students = students  # 将students交给zodb来管理
     else:

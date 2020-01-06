@@ -291,9 +291,9 @@ class MyWindow(QtWidgets.QMainWindow):
         dashboard = DashboardDialog(self,self.students,ChartType.Histogram)
         dashboard.exec()
 
-
-app = QtWidgets.QApplication(sys.argv)
-ui = Ui_MainWindow()
-mainWindow = MyWindow(ui)
-mainWindow.show()
-sys.exit(app.exec_())
+if __name__ == "__main__":
+    app = QtWidgets.QApplication(sys.argv)
+    ui = Ui_MainWindow()
+    mainWindow = MyWindow(ui)
+    mainWindow.show()
+    app.exec_()
