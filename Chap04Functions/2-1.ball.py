@@ -39,36 +39,37 @@ class Ball:
                or self.cx > self.world.right - self.r
 
 
-init_graph(400,400)
-set_render_mode(RenderMode.RENDER_MANUAL)
-random.seed()
-world = World(20,20,380,380)
-cx = random.randrange(20,380)
-cy = random.randrange(20,200)
-r=5
-vx = 0
-# 确保随机出来的vx（x方向速度）不会是0
-while vx == 0:
-    vx = random.randint(-3,3)
+def main():
+    init_graph(400,400)
+    set_render_mode(RenderMode.RENDER_MANUAL)
+    random.seed()
+    world = World(20,20,380,380)
+    cx = random.randrange(20,380)
+    cy = random.randrange(20,200)
+    r=5
+    vx = 0
+    # 确保随机出来的vx（x方向速度）不会是0
+    while vx == 0:
+        vx = random.randint(-3,3)
 
-vy = 0
-while vy == 0:
-    vy = random.randint(1,3)
-ball = Ball(world,cx,cy,r,vx,vy)
-while is_run():
-    ball.move()
-    # Ball.move(ball) # 和上面一行语句等效
-    if delay_jfps(200):
-        clear()
-        set_color("black")
-        rect(20,20,380,380)
-        set_color("red")
-        set_fill_color("red")
-        fill_circle(ball.cx,ball.cy,ball.r)
-close_graph()
+    vy = 0
+    while vy == 0:
+        vy = random.randint(1,3)
+    ball = Ball(world,cx,cy,r,vx,vy)
+    while is_run():
+        ball.move()
+        # Ball.move(ball) # 和上面一行语句等效
+        if delay_jfps(200):
+            clear()
+            set_color("black")
+            rect(20,20,380,380)
+            set_color("red")
+            set_fill_color("red")
+            fill_circle(ball.cx,ball.cy,ball.r)
+    close_graph()
 
 
-
+easy_run(main)
 
 
 

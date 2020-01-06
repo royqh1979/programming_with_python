@@ -33,10 +33,12 @@ def chamber_spiral(base, s1, s2, a1, a2):
         s1 = s1 * scale
         s2 = s2 * scale
 
+def main():
+    create_world(1024, 768)
+    set_speed(100)
 
-create_world(1024, 768)
-set_speed(100)
+    chamber_spiral(1, 1, 1.5, 90, 90)
 
-chamber_spiral(1, 1, 1.5, 90, 90)
+    close_world()
 
-close_world()
+easy_run(main)

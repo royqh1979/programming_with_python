@@ -35,14 +35,16 @@ def random_move(d1, d2, a1, a2):
         if forward_failed:
             wriggle()
 
+def main():
+    create_world(800, 600)
+    set_speed(10)
+    random.seed()
 
-create_world(800, 600)
-set_speed(10)
-random.seed()
+    # random_move(1,10,0,10)
+    # random_move(1,10,-10,5)
+    random_move(1, 10, -10, 10)
 
-# random_move(1,10,0,10)
-# random_move(1,10,-10,5)
-random_move(1, 10, -10, 10)
+    pause()
+    close_world()
 
-pause()
-close_world()
+easy_run(main)

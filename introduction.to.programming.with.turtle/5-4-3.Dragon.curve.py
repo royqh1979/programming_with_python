@@ -18,14 +18,16 @@ def rdragon(size, level):
     rt(90)
     rdragon(size, level - 1)
 
+def main():
+    create_world(800, 600)
+    set_speed(100)
 
-create_world(800, 600)
-set_speed(100)
+    setxy(200, 0)
 
-setxy(200, 0)
+    ldragon(5, 11)
+    hide()
 
-ldragon(5, 11)
-hide()
+    pause()
+    close_world()
 
-pause()
-close_world()
+easy_run(main)

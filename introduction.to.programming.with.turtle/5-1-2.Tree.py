@@ -23,14 +23,17 @@ def node(size, angle, level):
     lt(angle)
 
 
-create_world(800, 600)
-set_speed(100)
+def main():
+    create_world(800, 600)
+    set_speed(100)
 
-pen_up()
-back(200)
-pen_down()
+    pen_up()
+    back(200)
+    pen_down()
 
-lbranch(20, 20, 8)
+    lbranch(20, 20, 8)
 
-pause()
-close_world()
+    pause()
+    close_world()
+
+easy_run(main)

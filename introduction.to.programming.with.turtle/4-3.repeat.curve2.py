@@ -8,11 +8,14 @@ def inspi(side, angle, inc):
         angle += inc;
 
 
-create_world(800, 600)
-set_speed(1000)
+def main():
+    create_world(800, 600)
+    set_speed(1000)
 
-# inspi(15,0,7)
-# inspi(50,40,30)
-inspi(50, 2, 20)
+    # inspi(15,0,7)
+    # inspi(50,40,30)
+    inspi(50, 2, 20)
 
-close_world()
+    close_world()
+
+easy_run(main)

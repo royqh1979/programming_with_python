@@ -13,13 +13,16 @@ def arcr(side, degree):
         rt(1)
 
 
-create_world(800, 600)
+def main():
+    create_world(800, 600)
 
-set_speed(50)
+    set_speed(50)
 
-for i in range(9):
-    arcr(1, 360)
-    rt(40)
+    for i in range(9):
+        arcr(1, 360)
+        rt(40)
 
-pause()
-close_world()
+    pause()
+    close_world()
+
+easy_run(main)

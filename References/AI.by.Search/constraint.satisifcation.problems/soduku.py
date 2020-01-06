@@ -248,23 +248,25 @@ def solve(unsolved):
 
     return False
 
+def main():
+    init()
+    load_board(DATA_FILE)
+    draw_board()
+    draw_rect_text(10, 550, 700, 50, "按任意键开始...")
+    pause()
+    fill_rect(10, 550, 710, 600)
+    draw_rect_text(10, 550, 700, 50, "正在穷举...")
 
-init()
-load_board(DATA_FILE)
-draw_board()
-draw_rect_text(10, 550, 700, 50, "按任意键开始...")
-pause()
-fill_rect(10, 550, 710, 600)
-draw_rect_text(10, 550, 700, 50, "正在穷举...")
+    # 将数独中已有的数字做标记
+    for i in range(1, 10):
+        for j in range(1, 10):
+            if board[i][j] != 0:
+                tag(i, j, board[i][j])
 
-# 将数独中已有的数字做标记
-for i in range(1, 10):
-    for j in range(1, 10):
-        if board[i][j] != 0:
-            tag(i, j, board[i][j])
+    solve(count_unsolved())
+    fill_rect(10, 550, 710, 600)
+    draw_rect_text(10, 550, 700, 50, "找到答案了！按任意键退出...")
+    pause()
+    close_graph()
 
-solve(count_unsolved())
-fill_rect(10, 550, 710, 600)
-draw_rect_text(10, 550, 700, 50, "找到答案了！按任意键退出...")
-pause()
-close_graph()
+easy_run(main)

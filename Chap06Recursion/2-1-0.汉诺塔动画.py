@@ -198,7 +198,7 @@ def init(n):
     pole_c = Pole(POLE_C,'C',POLE_CXC)
     poles.append(pole_c)
 
-    for i in range(5,0,-1):
+    for i in range(n,0,-1):
         # 从大到小，创建圆盘，最小的圆盘在上面
         disk = Disk(i,
                     pole_a.cx,
@@ -231,12 +231,13 @@ def hanoi(n, from_pole_id, to_pole_id, aux_pole_id):
 
 
 # Entry Point
+def main():
+    n=3
+    init(n)
+    pause()
+    hanoi(n, POLE_A, POLE_C, POLE_B) # 设Pole B为辅助，从A移动C
+    pause()
+    quit()
+    close_graph()
 
-n=5
-init(n)
-pause()
-hanoi(n, POLE_A, POLE_C, POLE_B) # 设Pole B为辅助，从A移动C
-pause()
-quit()
-close_graph()
-
+easy_run(main)

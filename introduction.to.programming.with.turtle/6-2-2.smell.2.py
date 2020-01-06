@@ -21,13 +21,16 @@ def find_by_smell_ortho(x, y, d1, d2, rand_turn):
         lt(random.uniform(-rand_turn, rand_turn) * d)
 
 
-create_world(800, 600)
-set_speed(100)
-random.seed()
+def main():
+    create_world(800, 600)
+    set_speed(100)
+    random.seed()
 
-set_fill_color("red")
-fill_circle(50, 50, 4)
-set_fill_color("white")
-find_by_smell_ortho(50, 50, 0.5, 1, 20);
+    set_fill_color("red")
+    fill_circle(50, 50, 4)
+    set_fill_color("white")
+    find_by_smell_ortho(50, 50, 0.5, 1, 20);
 
-close_world()
+    close_world()
+
+easy_run(main)

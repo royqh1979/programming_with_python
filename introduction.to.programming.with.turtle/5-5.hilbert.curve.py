@@ -16,11 +16,13 @@ def hilbert(size, level, parity):
     hilbert(size, level - 1, -parity)
     lt(parity * 90)
 
+def main():
+    create_world(800, 600)
 
-create_world(800, 600)
+    set_speed(500)
+    hilbert(5, 5, 1);
 
-set_speed(500)
-hilbert(5, 5, 1);
+    pause()
+    close_world()
 
-pause()
-close_world()
+easy_run(main)

@@ -26,11 +26,13 @@ def fill(size, level):
     rt(45)
     fill(size / 3, level - 1)
 
+def main():
+    create_world(800, 600)
+    set_speed(1000)
+    setxy(0, -250)
+    fill(200, 4)
 
-create_world(800, 600)
-set_speed(1000)
-setxy(0, -250)
-fill(200, 4);
+    pause()
+    close_world()
 
-pause()
-close_world()
+easy_run(main)
