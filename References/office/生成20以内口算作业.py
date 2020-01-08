@@ -1,4 +1,4 @@
-#生成一百以内带退位减法 带进位加法
+#生成20以内带退位减法 带进位加法
 
 from comtypes.client import CreateObject,Constants
 import random
