@@ -12,9 +12,9 @@ out_dir = "g:\\"
 out_name = out_dir+"口算"
 
 max_number = 100
-ratio_sub = 0.1 #减法题的比例
-ratio_add = 0.1 #加法题的比例
-ratio_mul = 0.4 #乘法题的比例
+ratio_sub = 0.05 #减法题的比例
+ratio_add = 0.05 #加法题的比例
+ratio_mul = 0.45 #乘法题的比例
 
 ratio_carry = 0.8 # 进退位比例
 total_page = 30 # 总页数
@@ -81,7 +81,7 @@ for page in range(total_page):
                 x = random.randint(2,9)
                 y = random.randint(2,9)
                 str = f"{x*y: 3d} ÷ {y: 3d} = "
-                total_div -= 1
+                total_div += 1
 
             workbook.ActiveSheet.Cells(row + row_start, col).Value=str
     out_file = f"{out_name}{page+1:03d}.pdf"
