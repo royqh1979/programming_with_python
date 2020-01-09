@@ -55,7 +55,7 @@ for page in range(total_page):
                         if (x % 10) >= (y % 10):
                             total_sub_no_decomposition += 1
                             break
-                str = f"{x: 3d} - {y: 3d} = "
+                str = f"{x: 3d} ― {y: 3d} = "
             elif type_ratio < ratio_sub + ratio_add:
                 # 生成加法
                 while True:
@@ -69,7 +69,7 @@ for page in range(total_page):
                         if (x%10)+(y%10) < 10:
                             total_add_with_no_carry += 1
                             break
-                str = f"{x: 3d} + {y: 3d} = "
+                str = f"{x: 3d} ＋ {y: 3d} = "
             elif type_ratio < ratio_sub + ratio_add + ratio_mul:
                 # 生成乘法
                 x = random.randint(2,9)
