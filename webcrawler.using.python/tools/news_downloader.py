@@ -88,10 +88,12 @@ def download_news(session, link, title, pub_date):
     attachments = html.find("div#con_fujian li a")
     session.headers.update({"Referrer":link})
     for a in attachments:
+        attach_resp = session.get(list(a.absolute_links)[0],)
+        if len(attach_resp.content) > 50000:
+            continue
         attach = Attachment()
         attach.news_id = id
         attach.filename = a.text.strip()
-        attach_resp = session.get(list(a.absolute_links)[0],)
         attach.content = attach_resp.content
         attach.size = len(attach.content)
         attach.save()
@@ -127,7 +129,7 @@ def download(session, max_page_number, num=100):
             if count >= num:
                 return
 
-
+db.create_tables([News,Attachment])
 News.delete().execute()
 Attachment.delete().execute()
 session = HTMLSession()

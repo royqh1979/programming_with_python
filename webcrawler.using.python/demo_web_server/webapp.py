@@ -4,13 +4,17 @@ from pathlib import Path
 from flask import Flask,render_template,Response
 from peewee import *
 from werkzeug.urls import url_quote
+from pathlib import Path
 
 app= Flask(__name__)
 app.config['DEBUG'] = True
 # 让Flask自动更新静态文件（每秒1次）
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = timedelta(seconds=1)
 
-db = SqliteDatabase("demo.db")
+myself = Path(__file__)
+parent = myself.parent
+db_path=Path(str(parent.absolute())+"/demo.db")
+db = SqliteDatabase(db_path.absolute())
 NEWS_PER_PAGE = 15
 
 # 新闻
