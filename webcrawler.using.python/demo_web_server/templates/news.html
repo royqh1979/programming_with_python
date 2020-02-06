@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{news.title}}</title>
+    <script type="text/javascript" src="/static/jquery-3.4.1.js"></script>
+    <link rel="stylesheet" href="/static/style.css" type="text/css" />
+    <script type="text/javascript">
+        var attachments = [
+            {% for att in attachments %}
+            {'filename':'{{att.filename}}',
+             'link':'/attachment/{{att.id}}'},
+            {% endfor %}
+            {}
+        ]
+        $(document).ready(function() {
+            var fujian = $('div#con_fujian')
+            var ul = $("<ul></ul>")
+            fujian.append(ul)
+            for (var i=0;i<attachments.length;i++) {
+                var att=attachments[i]
+                if (att.title==""){
+                    continue
+                }
+                var li = $("<li></li>")
+                ul.append(li)
+                var link = $("<a href='"+att.link+"'></a>")
+                link.text(att.filename)
+                li.append(link)
+            }
+        })
+    </script>
+</head>
+<body>
+    <div id="contents">
+        <div id="con_title">{{news.title}}</div>
+        <div id="con_c">{{news.content | safe}}</div>
+        <div id="con_fujian"></div>
+    </div>
+</body>
+</html>
