@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{news.title}}</title>
+    <link rel="stylesheet" href="/static/style.css" type="text/css" />
+</head>
+<body>
+    <div id="contents">
+        <div id="con_title">{{news.title}}</div>
+        <div id="con_c">{{news.content | safe}}</div>
+        <div id="con_fujian">
+            <ul class="list_fj">
+                {% for att in attachments %}
+                <li>
+                    <a href="/attachment/{{att.id}}">{{att.filename}}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

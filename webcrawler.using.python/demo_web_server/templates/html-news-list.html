@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>教务快讯</title>
+    <link rel="stylesheet" href="/static/style.css" type="text/css" />
+</head>
+<body>
+    <div id="contents">
+        <div id="con_title">教务快讯</div>
+        <div id="con_c">
+            <ul class="list_c">
+            {% for news in news_list %}
+                <li>
+                    <span class="datetime">{{news.pub_date}}</span>
+                    <a href="/html-news/{{news.id}}">{{news.title}}</a>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+        <div id="con_fanye">
+            <span>共有{{info.total}}条新闻，分{{info.total_page}}页，当前第{{info.page}}页</span>
+            {% if info.page == 1 %}
+            <span>最前页</span>
+            <span>上一页</span>
+            {% else %}
+            <a href="/html-list/1">最前页</a>
+            <a href="/html-list/{{info.page-1}}">上一页</a>
+            {% endif %}
+            {% if info.page == info.total_page %}
+            <span>下一页</span>
+            <span>最后页</span>
+            {% else %}
+            <a href="/html-list/{{info.page+1}}">下一页</a>
+            <a href="/html-list/{{info.total_page}}">最后页</a>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

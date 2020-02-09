@@ -42,25 +42,44 @@ class Attachment(Model):
         database = db
         table_name = "attachments"
 
+
 @app.route('/')
 def index():
-    return list(1)
+    return render_template("index.html")
 
-@app.route("/newslist/<page>")
-def list(page):
-    page=int(page)
-    lst=News.select().order_by(News.id).paginate(page, NEWS_PER_PAGE)
-    total=News.select().count()
-    page_info=calc_page(total,page)
-    return render_template("index.html",news_list=lst,info=page_info)
+# 普通html网站
+@app.route("/html-list/<page>")
+def list_news_html(page):
+    page = int(page)
+    lst = get_news_list(page)
+    page_info = calc_page(page)
+    return render_template("html-news-list.html", news_list=lst, info=page_info)
 
-@app.route("/news/<id>")
-def show_news(id):
+@app.route("/html-news/<id>")
+def show_news_html(id):
     id=int(id)
-    news = News.get_by_id(id)
-    news.content = str(news.content).replace("<a name=\"_GoBack\" id=\"_GoBack\"/>","")
-    attachments = Attachment.select().where(Attachment.news_id == id)
-    return render_template("news.html",news=news,attachments=attachments)
+    news = get_news(id)
+    attachments = get_news_attachments(id)
+    return render_template("html-news.html", news=news, attachments=attachments)
+
+# 使用javascript生成内容
+
+@app.route("/js-list/<page>")
+def list_news_js(page):
+    page=int(page)
+    lst = get_news_list(page)
+    page_info=calc_page(page)
+    return render_template("js-news-list.html", news_list=lst, info=page_info)
+
+@app.route("/js-news/<id>")
+def show_news_js(id):
+    id=int(id)
+    news=get_news(id)
+    attachments = get_news_attachments(id)
+    return render_template("js-news.html", news=news, attachments=attachments)
+
+
+#  共用，附件下载
 
 @app.route("/attachment/<id>")
 def show_attachment(id):
@@ -78,11 +97,47 @@ def show_attachment(id):
         }
     else:
         filenames = {'filename': filename}
-
     resp.headers.set('Content-Disposition', 'attachment', **filenames)
     return resp
 
-def calc_page(total,page):
+# 通用辅助函数
+
+def get_news_attachments(id):
+    """
+    获取新闻的所有附件
+    :param id: 新闻的id
+    :return:
+    """
+    attachments = Attachment.select().where(Attachment.news_id == id)
+    return attachments
+
+def get_news(id):
+    """
+    获取新闻内容
+    :param id: 新闻的id
+    :return:
+    """
+    news = News.get_by_id(id)
+    news.content = str(news.content).replace("<a name=\"_GoBack\" id=\"_GoBack\"/>", "")
+    return news
+
+
+def get_news_list(page):
+    """
+    从数据库中获取第page页的新闻列表
+    :param page:
+    :return:
+    """
+    lst = News.select().order_by(News.id).paginate(page, NEWS_PER_PAGE)
+    return lst
+
+def calc_page(page):
+    """
+    计算页面导航信息
+    :param page: 页数
+    :return: 
+    """
+    total=News.select().count()
     info = {}
     total_page = (total - 1) % NEWS_PER_PAGE + 1
     if page<0:
