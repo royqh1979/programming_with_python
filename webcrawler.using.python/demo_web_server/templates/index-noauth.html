@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>尚未登陆</title>
+    <link type="text/css" rel="stylesheet" href="/static/style.css" />
+    <link type="text/css" rel="stylesheet" href="/static/jquery-ui.css" />
+    <script type="text/javascript" src="/static/jquery-3.4.1.js" ></script>
+    <script type="text/javascript" src="/static/jquery-ui.js" ></script>
+    <script>
+        function do_login() {
+            var form = $("#login-form");
+            form.submit();
+        }
+        $(function(){
+            var dialog = $("#login-dialog").dialog({
+                autoOpen:false,
+                height: 400,
+                width: 350,
+                modal: true,
+                buttons: {
+                    "登陆": do_login,
+                    Cancel: function() {
+                        dialog.dialog("close");
+                    }
+                },
+                close: function() {
+
+                }
+            })
+            $("#open_login").on("click", function() {
+                dialog.dialog("open");
+            })
+        })
+    </script>
+</head>
+<body>
+    <h1>您尚未登陆，需要登陆之后才能查看新闻</h1>
+    <div>
+        <button href="#" id="open_login">点击登陆</button>
+    </div>
+    <div id="login-dialog" title="登陆信息">
+        <p>{{error}}</p>
+        <p>用户名为test，密码为test</p>
+        <form id="login-form" action="/login" method="post">
+            <fieldset>
+                <label for="username">账号 </label>
+                <input type="text" name="username" id="username" text="test" />
+                <label for="password">密码</label>
+                <input type="password" name="password" id="password" text="test" />
+
+                <!-- Allow form submission with keyboard without duplicating the dialog button -->
+                <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+            </fieldset>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,8 +1,10 @@
 from datetime import timedelta
 from pathlib import Path
+from typing import List
 
-from flask import Flask,render_template,Response
+from flask import Flask, render_template, Response, session, request, redirect, url_for
 from peewee import *
+from playhouse.shortcuts import model_to_dict
 from werkzeug.urls import url_quote
 from pathlib import Path
 
@@ -10,6 +12,7 @@ app= Flask(__name__)
 app.config['DEBUG'] = True
 # 让Flask自动更新静态文件（每秒1次）
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = timedelta(seconds=1)
+app.secret_key = b'\x08\xcd|\x01\xf5\x15\xd0{1\x08\xa7/\xd4\xb3\x1eu'
 
 myself = Path(__file__)
 parent = myself.parent
@@ -48,36 +51,94 @@ def index():
     return render_template("index.html")
 
 # 普通html网站
-@app.route("/html-list/<page>")
+@app.route("/html-list/<int:page>")
 def list_news_html(page):
-    page = int(page)
     lst = get_news_list(page)
     page_info = calc_page(page)
     return render_template("html-news-list.html", news_list=lst, info=page_info)
 
-@app.route("/html-news/<id>")
+@app.route("/html-news/<int:id>")
 def show_news_html(id):
-    id=int(id)
     news = get_news(id)
     attachments = get_news_attachments(id)
     return render_template("html-news.html", news=news, attachments=attachments)
 
 # 使用javascript生成内容
 
-@app.route("/js-list/<page>")
+@app.route("/js-list/<int:page>")
 def list_news_js(page):
-    page=int(page)
     lst = get_news_list(page)
     page_info=calc_page(page)
     return render_template("js-news-list.html", news_list=lst, info=page_info)
 
-@app.route("/js-news/<id>")
+@app.route("/js-news/<int:id>")
 def show_news_js(id):
-    id=int(id)
     news=get_news(id)
     attachments = get_news_attachments(id)
     return render_template("js-news.html", news=news, attachments=attachments)
 
+# ajax生成
+
+@app.route("/ajax-list/<int:page>")
+def list_news_ajax(page):
+    return render_template("ajax-news-list.html", page=page)
+
+@app.route("/ajax-news/<int:id>")
+def show_news_ajax(id):
+    return render_template("ajax-news.html",id=id)
+
+# ajax生成（带登陆)
+@app.route("/login",methods=['POST'])
+def login():
+    error = None
+    if request.form['username']=='test' and request.form['password']=='test':
+        session['username']='test'
+        return redirect(url_for('list_news_ajax_auth',page=1))
+    else:
+        return render_template("index-noauth.html",error="错误的密码!")
+
+@app.route("/logout")
+def logout():
+    session.pop("username",None)
+    return render_template("index-noauth.html",error="已经退出登陆!")
+
+@app.route("/ajax-auth-list/<int:page>")
+def list_news_ajax_auth(page):
+    if 'username' not in session:
+        return render_template("index-noauth.html")
+    return render_template("ajax-auth-news-list.html", page=page)
+
+@app.route("/ajax-auth-news/<int:id>")
+def show_news_ajax_auth(id):
+    if 'username' not in session:
+        return render_template("index-noauth.html")
+    return render_template("ajax-auth-news.html",id=id)
+
+# json信息
+@app.route("/json-list/<int:page>")
+def list_news_json(page):
+    news_list = get_news_list(page)
+    page_info = calc_page(page)
+    lst = []
+    for news in news_list:
+        news_dict = model_to_dict(news,only=(News.id,News.pub_date,News.title))
+        lst.append(news_dict)
+    return {
+        "news_list":lst,
+        "info":page_info
+    }
+
+@app.route("/json-news/<int:id>")
+def show_news_json(id):
+    news = get_news(id)
+    result = model_to_dict(news,only=(News.title,News.content))
+    attach_list = []
+    attachments = get_news_attachments(id)
+    for attach in attachments:
+        att_dict = model_to_dict(attach,only=(Attachment.id,Attachment.filename))
+        attach_list.append(att_dict)
+    result['attachments'] = attach_list
+    return result
 
 #  共用，附件下载
 
@@ -148,7 +209,6 @@ def calc_page(page):
     info['page'] = page
     info['total_page'] = total_page
     return info
-
 
 if __name__ == "__main__":
     # 在本地的8080端口上启动web服务器

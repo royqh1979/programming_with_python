@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script type="text/javascript" src="/static/jquery-3.4.1.js"></script>
+    <link rel="stylesheet" href="/static/style.css" type="text/css" />
+    <script type="text/javascript">
+        var id = {{id}}
+        $(document).ready(function(){
+            jQuery.get("/json-news/"+id, function(news){
+                $("title").text(news.title)
+                $("#con_title").text(news.title)
+                $("#con_c").html(news.content)
+                var attachments = news.attachments
+                var fujian = $('div#con_fujian')
+                var ul = $("<ul></ul>")
+                fujian.append(ul)
+                for (var i=0;i<attachments.length;i++) {
+                    var att=attachments[i]
+                    if (att.title==""){
+                        continue
+                    }
+                    var li = $("<li></li>")
+                    ul.append(li)
+                    var link = $("<a href='/attachment/"+att.id+"'></a>")
+                    link.text(att.filename)
+                    li.append(link)
+                }
+            })
+        })
+    </script>
+</head>
+<body>
+    <div id="contents">
+        <div id="con_title"></div>
+        <div id="con_c"></div>
+        <div id="con_fujian"></div>
+    </div>
+</body>
+</html>

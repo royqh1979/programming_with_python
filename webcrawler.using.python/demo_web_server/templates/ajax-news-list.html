@@ -6,42 +6,28 @@
     <script type="text/javascript" src="/static/jquery-3.4.1.js"></script>
     <link rel="stylesheet" href="/static/style.css" type="text/css" />
     <script type="text/javascript">
-        var data=[
-            {% for news in news_list %}
-            {
-            'title': '{{news.title}}',
-            'pub_date':'{{news.pub_date}}',
-            'link':'/js-news/{{news.id}}'
-            },
-            {% endfor %}
-            {
-                'title':''
-            }];
-        function create_list(){
+        function create_list(news_list){
             var content = $('div#con_c');
             var ul = $("<ul></ul>");
             content.append(ul)
             ul.addClass("list_c")
-            var len=data.length;
+            var len=news_list.length;
             for (i=0;i<len;i++){
-                var obj = data[i];
-                if (obj.title=='') {
-                    continue;
-                }
+                var news = news_list[i];
                 var li=$("<li></li>");
                 ul.append(li)
                 var span = $("<span></span>");
                 span.addClass('datetime');
-                span.text(obj.pub_date)
+                span.text(news.pub_date)
                 li.append(span)
-                var link = $("<a href='"+obj.link+"' target='_blank'>"+obj.title+"</a>");
+                var link = $("<a href='/ajax-news/"+news.id+"' target='_blank'>"+news.title+"</a>");
                 li.append(link)
             }
         }
-        function create_nav(){
-            var total = {{info.total}};
-            var page = {{info.page}};
-            var total_page = {{info.total_page}};
+        function create_nav(info){
+            var total = info.total;
+            var page = info.page;
+            var total_page = info.total_page;
             var nav=$('div#con_fanye');
             var info_span = $('<span></span>');
             info_span.text("共有"+total+"条新闻，分"+total_page+"页，当前第"+page+"页");
@@ -55,10 +41,10 @@
                 nav.append(span)
             }else{
                 var pre_page=page-1
-                var link=$("<a href='/js-list/1'></a>")
+                var link=$("<a href='/ajax-list/1'></a>")
                 link.text("最前页")
                 nav.append(link)
-                link=$("<a href='/js-list/"+pre_page+"'></a>")
+                link=$("<a href='/ajax-list/"+pre_page+"'></a>")
                 link.text("上一页")
                 nav.append(link)
             }
@@ -71,18 +57,22 @@
                 nav.append(span)
             } else {
                 var next_page=page+1
-                var link=$("<a href='/js-list/"+next_page+"'></a>")
+                var link=$("<a href='/ajax-list/"+next_page+"'></a>")
                 link.text("下一页")
                 nav.append(link)
-                link=$("<a href='/js-list/"+total_page+"'></a>")
+                link=$("<a href='/ajax-list/"+total_page+"'></a>")
                 link.text("最后页")
                 nav.append(link)
             }
 
         }
         $(document).ready(function() {
-            create_list()
-            create_nav()
+            var page = {{page}};
+            jQuery.get("/json-list/"+page,function(data){
+                create_list(data.news_list)
+                create_nav(data.info)
+            })
+
         })
     </script>
 </head>

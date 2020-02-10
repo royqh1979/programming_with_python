@@ -135,3 +135,7 @@ a:hover{
     color: #5a5a5a;
     font-size: 12px;
 }
+
+form#login-form label{
+	display: block;
+}
