@@ -1,8 +1,11 @@
+import random
+import string
 from datetime import timedelta
-from pathlib import Path
-from typing import List
+from io import BytesIO
 
-from flask import Flask, render_template, Response, session, request, redirect, url_for
+from PIL import Image, ImageFont, ImageDraw, ImageFilter
+
+from flask import Flask, render_template, Response, session, request, redirect, url_for, send_file
 from peewee import *
 from playhouse.shortcuts import model_to_dict
 from werkzeug.urls import url_quote
@@ -88,9 +91,20 @@ def show_news_ajax(id):
     return render_template("ajax-news.html",id=id)
 
 # ajax生成（带登陆)
+@app.route("/ver_code.jpg")
+def get_ver_code():
+    """
+    生成验证码图片
+    :return:
+    """
+    code_image = gen_verify_code(4)
+    return send_file(code_image, mimetype='image/jpeg', as_attachment=False)
+
 @app.route("/login",methods=['POST'])
 def login():
-    error = None
+    if request.form['code']!= session['code']:
+        print(request.form['code'],session['code'])
+        return render_template("index-noauth.html", error="验证码错误!")
     if request.form['username']=='test' and request.form['password']=='test':
         session['username']='test'
         return redirect(url_for('list_news_ajax_auth',page=1))
@@ -161,6 +175,7 @@ def show_attachment(id):
     resp.headers.set('Content-Disposition', 'attachment', **filenames)
     return resp
 
+
 # 通用辅助函数
 
 def get_news_attachments(id):
@@ -209,6 +224,49 @@ def calc_page(page):
     info['page'] = page
     info['total_page'] = total_page
     return info
+
+def gen_verify_code(n:int):
+    """
+    生成字母验证码图片
+    :param n:验证码长度(字母数量）
+    """
+    width = 60*n
+    height = 60
+    image = Image.new("RGB",(width,height),(255,255,255))
+
+    font_path = Path(str(parent.absolute()) + "/Jose.ttf")
+    print(font_path.absolute())
+    font= ImageFont.truetype(str(font_path.absolute()),36)
+    # 创建Draw对象
+    draw = ImageDraw.Draw(image)
+
+    # 填充每个像素
+    for x in range(width):
+        for y in range(height):
+            draw.point((x, y), fill=(random.randint(64, 255),
+                                     random.randint(64, 255),
+                                     random.randint(64, 255)))
+
+
+    code = ''
+    # 输出文字
+    for i in range(n):
+        letter = random.choice(string.ascii_letters).upper()
+        code += letter
+        draw.text((60 * i + 10, 10), letter , font=font,
+                  fill=(random.randint(32, 127),
+                        random.randint(32, 127),
+                        random.randint(32, 127)))
+
+    session['code']=code
+    # 模糊处理
+    #image = image.filter(ImageFilter.BLUR)
+
+    out=BytesIO()
+    image.save(out,format='jpeg')
+    out.seek(0,0)
+    return out
+
 
 if __name__ == "__main__":
     # 在本地的8080端口上启动web服务器

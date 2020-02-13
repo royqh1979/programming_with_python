@@ -35,20 +35,20 @@ for page in range(total_page):
                 while True:
                     x = random.randint(20, max_number)
                     y = random.randint(10, x)
-                    print(x,y,type_ratio)
+                    # print(x,y,type_ratio)
                     if x-y>10 and y>10:
                         break
-                # op1_str = f"{x:>2d} - {y:>2d}"
+                op1_str = f"{x:>2d} - {y:>2d}"
                 res1 = x-y
             else:
                 # 第一项是加法
                 while True:
                     x = random.randint(10, max_number-10)
                     y = random.randint(10, max_number-x)
-                    print(x,y,type_ratio)
+                    # print(x,y,type_ratio)
                     if 10<x+y<100:
                         break
-                # op1_str = f"{x:>2d} + {y:>2d}"
+                op1_str = f"{x:>2d} + {y:>2d}"
                 res1=x+y
             if res1<=11:
                 type_ratio=1

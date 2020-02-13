@@ -31,24 +31,29 @@
             $("#open_login").on("click", function() {
                 dialog.dialog("open");
             })
+            $("#ver_code").attr("src","/ver_code.jpg?"+Date.now()).click(function(){
+                $("#ver_code").attr("src","/ver_code.jpg?"+Date.now())
+            })
         })
     </script>
 </head>
 <body>
     <h1>您尚未登陆，需要登陆之后才能查看新闻</h1>
     <div>
+        <p>{{error}}</p>
         <button href="#" id="open_login">点击登陆</button>
     </div>
     <div id="login-dialog" title="登陆信息">
-        <p>{{error}}</p>
         <p>用户名为test，密码为test</p>
         <form id="login-form" action="/login" method="post">
             <fieldset>
                 <label for="username">账号 </label>
-                <input type="text" name="username" id="username" text="test" />
+                <input type="text" name="username" id="username"/>
                 <label for="password">密码</label>
-                <input type="password" name="password" id="password" text="test" />
-
+                <input type="password" name="password" id="password" />
+                <label for="code">验证码</label>
+                <input type="text" name="code" id="code" />
+                <img id="ver_code" />
                 <!-- Allow form submission with keyboard without duplicating the dialog button -->
                 <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
             </fieldset>
