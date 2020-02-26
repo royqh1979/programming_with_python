@@ -6,13 +6,11 @@ Created on Fri Nov 30 16:20:02 2018
 """
 from datetime import datetime
 
-
 def sum(n):
     s = 0
     for i in range(1, n + 1):
         s = s + i
     return s
-
 
 begin = datetime.now()
 t = 0
