@@ -4,11 +4,6 @@ warnings.filterwarnings('ignore')
 
 import pandas as pd
 
-# 关掉所有警告信息
-import warnings
-warnings.filterwarnings('ignore')
-
-
 # 设置以下属性，保证dataframe各列能全部输出
 pd.set_option('display.width',400)
 pd.set_option('display.max_column',20)

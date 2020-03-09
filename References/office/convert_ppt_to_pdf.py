@@ -1,4 +1,4 @@
-from comtypes.client import CreateObject,Constants
+import win32com.client
 from easygraphics import dialog as dlg
 
 import os
@@ -6,8 +6,8 @@ from pathlib import Path
 
 
 
-app = CreateObject("Powerpoint.Application")
-pp_constants = Constants(app)
+app = win32com.client.gencache.EnsureDispatch('Powerpoint.Application')
+pp_constants = win32com.client.constants
 
 dir_path = dlg.get_directory_name("请选择要转换的目录")
 
@@ -20,8 +20,8 @@ for entry in path.iterdir():
     filename = str(path.absolute())+os.sep+entry.name.lower()
     if filename.endswith(".ppt") or filename.endswith(".pptx"):
         print(filename)
-        newname = newname.replace(".pptx",".pdf")
-        newname = filename.replace(".ppt",".pdf")
+        newname = filename.replace(".pptx", ".pdf")
+        newname = newname.replace(".ppt",".pdf")
         presentation = app.Presentations.Open(filename)
         presentation.SaveAs(newname, pp_constants.ppSaveAsPDF)
         presentation.Close()
