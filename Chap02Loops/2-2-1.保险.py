@@ -1,6 +1,6 @@
 rate = 0.02
 balance = 15350
-for age in range(1,26):
+for age in range(0,26):
     interest = balance * rate
     if 0<=age<=8:
         deposit = 15350
