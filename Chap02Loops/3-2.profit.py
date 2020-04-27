@@ -21,6 +21,7 @@ cost = 200000
 sale_mean, sale_dev = 30000,10000
 price_mean, price_dev= 6,1
 rate_mean, rate_dev = 0.1,0.02
+
 n=500000 # 实验次数
 count=0 # 亏损的实验次数
 for i in range(n):

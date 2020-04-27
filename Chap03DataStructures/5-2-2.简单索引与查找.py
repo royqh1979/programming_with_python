@@ -50,6 +50,7 @@ def find_using_index(index,id_key):
     return index[id_key]
 
 
+#5-2-2.成绩.csv
 filename = dlg.get_open_file_name("请选择成绩csv文件",dlg.FileFilter.CSVFiles)
 if filename == "":
     print("未选择文件")

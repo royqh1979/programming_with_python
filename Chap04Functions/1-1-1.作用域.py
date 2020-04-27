@@ -21,6 +21,7 @@ print("主程序全局变量:",globals())
 fun1()
 fun2()
 print("程序结束时")
+print(f"x={x} y={y}")
 print("主程序局部变量:",locals())
 print("主程序全局变量:",globals())
 

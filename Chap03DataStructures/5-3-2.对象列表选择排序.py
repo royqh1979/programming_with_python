@@ -40,6 +40,7 @@ def select_sort(scores):
                 t = j
         scores[i],scores[t] = scores[t],scores[i]
 
+#5-2-2.成绩.csv
 filename = dlg.get_open_file_name("请选择成绩csv文件",dlg.FileFilter.CSVFiles)
 if filename == "":
     print("未选择文件")
