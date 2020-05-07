@@ -15,10 +15,11 @@ class Score:
     literature: Decimal
     english: Decimal
 
+# 姓名查找索引项
 @dataclass()
 class NameIndex:
-    index: int
-    name: str
+    index: int # 在数据列表中的下标
+    name: str # 姓名（要索引的属性）
 
 def read_csv(filename):
     """
