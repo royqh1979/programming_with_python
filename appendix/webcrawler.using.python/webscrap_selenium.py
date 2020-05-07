@@ -3,7 +3,7 @@ import time
 
 from selenium import webdriver
 
-#使用with语句，保证driver
+#使用with语句，保证driver使用完了之后会自动关闭
 with webdriver.Chrome() as driver:
     #打开登录页（请先保证示例网站已打开，且地址正确）
     driver.get("http://127.0.0.1:8080/ajax-auth-list/1")

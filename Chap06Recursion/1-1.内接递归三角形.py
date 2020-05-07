@@ -20,7 +20,7 @@ def inner_triangle(size,level):
     rt(120)  # 恢复海龟最初朝向
 
 create_world(800,600)
-set_speed(100)
+set_speed(10)
 setxy(-200,-200)
 inner_triangle(400,10)
 pause()

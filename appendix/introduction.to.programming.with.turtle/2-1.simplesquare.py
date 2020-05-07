@@ -5,7 +5,6 @@ def main():
     set_pen_size(1)
     set_speed(10)
 
-
     fd(100)
     lt(90)
     fd(100)

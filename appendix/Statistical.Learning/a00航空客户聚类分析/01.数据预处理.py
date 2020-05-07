@@ -16,7 +16,7 @@ SUM_YR_2 = data['SUM_YR_2'] #第二年总票价
 SEG_KM_SUM = data['SEG_KM_SUM'] #总飞行公里数
 AVG_Discount = data['avg_discount'] #平均折扣率
 
-data = data[(SUM_YR_1 !=0) | (SUM_YR_2 != 0) | ((SEG_KM_SUM==0) & (AVG_Discount == 0))]
+data = data[(SUM_YR_1 !=0) | (SUM_YR_2 != 0) | ((SEG_KM_SUM!=0) & (AVG_Discount != 0))]
 
 print(f"共有{len(data)}条数据")
 

@@ -52,7 +52,7 @@ def try_queen(i,n):
 				clear_flags(i,j,n)
 			queens[i] = 0
 
-def queen(n):
+def solve_queen(n):
 	try_queen(1,n)
 
 
@@ -66,7 +66,7 @@ diag_flags = [0]*(2*n)
 diag2_flags = [0] * (2*n)
 
 count = 0
-queen(n)
+solve_queen(n)
 print(f"共有{count}种解法\n")
 
 
