@@ -16,7 +16,8 @@ if filename == '':
     exit(-1)
 
 sales = []
-with open(filename,mode="r",encoding="GBK") as file:
+with open(filename,mode="r",encoding="GBK") as file: # with在代码段结束时会自动执行file.close()
+    # with会在本段代码结束后自动执行file.close()
     reader = csv.reader(file)
     next(reader) # 跳过csv第一行 (标题行)
     for row in reader:
@@ -30,7 +31,7 @@ with open(filename,mode="r",encoding="GBK") as file:
 print("名称\t单价\t数量")
 for i in range(len(sales)):
     sale = sales[i]
-    print(f"{sale.name}\t{sale.price}\t{sale.quantity}")
+    print(sale)
 
 # 写入文件
 filename = dlg.get_save_file_name("要保存到哪个文件",dlg.FileFilter.CSVFiles)

@@ -16,10 +16,11 @@ if filename == '':
 
 sales = []
 file=open(filename,mode="r",encoding="GBK")
+# 需要判断是否成功打开（这里省了）
 while True:
-    name = file.readline()
+    name = file.readline() # 读入一行
     print(f"---{name}---")
-    name = name.strip()
+    name = name.strip() # 去掉读入的回车
     print(f"---**{name}**---")
     if name == "":
         break

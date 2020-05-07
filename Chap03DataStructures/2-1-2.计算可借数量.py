@@ -24,7 +24,6 @@ user_id = data[0]
 name = data[1]
 borrowed = int(data[2])
 type = data[3]
-
 user = User(user_id, name, borrowed, type)
 
 can_borrow = calc_books_can_borrow(user)
