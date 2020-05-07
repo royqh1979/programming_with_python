@@ -109,3 +109,5 @@ docs/_build
 #idea
 .idea
 /Chap00Intro/3-4.运算性能.exe
+/appendix/Statistical.Learning/a00航空客户聚类分析/data_cleaned.csv
+/Chap05Numpy/result.csv
