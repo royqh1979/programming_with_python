@@ -6,9 +6,12 @@ n个数字的可重复排列
 def perm(i, n):
     global count
     for a[i] in range(1, n + 1):
-        if i==4:
+        if i==n:
             count += 1
-            print(f"{a[1]},{a[2]},{a[3]},{a[4]}")
+            # 显示输出找到的新排列
+            for j in range(1,n+1):
+                print(f"{a[j]}," ,end="")
+            print()
         else:
             perm(i + 1, n)
 
