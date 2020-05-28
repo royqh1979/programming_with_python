@@ -24,5 +24,6 @@ sale = get_normal(sale_mean,sale_dev,n)
 price = get_normal(price_mean,price_dev,n)
 rate = get_normal(rate_mean,rate_dev,n)
 profit = sale * price / (1+rate) - cost
-count = len(profit[profit<=0])
+# count = len(profit[profit<=0])
+count = np.count_nonzero(profit<=0)
 print(f"亏损的比例为{count/n *100: .2f}%")
