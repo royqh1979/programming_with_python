@@ -1,11 +1,9 @@
 import random
 
-random.seed()
-total_time = 0
-n=500000
-
+total_time = 0 #总逃生时间
+n=500000 #实验次数
 for i in range(n):
-    escape_time = 0
+    escape_time = 0 #单次实验逃生时间
     while True:
         door = random.randint(1,3)
         if door == 1:
@@ -16,6 +14,5 @@ for i in range(n):
         elif door == 3:
             escape_time += 5
     total_time += escape_time
-
 average = total_time / n
 print(f"平均逃生时间为{average: .2f}小时")

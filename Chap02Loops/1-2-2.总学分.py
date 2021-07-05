@@ -1,4 +1,4 @@
-
+#求总学分，用户输入小于等于0的学分表示输入结束
 total=0
 count=0
 credit=float(input(f"请输入第{count+1}门课的学分:"))
