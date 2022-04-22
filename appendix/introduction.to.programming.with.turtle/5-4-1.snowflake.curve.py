@@ -22,12 +22,9 @@ def snowflake(size, level):
 def main():
     create_world(800, 600)
     set_speed(100)
-
     setxy(-250, 150)
-
     rt(90)
     snowflake(500, 4)
-
     hide()
     pause()
     close_world()
