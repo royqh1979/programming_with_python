@@ -71,7 +71,7 @@ mysqlclient==1.4.6
 nbconvert==5.6.1
 nbformat==5.0.3
 netCDF4==1.5.3
-notebook==6.0.2
+notebook==6.4.12
 numba==0.47.0
 numpy==1.18.1+mkl
 numpydoc==0.9.2
