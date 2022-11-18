@@ -10,6 +10,7 @@ def select_sort(lst):
         for j in range(i, n):
             if lst[j] > lst[t]:
                 t = j
+        #交换lst[i]和lst[t]，交换待排序部分的第一个元素和最大值元素
         lst[i],lst[t]=lst[t],lst[i]
 
 lst=[15,20,4,20,76,58,95,32,63,60]
