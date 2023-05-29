@@ -1,19 +1,4 @@
 import math
-
-# def sqrt(a, epsilon):
-#     xk = a
-#     k=0
-#     while True:
-#         # temp=xk # 保存上一次迭代时的x值(xk值）
-#         # k+=1 # 进入一次新的迭代
-#         # xk1=temp #
-#         xk1 = xk
-#         xk = (xk1+a/xk1)/2
-#         if math.fabs(xk-xk1)<epsilon:
-#             break
-#     return xk
-
-
 def sqrt(a,epsilon):
     x1=a # 迭代初始值
     while True:
