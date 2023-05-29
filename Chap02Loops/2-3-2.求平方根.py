@@ -1,4 +1,3 @@
-import easygraphics.dialog as gui
 import math
 
 # def sqrt(a, epsilon):
@@ -16,24 +15,15 @@ import math
 
 
 def sqrt(a,epsilon):
-    xk=a # 在第一次迭代计算之前，xk就是x0，x0初值就是a
+    x1=a # 迭代初始值
     while True:
-        xk1=xk #上一次的x k，成了这一次迭代计算的x k-1
-        xk=1/2*(xk1+a/xk1) # 用x k-1 去计算得到新的x k
-        if math.fabs(xk-xk1)<epsilon:
+        x=1/2*(x1+a/x1) # 迭代计算
+        if math.fabs(x-x1)<epsilon:
             break
-    return xk
-
-# def sqrt(a,epsilon):
-#     xk1=a # 在第一次迭代计算的时候，xk-1就是x0，x0初值就是a
-#     while True:
-#         xk=1/2*(xk1+a/xk1) # 用x k-1 去计算得到新的x k
-#         if math.fabs(xk-xk1)<epsilon:
-#             break
-#         xk1 = xk  # 上一次的x k，成了这一次迭代计算的x k-1
-#     return xk
+        x1=x # 更新x1以在下次循环中迭代计算
+    return x
 
 ep=0.0001
-a=float(gui.get_string("请输入a:"))
+a=float(input("请输入a:"))
 root = sqrt(a,ep)
-gui.show_message(f"{a}的平方根是{root}")
+print(f"{a}的平方根是{root}")

@@ -7,10 +7,10 @@ def f_derivative(x):
     return 6 * x ** 2 - 8 * x + 3
 
 ep = 0.00000001
-xk = 1.5
+x1 = 1.5 # 迭代初始值
 while True:
-    xk1 = xk
-    xk = xk1 - f(xk1) / f_derivative(xk1)
-    if math.fabs(xk - xk1) < ep:
+    x = x1 - f(x1) / f_derivative(x1) # 迭代计算
+    if math.fabs(x - x1) < ep:
         break
-print(xk)
+    x1 = x # 更新以进行下次迭代计算
+print(x)
