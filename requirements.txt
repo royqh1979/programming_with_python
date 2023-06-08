@@ -161,7 +161,7 @@ tqdm==4.41.1
 traitlets==4.3.3
 transaction==3.0.0
 typed-ast==1.4.1
-urllib3==1.25.7
+urllib3==1.26.5
 w3lib==1.21.0
 watchdog==0.10.2
 wcwidth==0.1.8
