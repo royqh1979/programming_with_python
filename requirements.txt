@@ -167,7 +167,7 @@ watchdog==0.10.2
 wcwidth==0.1.8
 webencodings==0.5.1
 websockets==8.1
-Werkzeug==0.16.0
+Werkzeug==2.2.3
 wrapt==1.11.2
 xarray==0.14.1
 yapf==0.29.0
