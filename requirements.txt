@@ -79,7 +79,7 @@ opencv-python==4.1.2+contrib
 packaging==20.0
 pandas==0.25.3
 pandocfilters==1.4.2
-paramiko==2.7.1
+paramiko==2.10.1
 parse==1.14.0
 parso==0.5.2
 pathtools==0.1.2
