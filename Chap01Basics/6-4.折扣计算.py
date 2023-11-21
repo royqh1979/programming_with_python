@@ -1,5 +1,3 @@
-import easygraphics.dialog as dlg
-
 def calc_discount(total):
     """
     计算折扣数和折后金额
@@ -18,7 +16,7 @@ def calc_discount(total):
     amount = total * discount_rate
     return discount_rate,amount
 
-total = float(dlg.get_string("请输入总金额"))
+total = float(input("请输入总金额"))
 dis_rate, amount = calc_discount(total)
-dlg.show_message(f"折扣率为{dis_rate},折后金额为{amount}")
+print(f"折扣率为{dis_rate},折后金额为{amount}")
 

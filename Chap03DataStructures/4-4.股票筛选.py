@@ -1,5 +1,4 @@
 from decimal import Decimal
-import easygraphics.dialog as dlg
 import csv
 from datetime import date
 from dataclasses import dataclass
@@ -86,13 +85,12 @@ def filter_by_year(stocks,year):
 props = 'pdate,pclose,high,low,popen,last_price,change,change_percent,turnover_rate,volume,amount,cap,tradable_cap'.split(',')
 prop_names = '日期,收盘价,最高价,最低价,开盘价,前收盘,涨跌额,涨跌幅,换手率,成交量,成交金额,总市值,流通市值'.split(',')
 
-filename = dlg.get_open_file_name("请选择股票csv文件",dlg.FileFilter.CSVFiles)
-if filename == "":
-    print("未选择文件")
-    exit(-1)
+filename = "4-4.浦发银行.csv"
 
 stocks = read_csv(filename)
-dlg.show_objects(stocks,fields=props,field_names=prop_names)
+print(stocks)
 filtered = filter_by_year(stocks, 2014)
-dlg.show_objects(filtered,fields=props,field_names=prop_names)
-
+print("------ 筛选结果 ------")
+for s in filtered:
+    print(s)
+print("--------------------")

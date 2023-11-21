@@ -1,4 +1,3 @@
-import easygraphics.dialog as dlg
 from decimal import Decimal
 from dataclasses import dataclass
 
@@ -9,10 +8,7 @@ class Sale:
     quantity: int
 
 # 读取文件
-filename = dlg.get_open_file_name("选择要打开的文件", dlg.FileFilter.TxtFiles)
-if filename == '':
-    print("未选择文件")
-    exit(-1)
+filename = "3-1.销售信息.txt"
 
 sales = []
 file=open(filename,mode="r",encoding="GBK")
@@ -37,11 +33,7 @@ for i in range(len(sales)):
     print(f"{sale.name}\t{sale.price}\t{sale.quantity}")
 
 # 写入文件
-filename = dlg.get_save_file_name("要保存到哪个文件",dlg.FileFilter.TxtFiles)
-if filename == '':
-    print("未选择文件")
-    exit(-1)
-
+filename = "3-1.处理结果.txt"
 
 file=open(filename,mode="w",encoding="GBK")
 for i in range(len(sales)):

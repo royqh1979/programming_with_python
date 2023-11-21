@@ -1,5 +1,4 @@
 import csv
-import easygraphics.dialog as dlg
 from decimal import Decimal
 from dataclasses import dataclass
 
@@ -41,16 +40,13 @@ def find_by_id(scores, id_key):
             return s
     return None
 
-filename = dlg.get_open_file_name("请选择成绩csv文件",dlg.FileFilter.CSVFiles)
-if filename == "":
-    print("未选择文件")
-    exit(-1)
+filename = "5-1.score.csv"
 
 scores = read_csv(filename)
-dlg.show_objects(scores)
-id = int(dlg.get_string("请输入要查找的id"))
+print(scores)
+id = int(input("请输入要查找的id:"))
 found = find_by_id(scores,id)
 if found is None:
-    dlg.show_message(f"找不到id为{id}的学生")
+    print(f"找不到id为{id}的学生")
 else:
-    dlg.show_message(f"id: {found.id} 姓名: {found.name} 成绩：{found.score}")
+    print(f"id: {found.id} 姓名: {found.name} 成绩：{found.score}")

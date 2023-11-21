@@ -1,5 +1,4 @@
 import csv
-from easygraphics import dialog as dlg
 from decimal import Decimal
 from dataclasses import dataclass
 
@@ -41,10 +40,7 @@ def gather_names(sales):
         names.add(sale.name)
     return names
 
-filename = dlg.get_open_file_name("请选择csv文件：",dlg.FileFilter.CSVFiles)
-if filename == "":
-    print("未选择文件")
-    exit(-1)
+filename = "6-2.sales.csv"
 sales = read_csv(filename)
 
 names = gather_names(sales)

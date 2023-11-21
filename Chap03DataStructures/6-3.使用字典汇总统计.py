@@ -1,5 +1,4 @@
 import csv
-from easygraphics import dialog as dlg
 from decimal import Decimal
 from dataclasses import dataclass
 
@@ -45,10 +44,7 @@ def calc_good_totals(sales):
         sale_totals[sale.name] += sale.price * sale.quantity
     return sale_totals
 
-filename = dlg.get_open_file_name("请选择csv文件：",dlg.FileFilter.CSVFiles)
-if filename == "":
-    print("未选择文件")
-    exit(-1)
+filename = "6-2.sales.csv"
 sales = read_csv(filename)
 totals = calc_good_totals(sales)
 

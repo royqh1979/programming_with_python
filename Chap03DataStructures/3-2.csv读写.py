@@ -1,4 +1,3 @@
-import easygraphics.dialog as dlg
 from decimal import Decimal
 import csv
 from dataclasses import dataclass
@@ -10,10 +9,7 @@ class Sale:
     quantity: int
 
 # 读取文件
-filename = dlg.get_open_file_name("选择要打开的文件", dlg.FileFilter.CSVFiles)
-if filename == '':
-    print("未选择文件")
-    exit(-1)
+filename = "3-2.销售信息.csv"
 
 sales = []
 with open(filename,mode="r",encoding="GBK") as file: # with在代码段结束时会自动执行file.close()
@@ -34,10 +30,7 @@ for i in range(len(sales)):
     print(sale)
 
 # 写入文件
-filename = dlg.get_save_file_name("要保存到哪个文件",dlg.FileFilter.CSVFiles)
-if filename == '':
-    print("未选择文件")
-    exit(-1)
+filename = "3-2.处理结果.csv"
 
 with open(filename,mode="w",encoding="GBK") as file:
     file.write(f"商品名称,单价,数量\n")

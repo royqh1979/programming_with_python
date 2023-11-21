@@ -1,6 +1,3 @@
-import easygraphics.dialog as dlg
-
-
 def calc_sales_price(price):
     """
     计算9折后的价格
@@ -16,4 +13,4 @@ def calc_sales_price(price):
 
 price = 100
 sales_price = calc_sales_price(price)
-dlg.show_message(f"打折后价格为{sales_price}")
+print(f"打折后价格为{sales_price}")
