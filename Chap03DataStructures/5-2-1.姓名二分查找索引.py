@@ -1,5 +1,4 @@
 import csv
-import easygraphics.dialog as dlg
 from decimal import Decimal
 from dataclasses import dataclass
 
@@ -88,27 +87,24 @@ def find_using_index(name_indices,key_name):
             start = mid+1
         else:
             end = mid - 1
-    return -1
+    return None
 
 # 从csv文件中读入学生成绩信息，放到scores列表中
-# 5-2-1.成绩.csv
-filename = dlg.get_open_file_name("请选择成绩csv文件",dlg.FileFilter.CSVFiles)
-if filename == "":
-    print("未选择文件")
-    exit(-1)
+filename = "5-2-1.成绩.csv"
 
 scores = read_csv(filename)
-dlg.show_objects(scores,fields=['id','name','clazz','math','literature','english'])
+print("--- 原数据 ---")
+print(scores)
 
 # 创建姓名的折半查找索引
 name_indices = create_indices(scores)
-dlg.show_objects(name_indices)
-
+print("--- 索引 ---")
+print(name_indices)
 
 # 使用折半查找索引进行查找
-key = dlg.get_string("请输入要查找的姓名")
+key = input("请输入要查找的姓名:")
 i = find_using_index(name_indices,key)
-if i == -1:
-    dlg.show_message(f"找不到姓名为{key}的学生")
+if i is None:
+    print(f"找不到姓名为{key}的学生")
 else:
-    dlg.show_message(f"找到了！是{scores[i]}")
+    print(f"找到了！下标为{i}, {scores[i]}")

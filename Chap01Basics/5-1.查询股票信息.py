@@ -5,8 +5,6 @@ Created on Fri Nov 30 15:25:21 2018
 @author: Roy
 """
 from urllib import request
-import easygraphics.dialog as dlg
-
 
 #要抓取的股票代码
 code="sh601006"
@@ -22,8 +20,8 @@ raw_data= raw_data[quote1 + 1:quote2]
 datas=raw_data.split(',')
 
 result="股票{0}目前的价格是{1},最高价{2},最低价{3}".format(datas[0],datas[3],datas[4],datas[5])
-#使用对话框显示查询结果
-dlg.show_message(result, "股票信息")
+#显示查询结果
+print(result, "股票信息")
 
 """
 https://www.cnblogs.com/phpxuetang/p/4519446.html

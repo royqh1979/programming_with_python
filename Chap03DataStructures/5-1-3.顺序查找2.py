@@ -27,35 +27,28 @@ def read_csv(filename):
     return scores
 
 
-def find_by_id(scores, id_key):
+def which_by_id(scores, id_key):
     """
-    用二分法在scores列表中查找id等于id_key的元素
-    scores列表中的各学生对象按照id从小到大顺序排列
+    在scores列表中查找id等于id_key的元素
 
     :param scores: scores列表
     :param id_key: 要查找的id关键字
-    :return: 找到的元素；如果没有找到，返回None
+    :return: 找到的元素在列表中的下标；None表示未找到
     """
-    start,end = 0,len(scores)-1
-    while start<=end:
-        mid = (start+end)//2
-        s=scores[mid]
-        if s.id == id_key:
-            return s
-        elif s.id < id_key: #查找后一半
-            start = mid+1
-        else: #查找前一半
-            end = mid - 1
+    n=len(scores)
+    for i in range(n):
+        if scores[i].id == id_key:
+            return i
     return None
-
 
 filename = "5-1.score.csv"
 
 scores = read_csv(filename)
 print(scores)
 id = int(input("请输入要查找的id:"))
-found = find_by_id(scores, id)
-if found is None:
+index = which_by_id(scores, id)
+if index is None:
     print(f"找不到id为{id}的学生")
 else:
-    print(f"id: {found.id} 姓名: {found.name} 成绩：{found.score}")
+    found = scores[index]
+    print(f"下标: {index} id: {found.id} 姓名: {found.name} 成绩：{found.score}")

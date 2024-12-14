@@ -1,5 +1,4 @@
 import csv
-import easygraphics.dialog as dlg
 from decimal import Decimal
 from dataclasses import dataclass
 
@@ -47,21 +46,19 @@ def find_using_index(index,id_key):
     :param id_key: 要查找的学号
     :return: 学号为id_key的学生。None表示无此学生。
     """
+    if id_key<0 or id_key>=len(index):
+        return None
     return index[id_key]
 
-
 #5-2-2.成绩.csv
-filename = dlg.get_open_file_name("请选择成绩csv文件",dlg.FileFilter.CSVFiles)
-if filename == "":
-    print("未选择文件")
-    exit(-1)
+filename = "5-2-2.成绩.csv"
 
 scores = read_csv(filename)
-dlg.show_objects(scores)
+print(scores)
 index = create_index(scores)
-id = int(dlg.get_string("请输入要查找的id"))
+id = int(input("请输入要查找的id:"))
 found = find_using_index(index,id)
 if found is None:
-    dlg.show_message(f"找不到id为{id}的学生")
+    print(f"找不到id为{id}的学生")
 else:
-    dlg.show_message(f"id: {found.id} 姓名: {found.name} 成绩：{found.score}")
+    print(f"id: {found.id} 姓名: {found.name} 成绩：{found.score}")

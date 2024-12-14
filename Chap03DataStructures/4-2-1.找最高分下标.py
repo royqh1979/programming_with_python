@@ -1,4 +1,3 @@
-import easygraphics.dialog as dlg
 import csv
 from decimal import Decimal
 from dataclasses import dataclass
@@ -42,18 +41,16 @@ def find_max_score(scores):
     return m
 
 # 读取文件
-filename = dlg.get_open_file_name("选择要打开的文件", dlg.FileFilter.CSVFiles)
-if filename == '':
-    print("未选择文件")
-    exit(-1)
+filename = "4-2-1.score.csv"
 
 scores = read_csv_file(filename)
 
-dlg.show_objects(scores)
+print(scores)
 
-max_score=find_max_score(scores)
+index=find_max_score(scores)
+max_score = scores[index]
 
-dlg.show_message(f"获得最高分的同学：{max_score.id} {max_score.name},成绩为{max_score.score}")
+print(f"获得最高分的同学：{max_score.id} {max_score.name},成绩为{max_score.score}")
 
 
 

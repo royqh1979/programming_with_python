@@ -1,8 +1,5 @@
-import easygraphics.dialog as dlg
-
-values = dlg.get_many_strings("请输入", labels=["身高(米)", "全票票价"])
-height = float(values[0])
-full_price = float(values[1])
+height = float(input("请输入身高:"))
+full_price = float(input("请输入票价:"))
 if height <= 1.3:
     price = 0
 elif height <= 1.5:

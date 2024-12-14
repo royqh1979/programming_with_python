@@ -1,6 +1,5 @@
 import csv
 from decimal import Decimal
-import easygraphics.dialog as dlg
 from dataclasses import dataclass
 
 @dataclass()
@@ -43,15 +42,12 @@ def calc_sub_total(sales, goods_name):
     return total
 
 
-filename = dlg.get_open_file_name("请选择csv文件",dlg.FileFilter.CSVFiles)
-if filename == "":
-    print("未选择文件！")
-    exit(-1)
+filename = "4-3.sales.csv"
 
 sales = read_csv(filename)
 
-dlg.show_objects(sales)
+print(sales)
 
 sub_total = calc_sub_total(sales, "方便面")
 
-dlg.show_message(f"方便面的销售额为{sub_total}元")
+print(f"方便面的销售额为{sub_total/100}元")
