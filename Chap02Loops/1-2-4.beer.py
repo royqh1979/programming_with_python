@@ -1,17 +1,16 @@
-beer=0
-total = 5
-bottle = 5
-lid = 5
-while lid >= 4 or bottle >=2:
-    print(f"换酒前：上轮剩酒{beer}瓶，上轮剩瓶盖换酒{lid//4}瓶，上轮剩瓶子换酒{bottle//2}瓶")
-    beer = beer + lid //4 + bottle //2
-    lid = lid % 4
-    bottle = bottle % 2
-    print(f"换酒后：有酒{beer}瓶，剩瓶盖{lid}个，剩酒瓶{bottle}瓶")
+total = 0   #已喝掉的啤酒总数量
+beer=5      #现有的还没喝的啤酒数量
+bottle = 0  #空瓶数量
+lid = 0     #空瓶盖数量
+while beer>0: #还有酒可以喝
+    # 喝酒
     total = total + beer
     lid = lid + beer
     bottle = bottle + beer
     beer = 0
-    print(f"喝酒后：总共已喝{total}瓶，剩瓶盖{lid}个，剩酒瓶{bottle}个")
-    print("------------------------")
+    # 换酒
+    beer = beer + lid //4 + bottle //2
+    lid = lid % 4
+    bottle = bottle % 2
+
 print(f"总共喝了{total}瓶，剩瓶盖{lid}个，剩酒瓶{bottle}个")

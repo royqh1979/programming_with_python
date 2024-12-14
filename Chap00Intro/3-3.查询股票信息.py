@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri Nov 30 15:25:21 2018
+通过新浪的api接口获取股票信息
+
+该api已无法使用
 
 @author: Roy
 """

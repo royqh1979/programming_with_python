@@ -1,15 +1,12 @@
-from easygraphics.turtle import *
-from easygraphics.dialog import *
+import turtle as t
 
 def polygon(n,size):
     for i in range(n):
-        fd(size)
-        lt(180-(n-2)*180/n)
+        t.fd(size)
+        t.lt(180-(n-2)*180/n)
 
-create_world(800,600)
-results=get_many_strings(labels=['n=','size='])
-n=int(results[0])
-size=int(results[1])
+n=int(t.numinput("多边形边数","n=",5))
+size=int(t.numinput("边长","size=",100))
 polygon(n,size)
-pause()
-close_world()
+
+t.mainloop()

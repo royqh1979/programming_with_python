@@ -1,14 +1,21 @@
 import math
-def sqrt(a,epsilon):
-    x1=a # 迭代初始值
+
+def sqrt(a,epsilon=0.0001):
+    '''
+    求a的平方根
+
+    :param a:
+    :param epsilon: 计算精度阈值，越小精度越高
+    :return: a的平方根
+    '''
+    x=a # 迭代初始值
     while True:
-        x=1/2*(x1+a/x1) # 迭代计算
-        if math.fabs(x-x1)<epsilon:
+        x1=1/2*(x+a/x) # 迭代计算
+        if math.fabs(x1-x)<epsilon:
             break
-        x1=x # 更新x1以在下次循环中迭代计算
+        x=x1 # 更新x1以在下次循环中迭代计算
     return x
 
-ep=0.0001
 a=float(input("请输入a:"))
-root = sqrt(a,ep)
+root = sqrt(a)
 print(f"{a}的平方根是{root}")
