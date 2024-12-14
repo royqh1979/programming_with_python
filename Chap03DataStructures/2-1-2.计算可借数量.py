@@ -23,4 +23,4 @@ user = User(user_id, name, borrowed, type)
 
 can_borrow = calc_books_can_borrow(user)
 
-dlg.show_message(f"用户{user.name}可以借{can_borrow}本书")
+print(f"用户{user.name}可以借{can_borrow}本书")

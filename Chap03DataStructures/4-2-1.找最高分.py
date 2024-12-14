@@ -28,11 +28,13 @@ def read_csv_file(filename):
 
 def find_max_score(scores):
     """
-    寻找并返回scores列表中成绩最高的学生信息
+    寻找并返回scores列表中成绩最高的学生信息对象
 
-    :param scores: scores列表
+    :param scores: 元素为学生信息对象的列表
     :return: 最高分同学信息
     """
+    if len(scores)==0:
+        return None
     max_score = scores[0]
     for score in scores:
         if score.score > max_score.score:
@@ -40,9 +42,10 @@ def find_max_score(scores):
     return max_score
 
 # 读取文件
-filename = "4-2-1.score.csv"
+filename = "4-2-1.score.csv" #4-2-1.score.csv和本程序文件应该在同一个文件夹中
 scores = read_csv_file(filename)
 
+#看一下从文件读取的信息是否正确
 print(scores)
 
 max_score=find_max_score(scores)
