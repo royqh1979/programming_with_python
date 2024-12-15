@@ -1,10 +1,9 @@
-from decimal import Decimal
 from dataclasses import dataclass
 
 @dataclass()
 class Sale:
     name: str
-    price: Decimal
+    price: float
     quantity: int
 
 # 读取文件
@@ -20,7 +19,7 @@ while True:
     print(f"---**{name}**---")
     if name == "":
         break
-    price = Decimal(file.readline().strip())
+    price = float(file.readline().strip())
     quantity = int(file.readline().strip())
     sale = Sale(name, price, quantity)
     sales.append(sale)

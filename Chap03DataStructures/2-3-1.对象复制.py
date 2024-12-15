@@ -1,4 +1,5 @@
-import copy
+#展示在python中如何复制对象
+from copy import copy
 from dataclasses import dataclass
 
 @dataclass()
@@ -8,7 +9,9 @@ class Vector:
 
 v1 = Vector(1,1)
 print(v1)
-v2 = copy.copy(v1)
+#使用copy模块中的copy方法来复制对象
+#注意程序开头的import语句
+v2 = copy(v1)
 print(v2)
 print(v1 is v2)
 

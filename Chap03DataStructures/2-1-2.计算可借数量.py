@@ -1,3 +1,4 @@
+# 示例: 对象作函数参数
 from dataclasses import dataclass
 
 @dataclass()

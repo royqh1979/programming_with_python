@@ -1,11 +1,10 @@
-from decimal import Decimal
 import csv
 from dataclasses import dataclass
 
 @dataclass()
 class Sale:
     name: str
-    price: Decimal
+    price: float
     quantity: int
 
 # 读取文件
@@ -18,7 +17,7 @@ with open(filename,mode="r",encoding="GBK") as file: # with在代码段结束时
     next(reader) # 跳过csv第一行 (标题行)
     for row in reader:
         name = row[0]
-        price = Decimal(row[1])
+        price = float(row[1])
         quantity = int(row[2])
         sale = Sale(name, price, quantity)
         sales.append(sale)
