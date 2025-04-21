@@ -26,7 +26,7 @@ class Student:
     class_name: str
     score: float
 
-filename =  "data.csv"
+filename = "data.csv"
 
 students = {}
 
