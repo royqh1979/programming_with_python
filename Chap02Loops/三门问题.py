@@ -1,4 +1,3 @@
-import random
 
 # 模拟实验次数
 num_trials = 100000

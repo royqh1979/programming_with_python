@@ -26,7 +26,7 @@ def read_csv(filename):
             scores[id]=s
     return scores
 
-filename = "6-1.score.csv"
+filename = "7-1.score.csv"
 
 scores=read_csv(filename)
 print(scores)

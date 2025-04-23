@@ -40,7 +40,7 @@ def gather_names(sales):
         names.add(sale.name)
     return names
 
-filename = "6-2.sales.csv"
+filename = "7-2.sales.csv"
 sales = read_csv(filename)
 
 names = gather_names(sales)

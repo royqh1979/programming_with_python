@@ -44,7 +44,7 @@ def calc_good_totals(sales):
         sale_totals[sale.name] += sale.price * sale.quantity
     return sale_totals
 
-filename = "6-2.sales.csv"
+filename = "7-2.sales.csv"
 sales = read_csv(filename)
 totals = calc_good_totals(sales)
 
