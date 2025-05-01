@@ -1,12 +1,13 @@
 import numpy as np
 from numpy import random
-
-random.seed()
+#用两个随机数发生器来保证x和y的独立性
+g1 = random.default_rng()
+g2 = random.default_rng()
 n=10000000
 r=0.5
 cx,cy=0,0
-x=random.uniform(-0.5,0.5,n)
-y=random.uniform(-0.5,0.5,n)
+x=g1.uniform(-0.5,0.5,n)
+y=g2.uniform(-0.5,0.5,n)
 in_circle = np.hypot(x-cx,y-cy)<= r
 
 # # 得到是所有在圆内的点的横坐标

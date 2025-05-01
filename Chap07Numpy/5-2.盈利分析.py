@@ -11,10 +11,10 @@ def get_normal(mean,dev,n):
     """
     if mean<=0 or dev<=0 :
         raise  ValueError("Mean and dev must be positive！")
-    result = random.normal(mean,dev,n)
+    g = random.default_rng()
+    result = g.normal(mean,dev,n)
     return np.where(result>0,result,0)
 
-random.seed()
 cost = 200000
 sale_mean, sale_dev = 30000,10000
 price_mean, price_dev= 6,1
