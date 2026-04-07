@@ -14,6 +14,7 @@ s2=[6.1,5.7,7.4,4.7,5.4,4.5,6.6,
     4.3,5.9,7.2,5.7]
 print("单样本t检验")
 print(stats.ttest_ind(s1,s2))
+print(stats.ttest_ind(s1,s2,equal_var=False))
 
 plt.boxplot([s1,s2])
 plt.xticks([1,2],["健康人","冠心病人"])
