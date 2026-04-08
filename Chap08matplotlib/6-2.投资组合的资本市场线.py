@@ -46,7 +46,7 @@ plt.xlabel("波动率",fontsize=18)
 plt.ylabel("预期收益率",fontsize=18)
 plt.xticks(fontsize=16)
 plt.yticks(fontsize=16)
-plt.title("五种股票投资组合有效前沿",fontsize=18)
+plt.title("资本市场线",fontsize=18)
 plt.grid()
 
 
@@ -93,7 +93,7 @@ Rm = wm @ R_mean
 Vm = np.sqrt( wm @ R_cov @ wm.T)
 sharpe_ratio = (Rm - Rf) / Vm
 
-Rp_ml = np.linspace(Rf,0.2,100)
+Rp_ml = np.linspace(0.08,0.2,100)
 Vp_ml = (Rp_ml-Rf)/sharpe_ratio
 
 plt.plot(Vp_ml, Rp_ml,'b--',lw=2, label='资本市场线')
