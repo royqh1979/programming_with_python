@@ -14,5 +14,7 @@ print(df)
 #计算相差天数
 diff = df.index-pd.to_datetime("2001-01-01")
 print(diff.days)
+#向后错1行
+print(df.shift(1))
 #按月统计
 print(df["收盘价"].resample("ME").mean())
