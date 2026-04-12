@@ -3,8 +3,9 @@ import pandas as pd
 df = pd.read_csv("bank_stock.csv",
                  encoding="GBK",
                  index_col=0)
-#转化为日期型
+#转化为日期型索引
 df.index = pd.to_datetime(df.index)
+
 #计算年月日
 df["年"]=df.index.year
 df["月"]=df.index.month

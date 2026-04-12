@@ -10,5 +10,5 @@ df = pd.DataFrame(iris.data, columns=iris.feature_names)
 #显示基础描述性统计
 print(df.describe())
 
-#显示方差
+#计算并显示各列的方差
 print(df.var())
