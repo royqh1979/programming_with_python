@@ -1,20 +1,20 @@
 import pandas as pd
+import numpy as np
 
-df = pd.read_csv("bank_stock.csv",
+stock = pd.read_csv("bank_stock.csv",
                  encoding="GBK",
                  index_col=0)
 #转化为日期型索引
-df.index = pd.to_datetime(df.index)
+stock.index = pd.to_datetime(stock.index)
 
 #计算年月日
-df["年"]=df.index.year
-df["月"]=df.index.month
-df["日"]=df.index.day
-print(df)
+stock["年"]=stock.index.year
+stock["月"]=stock.index.month
+stock["日"]=stock.index.day
+print(stock)
 #计算相差天数
-diff = df.index-pd.to_datetime("2001-01-01")
+diff = stock.index-pd.to_datetime("2001-01-01")
 print(diff.days)
-#向后错1行
-print(df.shift(1))
+
 #按月统计
-print(df["收盘价"].resample("ME").mean())
+print(stock["收盘价"].resample("ME").mean())
