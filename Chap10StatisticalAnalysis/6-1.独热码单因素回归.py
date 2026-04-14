@@ -8,4 +8,6 @@ model = sm.ols("Price ~ C(Neighborhood)", data=data)
 lm = model.fit()
 print(lm.summary())
 
+print(lm.params)
+print(data.groupby("Neighborhood")["Price"].mean())
 
