@@ -44,3 +44,8 @@ print(lm.summary())
 print("----预期收益率----")
 print(ff_factors_monthly.iloc[-1])
 print(lm.predict(ff_factors_monthly.iloc[-1]))
+
+#计算每个系数的VIF
+from statsmodels.stats.outliers_influence import variance_inflation_factor as vif
+for i in range(len(lm.model.exog_names)):
+    print(lm.model.exog_names[i],vif(lm.model.exog,i))
