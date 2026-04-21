@@ -12,13 +12,22 @@ sample_data = np.array([
 
 # 已知参数
 mu_0 = 200      # 标称均值
-sigma = 8       # 总体标准差
 alpha = 0.05    # 显著性水平
 
+#使用statsmodels计算
+from statsmodels.stats.weightstats import ztest
+z_statistics, p_value = ztest(sample_data,value=mu_0)
+
+print("使用statsmodels计算")
+print("z统计量：",z_statistics)
+print("p值：", p_value)
+
+#手工计算
 # 计算样本统计量
 n = len(sample_data)
 sample_mean = np.mean(sample_data)
-
+# unbiased estimator of standard deviation
+sigma = np.std(sample_data, ddof=1)
 # 计算标准误
 se = sigma / np.sqrt(n)
 
@@ -32,6 +41,8 @@ p_value = 2 * (1 - stats.norm.cdf(abs(z_statistic)))
 z_critical = stats.norm.ppf(1 - alpha/2)
 
 # 输出结果
+print()
+print("手工计算")
 print(f"样本量 n = {n}")
 print(f"样本均值 x̄ = {sample_mean:.3f} 克")
 print(f"标准误 SE = {se:.3f}")
