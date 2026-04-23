@@ -15,7 +15,7 @@ from sklearn.preprocessing import StandardScaler,OneHotEncoder
 from sklearn.compose import ColumnTransformer
 preprocessor = ColumnTransformer([
     ('num',StandardScaler(),["age","balance","duration"]),
-    ('nominal', OneHotEncoder(drop="if_binary"),["job","marital","education","default","housing","loan"])
+    ('nominal', OneHotEncoder(drop="first"),["job","marital","education","default","housing","loan"])
 ])
 
 accuracy = {}
@@ -92,7 +92,7 @@ for kernel in ['rbf','linear','poly','sigmoid']:
     from sklearn.svm import SVC
     pipeline = Pipeline([
         ('prep', preprocessor),
-        ('model', SVC(kernel=kernel, C=1000, max_iter=10000))
+        ('model', SVC(kernel=kernel, C=1, max_iter=10000))
     ])
     pipeline.fit(X_train, Y_train)
     # 用模型预测测试集
@@ -115,6 +115,8 @@ pipeline = Pipeline([
     ('model', DecisionTreeClassifier())
 ])
 pipeline.fit(X_train, Y_train)
+# 用模型预测测试集
+pred_test_y = pipeline.predict(X_test)
 # 计算评价指标
 from sklearn.metrics import accuracy_score,precision_score,recall_score,f1_score,roc_auc_score,average_precision_score
 accuracy[name] = accuracy_score(Y_test,pred_test_y)
