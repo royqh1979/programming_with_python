@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 
 #使用中文字体
 import matplotlib as mpl
-from statsmodels.discrete.discrete_margins import margeff
 
 mpl.rcParams['font.family']=['Microsoft Yahei', 'sans-serif']
 mpl.rcParams['axes.unicode_minus']=False

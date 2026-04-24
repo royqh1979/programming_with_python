@@ -25,111 +25,53 @@ precision = {}
 recall = {}
 f1score = {}
 roc = {}
+roc_curve_data = {}
 ap = {}
+pr_curve_data = {}
 
-#无正则项的logistic回归
-name = "logistic回归(无惩罚项)"
-from sklearn.linear_model import LogisticRegression
-print(f"正在拟合 {name}...")
-#训练模型
-pipeline = Pipeline([
-    ('prep', preprocessor),
-    ('model', LogisticRegression(penalty=None))
-])
-pipeline.fit(X_train, Y_train)
-# 用模型预测测试集
-pred_test_y = pipeline.predict(X_test)
-# 计算评价指标
-from sklearn.metrics import accuracy_score,precision_score,recall_score,f1_score,roc_auc_score,average_precision_score
-accuracy[name] = accuracy_score(Y_test,pred_test_y)
-precision[name] = precision_score(Y_test,pred_test_y)
-recall[name] = recall_score(Y_test,pred_test_y)
-f1score[name] = f1_score(Y_test,pred_test_y)
-roc[name] = roc_auc_score(Y_test,pred_test_y)
-ap[name] = average_precision_score(Y_test,pred_test_y)
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, \
+    average_precision_score, roc_curve, precision_recall_curve
 
-#带L2正则项的logistic回归
-for alpha in [1,2,5,10,20]:
-    name = f"logistic回归(L2 alpha={alpha})"
-    print(f"正在拟合 {name}...")
-    from sklearn.linear_model import LogisticRegression
+def calc_metrics(model_name, model):
+    print(f"正在拟合 {model_name} ...")
     pipeline = Pipeline([
         ('prep', preprocessor),
-        ('model', LogisticRegression(penalty="l2",C=1/alpha))
+        ('model', model)
     ])
     pipeline.fit(X_train, Y_train)
     # 用模型预测测试集
     pred_test_y = pipeline.predict(X_test)
     # 计算评价指标
-    from sklearn.metrics import accuracy_score,precision_score,recall_score,f1_score,roc_auc_score,average_precision_score
-    accuracy[name] = accuracy_score(Y_test,pred_test_y)
-    precision[name] = precision_score(Y_test,pred_test_y)
-    recall[name] = recall_score(Y_test,pred_test_y)
-    f1score[name] = f1_score(Y_test,pred_test_y)
-    roc[name] = roc_auc_score(Y_test,pred_test_y)
-    ap[name] = average_precision_score(Y_test,pred_test_y)
+    accuracy[model_name] = accuracy_score(Y_test, pred_test_y)
+    precision[model_name] = precision_score(Y_test, pred_test_y)
+    recall[model_name] = recall_score(Y_test, pred_test_y)
+    f1score[model_name] = f1_score(Y_test, pred_test_y)
+    roc[model_name] = roc_auc_score(Y_test, pred_test_y)
+    ap[model_name] = average_precision_score(Y_test, pred_test_y)
+    roc_curve_data[model_name] = roc_curve(Y_test, pred_test_y)
+    pr_curve_data[model_name] = precision_recall_curve(Y_test, pred_test_y)
+
+#无正则项的logistic回归
+from sklearn.linear_model import LogisticRegression
+calc_metrics("logistic回归(无惩罚项)", LogisticRegression(penalty=None))
+
+#带L2正则项的logistic回归
+from sklearn.linear_model import LogisticRegression
+for alpha in [1,2,5,10,20]:
+    calc_metrics(f"logistic回归(L2 alpha={alpha})", LogisticRegression(penalty="l2",C=1/alpha))
 
 #带L1正则项的logistic回归
 for alpha in [1,2,5,10,20]:
-    name = f"logistic回归(L1 alpha={alpha})"
-    print(f"正在拟合 {name}...")
-    from sklearn.linear_model import LogisticRegression
-    pipeline = Pipeline([
-        ('prep', preprocessor),
-        ('model', LogisticRegression(penalty="l1",C=1/alpha, solver='liblinear'))
-    ])
-    pipeline.fit(X_train, Y_train)
-    # 用模型预测测试集
-    pred_test_y = pipeline.predict(X_test)
-    # 计算评价指标
-    from sklearn.metrics import accuracy_score,precision_score,recall_score,f1_score,roc_auc_score,average_precision_score
-    accuracy[name] = accuracy_score(Y_test,pred_test_y)
-    precision[name] = precision_score(Y_test,pred_test_y)
-    recall[name] = recall_score(Y_test,pred_test_y)
-    f1score[name] = f1_score(Y_test,pred_test_y)
-    roc[name] = roc_auc_score(Y_test,pred_test_y)
-    ap[name] = average_precision_score(Y_test,pred_test_y)
+    calc_metrics(f"logistic回归(L1 alpha={alpha})", LogisticRegression(penalty="l1",C=1/alpha, solver='liblinear'))
 
 #支持向量机
-for kernel in ['rbf','linear','poly','sigmoid']:
-    name = f"支持向量机({kernel})"
-    print(f"正在拟合{name}...")
-    from sklearn.svm import SVC
-    pipeline = Pipeline([
-        ('prep', preprocessor),
-        ('model', SVC(kernel=kernel, C=1, max_iter=10000))
-    ])
-    pipeline.fit(X_train, Y_train)
-    # 用模型预测测试集
-    pred_test_y = pipeline.predict(X_test)
-
-    # 计算评价指标
-    from sklearn.metrics import accuracy_score,precision_score,recall_score,f1_score,roc_auc_score,average_precision_score
-    accuracy[name] = accuracy_score(Y_test,pred_test_y)
-    precision[name] = precision_score(Y_test,pred_test_y)
-    recall[name] = recall_score(Y_test,pred_test_y)
-    f1score[name] = f1_score(Y_test,pred_test_y)
-    roc[name] = roc_auc_score(Y_test,pred_test_y)
-    ap[name] = average_precision_score(Y_test,pred_test_y)
+# from sklearn.svm import SVC
+# for kernel in ['rbf','linear','poly','sigmoid']:
+#     calc_metrics(f"支持向量机({kernel})", SVC(kernel=kernel, C=1, max_iter=10000))
 
 #决策树
-name = "决策树"
 from sklearn.tree import DecisionTreeClassifier
-pipeline = Pipeline([
-    ('prep', preprocessor),
-    ('model', DecisionTreeClassifier())
-])
-pipeline.fit(X_train, Y_train)
-# 用模型预测测试集
-pred_test_y = pipeline.predict(X_test)
-# 计算评价指标
-from sklearn.metrics import accuracy_score,precision_score,recall_score,f1_score,roc_auc_score,average_precision_score
-accuracy[name] = accuracy_score(Y_test,pred_test_y)
-precision[name] = precision_score(Y_test,pred_test_y)
-recall[name] = recall_score(Y_test,pred_test_y)
-f1score[name] = f1_score(Y_test,pred_test_y)
-roc[name] = roc_auc_score(Y_test,pred_test_y)
-ap[name] = average_precision_score(Y_test,pred_test_y)
+calc_metrics("决策树", DecisionTreeClassifier())
 
 # 显示各模型的评价指标
 rt = pd.DataFrame({'accuracy':accuracy,
@@ -139,3 +81,23 @@ rt = pd.DataFrame({'accuracy':accuracy,
                    'roc-auc':roc,
                    'ap':ap})
 print(rt.round(4))
+
+import matplotlib.pyplot as plt
+import matplotlib as mpl
+
+mpl.rcParams['font.family']=['Microsoft Yahei', 'sans-serif']
+mpl.rcParams['axes.unicode_minus']=False
+
+for name in roc_curve_data:
+    plt.plot(roc_curve_data[name][0],roc_curve_data[name][1], label=name)
+plt.legend()
+plt.title("ROC曲线")
+plt.show()
+
+for name in pr_curve_data:
+    plt.plot(pr_curve_data[name][1],pr_curve_data[name][0], label=name)
+plt.legend()
+plt.title("P-R曲线")
+plt.show()
+
+
