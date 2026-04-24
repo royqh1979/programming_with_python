@@ -40,100 +40,45 @@ mse = {}
 mae = {}
 name = "Linear Regression"
 
-# 线性回归
-## 训练模型
-from sklearn.linear_model import LinearRegression
-pipeline = Pipeline(
-    [
-        ('prep',preprocessor),
-        ('model',LinearRegression())
-    ]
-)
-pipeline.fit(X_train,Y_train)
-# 用模型预测测试集
-pred_test_y = pipeline.predict(X_test)
-# 计算模型的R2、MSE和MAE指标
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
-r2[name] = r2_score(Y_test,pred_test_y)
-mse[name] = mean_squared_error(Y_test,pred_test_y)
-mae[name] = mean_absolute_error(Y_test,pred_test_y)
+def calc_metrics(model_name, prep, model):
+    print(f"正在训练{model_name}")
+    ## 训练模型
+    pipeline = Pipeline(
+        [
+            ('prep',prep),
+            ('model',model)
+        ]
+    )
+    pipeline.fit(X_train,Y_train)
+    # 用模型预测测试集
+    pred_test_y = pipeline.predict(X_test)
+    # 计算模型的R2、MSE和MAE指标
+    r2[model_name] = r2_score(Y_test,pred_test_y)
+    mse[model_name] = mean_squared_error(Y_test,pred_test_y)
+    mae[model_name] = mean_absolute_error(Y_test,pred_test_y)
+
+# 线性回归
+from sklearn.linear_model import LinearRegression
+calc_metrics("线性回归",preprocessor, LinearRegression())
 
 #脊回归(尝试不同alpha值）
 from sklearn.linear_model import Ridge
 for alpha in [0.1,0.5,1,2,4,8,10]:
-    #训练模型
-    pipeline = Pipeline(
-        [
-            ('prep', preprocessor),
-            ('model', Ridge(alpha=alpha))
-        ]
-    )
-    pipeline.fit(X_train, Y_train)
-    # 用模型预测测试集
-    pred_test_y = pipeline.predict(X_test)
-    # 计算模型的R2、MSE和MAE指标
-    name = f"Ridge(alpha={alpha})"
-    r2[name] = r2_score(Y_test,pred_test_y)
-    mse[name] = mean_squared_error(Y_test,pred_test_y)
-    mae[name] = mean_absolute_error(Y_test,pred_test_y)
+    calc_metrics(f"Ridge(alpha={alpha})",preprocessor, Ridge(alpha=alpha))
 
 #Lasso回归(尝试不同alpha值）
 from sklearn.linear_model import Lasso
 for alpha in [0.005,0.01,0.02,0.04]:
-    # 训练模型
-    model = Lasso(alpha=alpha)
-    pipeline = Pipeline(
-        [
-            ('prep', preprocessor),
-            ('model', Lasso(alpha=alpha))
-        ]
-    )
-    pipeline.fit(X_train, Y_train)
-    # 用模型预测测试集
-    pred_test_y = pipeline.predict(X_test)
-    # 计算模型的R2、MSE和MAE指标
-    name = f"Lasso(alpha={alpha})"
-    r2[name] = r2_score(Y_test,pred_test_y)
-    mse[name] = mean_squared_error(Y_test,pred_test_y)
-    mae[name] = mean_absolute_error(Y_test,pred_test_y)
+    calc_metrics(f"Lasso(alpha={alpha})",preprocessor, Lasso(alpha=alpha))
 
 # 回归决策树(k-1独热码)
 from sklearn.tree import DecisionTreeRegressor
-# 训练模型
-pipeline = Pipeline(
-    [
-        ('prep', preprocessor),
-        ('model', DecisionTreeRegressor())
-    ]
-)
-pipeline.fit(X_train, Y_train)
-# 用模型预测测试集
-pred_test_y = pipeline.predict(X_test)
-# 计算模型的R2、MSE和MAE指标
-name = "决策树(k-1独热码)"
-from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
-r2[name] = r2_score(Y_test,pred_test_y)
-mse[name] = mean_squared_error(Y_test,pred_test_y)
-mae[name] = mean_absolute_error(Y_test,pred_test_y)
+calc_metrics("决策树(k-1独热码)",preprocessor, DecisionTreeRegressor())
 
 # 回归决策树(k独热码)
 from sklearn.tree import DecisionTreeRegressor
-
-pipeline = Pipeline(
-    [
-        ('prep', preprocessor_tree),
-        ('model', Ridge(alpha=alpha))
-    ]
-)
-pipeline.fit(X_train, Y_train)
-# 用模型预测测试集
-pred_test_y = pipeline.predict(X_test)
-# 计算模型的R2、MSE和MAE指标
-name = "决策树(k独热码)"
-from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
-r2[name] = r2_score(Y_test,pred_test_y)
-mse[name] = mean_squared_error(Y_test,pred_test_y)
-mae[name] = mean_absolute_error(Y_test,pred_test_y)
+calc_metrics("决策树(k独热码)",preprocessor_tree, DecisionTreeRegressor())
 
 # 显示各模型的评价指标
 rt = pd.DataFrame({'r2':r2,'mse':mse,'mae':mae})
