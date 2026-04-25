@@ -13,3 +13,7 @@ from statsmodels.formula.api import logit
 model = logit("default ~ C(student) + income + balance", data=df)
 res = model.fit()
 print(res.summary())
+
+print(" ---- odds ratio ---- ")
+import numpy as np
+print(np.exp(res.params))
