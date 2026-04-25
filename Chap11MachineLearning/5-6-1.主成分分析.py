@@ -23,3 +23,4 @@ n = np.where(np.cumsum(pca.explained_variance_ratio_) > 0.9)[0][0]
 pca = PCA(n_components=n)
 X = pca.fit_transform(X)
 print(X.shape)
+print(np.round(pca.components_,3))

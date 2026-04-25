@@ -25,83 +25,43 @@ f1score = {}
 roc = {}
 ap = {}
 
+def calc_metrics(module_name, module):
+    print(f"正在训练 {module_name} ...")
+    # 训练模型
+    pipeline = Pipeline([
+        ('prep', preprocessor),
+        ('model', module)
+    ])
+    pipeline.fit(X_train, Y_train)
+    # 用模型预测测试集
+    pred_test_y = pipeline.predict(X_test)
+    # 计算评价指标
+    from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, \
+        average_precision_score
+    accuracy[module_name] = accuracy_score(Y_test, pred_test_y)
+    precision[module_name] = precision_score(Y_test, pred_test_y)
+    recall[module_name] = recall_score(Y_test, pred_test_y)
+    f1score[module_name] = f1_score(Y_test, pred_test_y)
+    roc[module_name] = roc_auc_score(Y_test, pred_test_y)
+    ap[module_name] = average_precision_score(Y_test, pred_test_y)
+
+
 #无正则项的logistic回归
 name = "logistic回归(无惩罚项)"
 from sklearn.linear_model import LogisticRegression
-#训练模型
-pipeline = Pipeline([
-    ('prep', preprocessor),
-    ('model', LogisticRegression(penalty=None))
-])
-pipeline.fit(X_train, Y_train)
-# 用模型预测测试集
-pred_test_y = pipeline.predict(X_test)
-# 计算评价指标
-from sklearn.metrics import accuracy_score,precision_score,recall_score,f1_score,roc_auc_score,average_precision_score
-accuracy[name] = accuracy_score(Y_test,pred_test_y)
-precision[name] = precision_score(Y_test,pred_test_y)
-recall[name] = recall_score(Y_test,pred_test_y)
-f1score[name] = f1_score(Y_test,pred_test_y)
-roc[name] = roc_auc_score(Y_test,pred_test_y)
-ap[name] = average_precision_score(Y_test,pred_test_y)
+calc_metrics("logistic回归(无惩罚项)", LogisticRegression(penalty=None))
 
 #决策树
-name = "决策树"
 from sklearn.tree import DecisionTreeClassifier
-pipeline = Pipeline([
-    ('prep', preprocessor),
-    ('model', DecisionTreeClassifier())
-])
-pipeline.fit(X_train, Y_train)
-# 用模型预测测试集
-pred_test_y = pipeline.predict(X_test)
-# 计算评价指标
-from sklearn.metrics import accuracy_score,precision_score,recall_score,f1_score,roc_auc_score,average_precision_score
-accuracy[name] = accuracy_score(Y_test,pred_test_y)
-precision[name] = precision_score(Y_test,pred_test_y)
-recall[name] = recall_score(Y_test,pred_test_y)
-f1score[name] = f1_score(Y_test,pred_test_y)
-roc[name] = roc_auc_score(Y_test,pred_test_y)
-ap[name] = average_precision_score(Y_test,pred_test_y)
+calc_metrics("决策树", DecisionTreeClassifier())
 
 #随机森林
-name = "随机森林"
 from sklearn.ensemble import RandomForestClassifier
-pipeline = Pipeline([
-    ('prep', preprocessor),
-    ('model', RandomForestClassifier())
-])
-pipeline.fit(X_train, Y_train)
-# 用模型预测测试集
-pred_test_y = pipeline.predict(X_test)
-# 计算评价指标
-from sklearn.metrics import accuracy_score,precision_score,recall_score,f1_score,roc_auc_score,average_precision_score
-accuracy[name] = accuracy_score(Y_test,pred_test_y)
-precision[name] = precision_score(Y_test,pred_test_y)
-recall[name] = recall_score(Y_test,pred_test_y)
-f1score[name] = f1_score(Y_test,pred_test_y)
-roc[name] = roc_auc_score(Y_test,pred_test_y)
-ap[name] = average_precision_score(Y_test,pred_test_y)
+calc_metrics("随机森林", RandomForestClassifier())
 
 #GBDT
-name = "GBDT"
 from sklearn.ensemble import GradientBoostingClassifier
-pipeline = Pipeline([
-    ('prep', preprocessor),
-    ('model', GradientBoostingClassifier())
-])
-pipeline.fit(X_train, Y_train)
-# 用模型预测测试集
-pred_test_y = pipeline.predict(X_test)
-# 计算评价指标
-from sklearn.metrics import accuracy_score,precision_score,recall_score,f1_score,roc_auc_score,average_precision_score
-accuracy[name] = accuracy_score(Y_test,pred_test_y)
-precision[name] = precision_score(Y_test,pred_test_y)
-recall[name] = recall_score(Y_test,pred_test_y)
-f1score[name] = f1_score(Y_test,pred_test_y)
-roc[name] = roc_auc_score(Y_test,pred_test_y)
-ap[name] = average_precision_score(Y_test,pred_test_y)
-
+calc_metrics("GBDT", GradientBoostingClassifier())
 
 # 显示各模型的评价指标
 rt = pd.DataFrame({'accuracy':accuracy,
