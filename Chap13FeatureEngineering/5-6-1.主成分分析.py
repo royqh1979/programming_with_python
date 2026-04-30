@@ -1,7 +1,7 @@
 # https://www.geeksforgeeks.org/machine-learning/implementing-pca-in-python-with-scikit-learn/
 import pandas as pd
 import numpy as np
-df =pd.read_csv("cancer.csv",index_col=0)
+df =pd.read_csv("cancer.csv", index_col=0)
 df = df.drop(columns=["diagnosis"])
 print(df)
 
