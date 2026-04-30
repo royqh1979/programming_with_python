@@ -43,6 +43,7 @@ print("mse: ",mean_squared_error(Y_test,pred_test_y))
 print("mae: ",mean_absolute_error(Y_test,pred_test_y))
 print("Feature importance:")
 importance = pd.Series(model.feature_importances_, index=X.columns)
+importance = importance.sort_values(ascending=False)
 print(importance)
 #绘制决策树
 from sklearn.tree import plot_tree
