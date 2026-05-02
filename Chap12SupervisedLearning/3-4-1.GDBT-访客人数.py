@@ -29,10 +29,10 @@ X = df.drop('Num_Players', axis=1)
 Y = df['Num_Players']
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size=0.5, shuffle=False)
 
-from sklearn.ensemble import AdaBoostRegressor
-print(f"正在训练 AdaBoost 模型...")
+from sklearn.ensemble import GradientBoostingRegressor
+print(f"正在训练 GDBT 模型...")
 ## 训练模型
-model = AdaBoostRegressor()
+model = GradientBoostingRegressor()
 model.fit(X_train,Y_train)
 # 用模型预测测试集
 pred_test_y = model.predict(X_test)
@@ -53,6 +53,6 @@ for estimator in model.estimators_:
     if count>3:
         break
     fig, ax = plt.subplots(1,1)
-    plot_tree(estimator,max_depth=3, filled=True, impurity=False,ax=ax,fontsize=14)
+    plot_tree(estimator[0],max_depth=3, filled=True, impurity=False,ax=ax,fontsize=14)
     fig.tight_layout()
 plt.show()

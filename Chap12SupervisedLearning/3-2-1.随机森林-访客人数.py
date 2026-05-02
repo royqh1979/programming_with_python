@@ -30,7 +30,7 @@ Y = df['Num_Players']
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size=0.5, shuffle=False)
 
 from sklearn.ensemble import RandomForestRegressor
-print(f"正在训练 决策树 模型...")
+print(f"正在训练 随机森林 模型...")
 ## 训练模型
 model = RandomForestRegressor()
 model.fit(X_train,Y_train)

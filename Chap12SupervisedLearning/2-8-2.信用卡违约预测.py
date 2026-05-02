@@ -84,20 +84,28 @@ print(rt.round(4))
 
 import matplotlib.pyplot as plt
 import matplotlib as mpl
-
 mpl.rcParams['font.family']=['Microsoft Yahei', 'sans-serif']
 mpl.rcParams['axes.unicode_minus']=False
 
-for name in roc_curve_data:
-    plt.plot(roc_curve_data[name][0],roc_curve_data[name][1], label=name)
-plt.legend()
-plt.title("ROC曲线")
-plt.show()
+#绘制roc曲线
+fig, ax = plt.subplots(1,1)
+for name in roc_curve_data.keys():
+    ax.plot(roc_curve_data[name][0],roc_curve_data[name][1], label=name)
+ax.set_title("ROC曲线",fontsize=18)
+ax.legend(fontsize=16)
+ax.set_xlim(0,1)
+ax.set_ylim(0,1)
+fig.tight_layout()
 
-for name in pr_curve_data:
-    plt.plot(pr_curve_data[name][1],pr_curve_data[name][0], label=name)
-plt.legend()
-plt.title("P-R曲线")
+#绘制pr曲线
+fig, ax = plt.subplots(1,1)
+for name in roc_curve_data.keys():
+    ax.plot(pr_curve_data[name][1],pr_curve_data[name][0], label=name)
+ax.legend(fontsize=16)
+ax.set_title("PR曲线",fontsize=18)
+ax.set_xlim(0,1)
+ax.set_ylim(0,1)
+fig.tight_layout()
 plt.show()
 
 

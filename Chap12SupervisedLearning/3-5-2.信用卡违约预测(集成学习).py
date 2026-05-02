@@ -1,4 +1,10 @@
 import pandas as pd
+import matplotlib.pyplot as plt
+#使用中文字体
+from pylab import mpl
+mpl.rcParams['font.sans-serif']="Simsun"
+mpl.rcParams['axes.unicode_minus']=False
+
 df = pd.read_csv("UCI_Credit_Card.csv", index_col=0)
 
 Y = df["default.payment.next.month"]
@@ -26,84 +32,50 @@ recall = {}
 f1score = {}
 roc = {}
 ap = {}
+pr_curve_data  = {}
+roc_curve_data = {}
+
+from sklearn.metrics import accuracy_score,precision_score,recall_score,f1_score,roc_auc_score,average_precision_score, precision_recall_curve, roc_curve
+def test_model(model_name, model):
+    print(f"正在拟合 {model_name} ...")
+    pipeline = Pipeline([
+        ('prep', preprocessor),
+        ('model', model)
+    ])
+    pipeline.fit(X_train, Y_train)
+    # 用模型预测测试集
+    pred_test_y = pipeline.predict(X_test)
+    # 计算评价指标
+    accuracy[model_name] = accuracy_score(Y_test, pred_test_y)
+    precision[model_name] = precision_score(Y_test, pred_test_y)
+    recall[model_name] = recall_score(Y_test, pred_test_y)
+    f1score[model_name] = f1_score(Y_test, pred_test_y)
+    roc[model_name] = roc_auc_score(Y_test, pred_test_y)
+    ap[model_name] = average_precision_score(Y_test, pred_test_y)
+    pr_curve_data[model_name] = precision_recall_curve(Y_test,pred_test_y)
+    roc_curve_data[model_name] = roc_curve(Y_test,pred_test_y)
+
 
 #无正则项的logistic回归
 name = "logistic回归(无惩罚项)"
 from sklearn.linear_model import LogisticRegression
-print(f"正在拟合 {name}...")
-#训练模型
-pipeline = Pipeline([
-    ('prep', preprocessor),
-    ('model', LogisticRegression(penalty=None))
-])
-pipeline.fit(X_train, Y_train)
-# 用模型预测测试集
-pred_test_y = pipeline.predict(X_test)
-# 计算评价指标
-from sklearn.metrics import accuracy_score,precision_score,recall_score,f1_score,roc_auc_score,average_precision_score
-accuracy[name] = accuracy_score(Y_test,pred_test_y)
-precision[name] = precision_score(Y_test,pred_test_y)
-recall[name] = recall_score(Y_test,pred_test_y)
-f1score[name] = f1_score(Y_test,pred_test_y)
-roc[name] = roc_auc_score(Y_test,pred_test_y)
-ap[name] = average_precision_score(Y_test,pred_test_y)
+test_model("logistic回归(无惩罚项)",LogisticRegression(penalty=None))
 
 #决策树
-name = "决策树"
 from sklearn.tree import DecisionTreeClassifier
-pipeline = Pipeline([
-    ('prep', preprocessor),
-    ('model', DecisionTreeClassifier())
-])
-pipeline.fit(X_train, Y_train)
-# 用模型预测测试集
-pred_test_y = pipeline.predict(X_test)
-# 计算评价指标
-from sklearn.metrics import accuracy_score,precision_score,recall_score,f1_score,roc_auc_score,average_precision_score
-accuracy[name] = accuracy_score(Y_test,pred_test_y)
-precision[name] = precision_score(Y_test,pred_test_y)
-recall[name] = recall_score(Y_test,pred_test_y)
-f1score[name] = f1_score(Y_test,pred_test_y)
-roc[name] = roc_auc_score(Y_test,pred_test_y)
-ap[name] = average_precision_score(Y_test,pred_test_y)
+test_model("决策树", DecisionTreeClassifier())
 
 #随机森林
-name = "随机森林"
 from sklearn.ensemble import RandomForestClassifier
-pipeline = Pipeline([
-    ('prep', preprocessor),
-    ('model', RandomForestClassifier())
-])
-pipeline.fit(X_train, Y_train)
-# 用模型预测测试集
-pred_test_y = pipeline.predict(X_test)
-# 计算评价指标
-from sklearn.metrics import accuracy_score,precision_score,recall_score,f1_score,roc_auc_score,average_precision_score
-accuracy[name] = accuracy_score(Y_test,pred_test_y)
-precision[name] = precision_score(Y_test,pred_test_y)
-recall[name] = recall_score(Y_test,pred_test_y)
-f1score[name] = f1_score(Y_test,pred_test_y)
-roc[name] = roc_auc_score(Y_test,pred_test_y)
-ap[name] = average_precision_score(Y_test,pred_test_y)
+test_model("随机森林",RandomForestClassifier())
 
 #GBDT
-name = "GBDT"
 from sklearn.ensemble import GradientBoostingClassifier
-pipeline = Pipeline([
-    ('prep', preprocessor),
-    ('model', GradientBoostingClassifier())
-])
-pipeline.fit(X_train, Y_train)
-# 用模型预测测试集
-pred_test_y = pipeline.predict(X_test)
-# 计算评价指标
-from sklearn.metrics import accuracy_score,precision_score,recall_score,f1_score,roc_auc_score,average_precision_score
-accuracy[name] = accuracy_score(Y_test,pred_test_y)
-precision[name] = precision_score(Y_test,pred_test_y)
-recall[name] = recall_score(Y_test,pred_test_y)
-f1score[name] = f1_score(Y_test,pred_test_y)
-roc[name] = roc_auc_score(Y_test,pred_test_y)
-ap[name] = average_precision_score(Y_test,pred_test_y)
+test_model("GBDT",GradientBoostingClassifier())
+
+#xgboost
+from xgboost import XGBClassifier
+test_model("xgboost", XGBClassifier())
 
 # 显示各模型的评价指标
 rt = pd.DataFrame({'accuracy':accuracy,
@@ -113,3 +85,24 @@ rt = pd.DataFrame({'accuracy':accuracy,
                    'roc-auc':roc,
                    'ap':ap})
 print(rt.round(4))
+
+#绘制roc曲线
+fig, ax = plt.subplots(1,1)
+for name in roc_curve_data.keys():
+    ax.plot(roc_curve_data[name][0],roc_curve_data[name][1], label=name)
+ax.set_title("ROC曲线",fontsize=18)
+ax.set_xlim(0,1)
+ax.set_ylim(0,1)
+ax.legend(fontsize=16)
+fig.tight_layout()
+
+#绘制pr曲线
+fig, ax = plt.subplots(1,1)
+for name in roc_curve_data.keys():
+    ax.plot(pr_curve_data[name][1],pr_curve_data[name][0], label=name)
+ax.legend(fontsize=16)
+ax.set_title("PR曲线",fontsize=18)
+ax.set_xlim(0,1)
+ax.set_ylim(0,1)
+fig.tight_layout()
+plt.show()
